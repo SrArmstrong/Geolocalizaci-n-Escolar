@@ -3,7 +3,7 @@ import MapComponent from "./MapComponent";
 function App() {
   return (
     <>
-      <h1>Mapa React PWA</h1>
+      <h1 style={{ textAlign: "center", marginTop: "1rem" }}> "Mapa de la UTEQ" </h1>
       <MapComponent />
     </>
   );
