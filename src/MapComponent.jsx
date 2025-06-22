@@ -16,8 +16,45 @@ function MapComponent() {
       mapRef.current = null;
     }
 
-    const map = L.map("map");
+    const map = L.map("map", {
+      minZoom: 2,
+      maxZoom: 20,
+      zoomControl: true,
+      dragging: true,
+      scrollWheelZoom: true
+    });
     mapRef.current = map;
+
+    // Add these lines
+    map.on('load', () => {
+      const loadingElement = document.getElementById('map-loading');
+      if (loadingElement) {
+        loadingElement.style.display = 'none';
+      }
+    });
+
+    // Force a resize after map creation
+    setTimeout(() => {
+      map.invalidateSize(true);
+    }, 100);
+
+    // Add zoom control to bottom right
+    L.control.zoom({
+      position: 'bottomright'
+    }).addTo(map);
+
+    // Add scale control
+    L.control.scale({
+      imperial: false,
+      position: 'bottomleft'
+    }).addTo(map);
+
+    // Remove the campus boundary restrictions
+    L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      attribution: 'Google Maps',
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      maxZoom: 20
+    }).addTo(map);
 
     // Función para obtener y mostrar la ubicación actual
     const showCurrentPosition = (position) => {
@@ -43,10 +80,10 @@ function MapComponent() {
         icon: new L.Icon({
           iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
           shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          shadowSize: [41, 41]
+          iconSize: [20, 32],     // Changed from [25, 41]
+          iconAnchor: [5, 10],   // Adjusted from [12, 41]
+          popupAnchor: [1, -15],  // Adjusted from [1, -34]
+          shadowSize: [32, 32]    // Adjusted from [41, 41]
         })
       })
         .addTo(map)
@@ -95,6 +132,11 @@ function MapComponent() {
       // Limpiar ruta anterior si existe
       if (routingControl) {
         map.removeControl(routingControl);
+        setRoutingControl(null);
+        map.closePopup();
+        // Remove any existing routing containers
+        const existingContainers = document.querySelectorAll('.leaflet-routing-container');
+        existingContainers.forEach(container => container.remove());
       }
 
       // Crear nueva ruta
@@ -105,7 +147,7 @@ function MapComponent() {
         ],
         routeWhileDragging: false,
         addWaypoints: false,
-        createMarker: function() { return null; }, // No crear marcadores adicionales
+        createMarker: function() { return null; },
         lineOptions: {
           styles: [{
             color: '#000000',
@@ -115,28 +157,19 @@ function MapComponent() {
         },
         show: true,
         collapsible: true,
-        language: 'es'
-      }).on('routesfound', function(e) {
-        const routes = e.routes;
-        const summary = routes[0].summary;
-        const distance = (summary.totalDistance / 1000).toFixed(2);
-        const time = Math.round(summary.totalTime / 60);
-        
-        // Mostrar información de la ruta
-        L.popup()
-          .setLatLng(destination)
-          .setContent(`
-            <div style="text-align: center; font-family: Arial, sans-serif;">
-              <h4 style="margin: 0 0 10px 0; color: #2c3e50;">🗺️ Ruta a ${destinationName}</h4>
-              <p style="margin: 5px 0; color: #7f8c8d;">📏 Distancia: <strong>${distance} km</strong></p>
-              <p style="margin: 5px 0; color: #7f8c8d;">⏱️ Tiempo estimado: <strong>${time} min</strong></p>
-              <button onclick="clearRoute()" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-top: 8px;">
-                🗑️ Limpiar ruta
-              </button>
-            </div>
-          `)
-          .openOn(map);
+        language: 'es',
+        showAlternatives: false
       }).addTo(map);
+
+      // Ensure only one routing container is visible
+      newRoutingControl.on('routesfound', function() {
+        const containers = document.querySelectorAll('.leaflet-routing-container');
+        if (containers.length > 1) {
+          containers.forEach((container, index) => {
+            if (index < containers.length - 1) container.remove();
+          });
+        }
+      });
 
       setRoutingControl(newRoutingControl);
     };
@@ -152,8 +185,8 @@ function MapComponent() {
 
     // Manejar errores de geolocalización
     const handleError = (error) => {
-      console.error("Error getting location:", error);
-      // Ubicación por defecto si no se puede obtener la actual
+      console.error("Error de geolocalización:", error);
+      
       const defaultLocation = [20.656338, -100.405114];
       map.setView(defaultLocation, 17);
       L.marker(defaultLocation)
@@ -276,53 +309,52 @@ function MapComponent() {
     ];
 
     // Función para crear popup personalizado con routing mejorado
+    // Modify the popup style for better mobile viewing
     const createCustomPopup = (loc) => {
       return `
-        <div style="width: 320px; font-family: Arial, sans-serif;">
+        <div style="width: 280px; font-family: Arial, sans-serif;">
           <div style="position: relative;">
             <img src="${loc.image}" alt="${loc.title}" 
-                 style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px 8px 0 0;" 
+                 style="width: 100%; height: 140px; object-fit: cover; border-radius: 8px 8px 0 0;" 
                  onerror="this.src='https://via.placeholder.com/300x180?text=Imagen+No+Disponible'">
-            <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+            <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px;">
               📍 ${loc.title}
             </div>
           </div>
           
-          <div style="padding: 12px; background: white; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <h3 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 16px; font-weight: bold;">
+          <div style="padding: 10px; background: white; border-radius: 0 0 8px 8px;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 14px; font-weight: bold;">
               ${loc.title}
             </h3>
             
-            <p style="margin: 0 0 8px 0; color: #7f8c8d; font-size: 14px; line-height: 1.4;">
+            <p style="margin: 0 0 6px 0; color: #7f8c8d; font-size: 12px; line-height: 1.3;">
               ${loc.description}
             </p>
             
-            <div style="border-top: 1px solid #ecf0f1; padding-top: 8px; margin-top: 8px;">
-              <div style="margin-bottom: 6px;">
-                <span style="color: #3498db; font-weight: bold; font-size: 13px;">ℹ️ Información:</span>
-                <br>
-                <span style="color: #2c3e50; font-size: 13px;">${loc.details}</span>
+            <div style="border-top: 1px solid #ecf0f1; padding-top: 6px; margin-top: 6px;">
+              <div style="margin-bottom: 4px;">
+                <span style="color: #3498db; font-weight: bold; font-size: 11px;">ℹ️ Info:</span>
+                <span style="color: #2c3e50; font-size: 11px;">${loc.details}</span>
               </div>
               
               <div>
-                <span style="color: #e74c3c; font-weight: bold; font-size: 13px;">📞 Contacto:</span>
-                <br>
-                <span style="color: #2c3e50; font-size: 13px;">${loc.contact}</span>
+                <span style="color: #e74c3c; font-weight: bold; font-size: 11px;">📞 Contacto:</span>
+                <span style="color: #2c3e50; font-size: 11px;">${loc.contact}</span>
               </div>
             </div>
             
-            <div style="margin-top: 12px; text-align: center;">
+            <div style="margin-top: 8px; display: flex; justify-content: space-between; gap: 4px;">
               <button onclick="showRouteToLocation([${loc.latitude}, ${loc.longitude}], '${loc.title}')" 
-                      style="background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 8px;">
-                🗺️ Cómo llegar
+                      style="flex: 1; background: #3498db; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 11px;">
+                🗺️ Ruta
               </button>
               <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${loc.latitude},${loc.longitude}', '_blank')" 
-                      style="background: #9b59b6; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 8px;">
-                🌐 Google Maps
+                      style="flex: 1; background: #9b59b6; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 11px;">
+                🌐 Maps
               </button>
               <button onclick="navigator.share ? navigator.share({title: '${loc.title}', text: '${loc.description}', url: window.location.href}) : alert('Compartir no disponible')" 
-                      style="background: #2ecc71; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">
-                📤 Compartir
+                      style="flex: 1; background: #2ecc71; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 11px;">
+                📤 Share
               </button>
             </div>
           </div>
@@ -335,8 +367,62 @@ function MapComponent() {
       showRoute(destination, destinationName);
     };
 
-    locations.forEach(loc => {
-      L.marker([loc.latitude, loc.longitude])
+    // Add campus boundary polygon
+    const campusBoundary = L.polygon([
+      [20.653705, -100.407463],
+      [20.659572, -100.406165],
+      [20.659045, -100.402758],
+      [20.653130, -100.403805]
+    ], {
+      color: '#3498db',
+      weight: 2,
+      fillOpacity: 0.1
+    }).addTo(map);
+
+    // Add outer area mask
+    const outerBounds = [
+      [[90, -180], [90, 180], [-90, 180], [-90, -180]], // Outer rectangle
+      [[20.653705, -100.407463], // Campus boundary (in reverse)
+       [20.653130, -100.403805],
+       [20.659045, -100.402758],
+       [20.659572, -100.406165]]
+    ];
+
+    L.polygon(outerBounds, {
+      color: 'transparent',
+      fillColor: '#000',
+      fillOpacity: 0.2
+    }).addTo(map);
+
+    // Fit map to campus boundary
+    map.fitBounds(campusBoundary.getBounds());
+
+    // Update tile layer with restricted bounds
+    L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      attribution: 'Google Maps',
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      maxZoom: 20,
+      bounds: campusBoundary.getBounds()
+    }).addTo(map);
+
+    // Filter locations to only show those within the campus boundary
+    const campusLocations = locations.filter(loc => {
+      const point = L.latLng(loc.latitude, loc.longitude);
+      return campusBoundary.getBounds().contains(point);
+    });
+
+    // Update locations loop to use filtered locations
+    campusLocations.forEach(loc => {
+      L.marker([loc.latitude, loc.longitude], {
+        icon: new L.Icon({
+          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+          iconSize: [20, 32],     // Smaller marker size
+          iconAnchor: [10, 32],   // Adjusted anchor point
+          popupAnchor: [1, -28],  // Adjusted popup position
+          shadowSize: [32, 32]    // Adjusted shadow size
+        })
+      })
         .addTo(map)
         .bindPopup(createCustomPopup(loc), {
           maxWidth: 340,
@@ -378,10 +464,12 @@ function MapComponent() {
             padding: 0;
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            max-width: 90vw;
           }
           .custom-popup .leaflet-popup-content {
             margin: 0;
-            line-height: 1.4;
+            line-height: 1.3;
+            width: auto !important;
           }
           .custom-popup .leaflet-popup-tip {
             background: white;
@@ -390,24 +478,74 @@ function MapComponent() {
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 90vw;
+            font-size: 12px;
+            color: black !important;
           }
           .leaflet-routing-container h2 {
             background: #3498db;
             color: white;
             margin: 0;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px 8px 0 0;
-            font-size: 14px;
+            font-size: 13px;
+          }
+          .leaflet-routing-alt {
+            color: black !important;
+          }
+          .leaflet-routing-alt table {
+            color: black !important;
+          }
+          .leaflet-routing-alt tr:hover {
+            background-color: rgba(0, 0, 0, 0.05) !important;
+            color: black !important;
+          }
+          .leaflet-routing-icon {
+            filter: brightness(0) !important;
+          }
+          .leaflet-touch .leaflet-control-layers,
+          .leaflet-touch .leaflet-bar {
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+          }
+          .leaflet-control-zoom a {
+            width: 30px !important;
+            height: 30px !important;
+            line-height: 30px !important;
+            font-size: 16px;
+          }
+          @media (max-width: 768px) {
+            .leaflet-control-zoom {
+              margin-bottom: 70px !important;
+            }
+            .leaflet-control-scale {
+              margin-bottom: 20px !important;
+            }
           }
         `}
       </style>
       <div
         id="map"
         style={{
-          height: "calc(100vh - 80px)",
+          height: "100vh",  // Changed from calc(100vh - 60px)
           width: "100%",
+          position: "relative",
+          zIndex: 1,
+          touchAction: "none",
+          backgroundColor: "#f0f0f0"  // Added fallback background
         }}
       />
+      <div id="map-loading" 
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 0,
+          textAlign: "center"
+        }}>
+        <p>Cargando mapa...</p>
+      </div>
     </>
   );
 }
