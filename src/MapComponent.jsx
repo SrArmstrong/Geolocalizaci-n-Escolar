@@ -4,6 +4,40 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
+const customRoutes = {
+  // Example: Route from DTAI to Rectoría
+  'DTAI-Rectoría': {
+    waypoints: [
+      [20.6543228, -100.4046271], // DTAI
+      [20.6542, -100.4050], // Intermediate point
+      [20.6543096, -100.4054418], // Rectoría
+    ],
+    description: 'Ruta interior por andadores peatonales'
+  },
+  // Add more custom routes as needed
+  // Route from Main Entrance to Auditorium with detailed waypoints
+  'Entrada principal-Auditorio UTEQ': {
+    waypoints: [
+      [20.6533474, -100.4046172],  // Entrada principal
+      [20.654240, -100.404367],    // Punto de reunión
+      [20.654135, -100.405019],    // Vuelta después del edificio K
+      [20.654135, -100.405019],    // Cruzando cafetería
+      [20.655530, -100.405391],    // Camino a la izquierda
+      [20.655562, -100.405754],    // Bifurcación derecha
+      [20.6560881, -100.4060255]   // Auditorio UTEQ
+    ],
+    description: 'Ruta peatonal segura: Sigue los andadores principales, cruza con precaución en la cafetería.',
+    instructions: [
+      'Camina hasta el punto de reunión y gira a la izquierda',
+      'Al terminar el edificio K, gira a la derecha',
+      'Cruza por la cafetería y la carretera hacia el camino junto al edificio F',
+      'Sigue el camino hacia la izquierda',
+      'En la bifurcación, toma el camino de la derecha',
+      'Has llegado al Auditorio UTEQ'
+    ]
+  },
+};
+
 function MapComponent() {
   const mapRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -129,49 +163,91 @@ function MapComponent() {
 
     // Función separada para crear la ruta
     const createRoute = (userLocation, destination, destinationName) => {
-      // Limpiar ruta anterior si existe
       if (routingControl) {
         map.removeControl(routingControl);
         setRoutingControl(null);
         map.closePopup();
-        // Remove any existing routing containers
         const existingContainers = document.querySelectorAll('.leaflet-routing-container');
         existingContainers.forEach(container => container.remove());
       }
-
-      // Crear nueva ruta
-      const newRoutingControl = L.Routing.control({
-        waypoints: [
-          L.latLng(userLocation[0], userLocation[1]),
-          L.latLng(destination[0], destination[1])
-        ],
-        routeWhileDragging: false,
-        addWaypoints: false,
-        createMarker: function() { return null; },
-        lineOptions: {
-          styles: [{
-            color: '#000000',
-            weight: 6,
-            opacity: 0.8
-          }]
-        },
-        show: true,
-        collapsible: true,
-        language: 'es',
-        showAlternatives: false
-      }).addTo(map);
-
-      // Ensure only one routing container is visible
-      newRoutingControl.on('routesfound', function() {
-        const containers = document.querySelectorAll('.leaflet-routing-container');
-        if (containers.length > 1) {
-          containers.forEach((container, index) => {
-            if (index < containers.length - 1) container.remove();
-          });
-        }
-      });
-
-      setRoutingControl(newRoutingControl);
+    
+      // Create route key based on location titles
+      const routeKey = `Entrada principal-${destinationName}`;
+      const customRoute = customRoutes[routeKey];
+    
+      if (customRoute) {
+        // Use custom route with waypoints
+        const path = L.polyline(customRoute.waypoints, {
+          color: '#2980b9',
+          weight: 5,
+          opacity: 0.8,
+          dashArray: '10, 10'
+        }).addTo(map);
+    
+        // Add markers for each waypoint with instructions
+        customRoute.waypoints.forEach((waypoint, index) => {
+          if (index > 0 && index < customRoute.waypoints.length - 1) {
+            L.circleMarker(waypoint, {
+              radius: 8,
+              fillColor: '#3498db',
+              color: '#fff',
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.8
+            }).addTo(map)
+              .bindPopup(customRoute.instructions[index-1]);
+          }
+        });
+    
+        // Fit bounds to show the entire route
+        map.fitBounds(path.getBounds(), { padding: [50, 50] });
+    
+        // Show route description
+        L.popup()
+          .setLatLng(customRoute.waypoints[0])
+          .setContent(`
+            <div style="max-width: 300px">
+              <h4 style="margin: 0 0 8px 0">Ruta personalizada</h4>
+              <p style="margin: 0 0 8px 0">${customRoute.description}</p>
+              <small style="color: #666">Haz clic en los puntos azules para ver las instrucciones paso a paso</small>
+            </div>
+          `)
+          .openOn(map);
+      } else {
+        // Default routing code remains unchanged
+        const newRoutingControl = L.Routing.control({
+          waypoints: [
+            L.latLng(userLocation[0], userLocation[1]),
+            L.latLng(destination[0], destination[1])
+          ],
+          routeWhileDragging: false,
+          addWaypoints: false,
+          createMarker: function() { return null; },
+          lineOptions: {
+            styles: [{
+              color: '#000000',
+              weight: 6,
+              opacity: 0.8
+            }]
+          },
+          show: true,
+          collapsible: true,
+          language: 'es',
+          showAlternatives: false
+        }).addTo(map);
+    
+        // Ensure only one routing container is visible
+        newRoutingControl.on('routesfound', function() {
+          const containers = document.querySelectorAll('.leaflet-routing-container');
+          if (containers.length > 1) {
+            containers.forEach((container, index) => {
+              if (index < containers.length - 1) container.remove();
+            });
+          }
+        });
+    
+        setRoutingControl(newRoutingControl);
+      };
     };
 
     // Función global para limpiar ruta
