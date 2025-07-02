@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function WelcomeScreen({ onStartClick }) {
+function WelcomeScreen({ onStartClick, onAdminClick }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeSection, setActiveSection] = useState('main');
 
@@ -184,28 +184,43 @@ function WelcomeScreen({ onStartClick }) {
         )}
       </div>
 
-      <button 
-        onClick={onStartClick}
-        style={{
-          padding: '1rem 2.5rem',
-          fontSize: '1.2rem',
-          backgroundColor: 'white',
-          color: '#1e3799',  // Changed to dark blue to match theme
-          border: 'none',
-          borderRadius: '50px',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-          fontWeight: 'bold',
-          marginTop: '1rem',
-          ':hover': {
-            transform: 'translateY(-2px)',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.3)'
-          }
-        }}
-      >
-        Explorar Mapa
-      </button>
+      <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+        <button 
+          onClick={onStartClick}
+          style={{
+            padding: '1rem 2.5rem',
+            fontSize: '1.2rem',
+            backgroundColor: 'white',
+            color: '#1e3799',
+            border: 'none',
+            borderRadius: '50px',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+            fontWeight: 'bold',
+          }}
+        >
+          Explorar Mapa
+        </button>
+
+        <button 
+          onClick={onAdminClick}
+          style={{
+            padding: '1rem 2.5rem',
+            fontSize: '1.2rem',
+            backgroundColor: '#f39c12',
+            color: 'white',
+            border: 'none',
+            borderRadius: '50px',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+            fontWeight: 'bold',
+          }}
+        >
+          Administrar Información
+        </button>
+      </div>
 
       <style>
         {`

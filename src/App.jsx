@@ -1,50 +1,43 @@
 import { useState } from "react";
 import MapComponent from "./MapComponent";
 import WelcomeScreen from "./components/WelcomeScreen";
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
-  const [showMap, setShowMap] = useState(false);
+  const [screen, setScreen] = useState('welcome'); // 'welcome', 'map', 'admin'
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Muestra el componente MapComponent (El mapa)
-  const handleStartClick = () => {
+  // Cambio de pantalla con transición
+  const changeScreenWithTransition = (target) => {
     setIsTransitioning(true);
     setTimeout(() => {
-      setShowMap(true);
+      setScreen(target);
       setIsTransitioning(false);
     }, 500);
   };
-
-  // Regresar a la pantalla de bienvenida
-  const handleBackToWelcome = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setShowMap(false);
-      setIsTransitioning(false);
-    }, 500);
-  };
-
 
   return (
     <div style={{
       position: 'relative',
       height: '100vh',
       width: '100vw',
-      overflow: 'auto',  // Changed from 'hidden' to 'auto'
-      WebkitOverflowScrolling: 'touch'  // Added for smooth scrolling on iOS
+      overflow: 'auto',
+      WebkitOverflowScrolling: 'touch'
     }}>
-      {!showMap && (
-        <WelcomeScreen 
-          onStartClick={handleStartClick} 
+      
+      {screen === 'welcome' && (
+        <WelcomeScreen
+          onStartClick={() => changeScreenWithTransition('map')}
+          onAdminClick={() => changeScreenWithTransition('admin')}
           style={{
             opacity: isTransitioning ? 0 : 1,
             transition: 'opacity 0.5s ease-out',
-            minHeight: '100vh'  // Added to ensure full height content is scrollable
+            minHeight: '100vh'
           }}
         />
       )}
-      
-      {showMap && (
+
+      {screen === 'map' && (
         <div style={{ 
           height: "100vh", 
           width: "100vw", 
@@ -59,7 +52,7 @@ function App() {
           <h1 style={{ 
             textAlign: "center", 
             margin: "0.5rem 0",
-            color: "#1e3799", // Changed from green to dark blue
+            color: "#1e3799",
             textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
             fontSize: '1.5rem',
             fontWeight: '500'
@@ -73,9 +66,13 @@ function App() {
             margin: '0 1rem 1rem 1rem',
             overflow: 'hidden'
           }}>
-            <MapComponent onBack={handleBackToWelcome} />
+            <MapComponent onBack={() => changeScreenWithTransition('welcome')} />
           </div>
         </div>
+      )}
+
+      {screen === 'admin' && (
+        <AdminDashboard onBack={() => changeScreenWithTransition('welcome')} />
       )}
     </div>
   );
