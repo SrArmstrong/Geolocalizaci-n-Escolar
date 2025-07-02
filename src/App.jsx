@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import MapComponent from "./MapComponent";
 import WelcomeScreen from "./components/WelcomeScreen";
 
@@ -6,6 +6,7 @@ function App() {
   const [showMap, setShowMap] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  // Muestra el componente MapComponent (El mapa)
   const handleStartClick = () => {
     setIsTransitioning(true);
     setTimeout(() => {
@@ -13,6 +14,16 @@ function App() {
       setIsTransitioning(false);
     }, 500);
   };
+
+  // Regresar a la pantalla de bienvenida
+  const handleBackToWelcome = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setShowMap(false);
+      setIsTransitioning(false);
+    }, 500);
+  };
+
 
   return (
     <div style={{
@@ -62,7 +73,7 @@ function App() {
             margin: '0 1rem 1rem 1rem',
             overflow: 'hidden'
           }}>
-            <MapComponent />
+            <MapComponent onBack={handleBackToWelcome} />
           </div>
         </div>
       )}

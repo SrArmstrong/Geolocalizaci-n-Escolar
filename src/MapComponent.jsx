@@ -38,9 +38,9 @@ const customRoutes = {
   },
 };
 
-function MapComponent() {
+function MapComponent({ onBack }) {
   const mapRef = useRef(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const [/*currentLocation*/, setCurrentLocation] = useState(null);
   const [routingControl, setRoutingControl] = useState(null);
   const currentLocationRef = useRef(null); // Agregar ref para ubicación actual
 
@@ -603,14 +603,35 @@ function MapComponent() {
       <div
         id="map"
         style={{
-          height: "100vh",  // Changed from calc(100vh - 60px)
+          height: "100vh",
           width: "100%",
           position: "relative",
           zIndex: 1,
           touchAction: "none",
-          backgroundColor: "#f0f0f0"  // Added fallback background
+          backgroundColor: "#f0f0f0"
         }}
-      />
+      ></div>
+
+      {onBack && (
+        <button
+          onClick={onBack}
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            zIndex: 1000,
+            backgroundColor: "#f39c12",
+            color: "white",
+            border: "none",
+            padding: "8px 12px",
+            borderRadius: "6px",
+            cursor: "pointer",
+            boxShadow: "0 2px 5px rgba(0,0,0,0.3)"
+          }}
+        >
+          ⬅ Volver
+        </button>
+      )}1
       <div id="map-loading" 
         style={{
           position: "absolute",
@@ -622,6 +643,7 @@ function MapComponent() {
         }}>
         <p>Cargando mapa...</p>
       </div>
+      
     </>
   );
 }
