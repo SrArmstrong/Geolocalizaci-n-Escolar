@@ -41,7 +41,8 @@ function AdminDashboard({ onBack }) {
 
   const renderSection = () => {
     switch (activeSection) {
-      case 'usuarios': return <Usuarios usuarios={usuarios} loading={loading} />;
+      //case 'usuarios': return <Usuarios usuarios={usuarios} loading={loading} />;
+      case 'usuarios': return <Usuarios />;
       case 'eventos': return <Eventos eventos={eventos} loading={loading} />;
       case 'edificios': return <Edificios edificios={edificios} loading={loading} />;
       case 'profesores': return <Profesores profesores={profesores} loading={loading} />;
@@ -52,10 +53,47 @@ function AdminDashboard({ onBack }) {
   return (
     <div style={{ padding: '2rem', minHeight: '100vh', background: 'linear-gradient(to bottom right, #087ef5, #1e3799)' }}>
       {/* Botones y Navegación */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
-        <button onClick={onBack}>⬅ Volver a Inicio</button>
-        <h2 style={{ color: 'white' }}>Panel de Administración</h2>
-        <div></div>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        marginBottom: '2rem',
+        padding: '0 1rem',
+        position: 'relative',
+        flexWrap: 'wrap' // Permite que los elementos se ajusten en pantallas pequeñas
+      }}>
+        {/* Botón de volver - se ajusta en móviles */}
+        <button 
+          onClick={onBack}
+          style={{ 
+            fontSize: 'clamp(12px, 3vw, 16px)', // Tamaño responsive
+            padding: '0.5rem 1rem',
+            whiteSpace: 'nowrap',
+            zIndex: 1 // Asegura que esté por encima
+          }}
+        >
+          ⬅ Volver
+        </button>
+
+        {/* Título centrado */}
+        <h2 style={{ 
+          color: 'white', 
+          margin: '0.5rem 0', // Espacio vertical en móviles
+          width: '100%', // Ocupa todo el ancho en móviles
+          textAlign: 'center',
+          fontSize: 'clamp(18px, 5vw, 24px)', // Tamaño responsive
+          order: -1 // Lo coloca arriba en móviles (opcional)
+        }}>
+          Panel de Administración
+        </h2>
+
+        {/* Espacio para balancear (opcional) */}
+        <div style={{ 
+          width: 'calc(3rem + 5vw)', // Ancho responsive
+          visibility: 'hidden' 
+        }}>
+          {/* Elemento invisible para balancear */}
+        </div>
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
