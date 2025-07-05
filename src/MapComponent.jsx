@@ -130,8 +130,14 @@ function MapComponent({ onBack }) {
         .openPopup();
     };
 
-    // Función para mostrar ruta en el mapa (corregida)
+    // Función mejorada para mostrar ruta
     const showRoute = (destination, destinationName) => {
+      const map = mapRef.current;
+      if (!map) return;
+
+      // Limpiar cualquier ruta existente primero
+      window.clearRoute();
+
       // Usar ref en lugar del estado para obtener la ubicación actual
       const userLocation = currentLocationRef.current;
       
@@ -161,30 +167,25 @@ function MapComponent({ onBack }) {
       createRoute(userLocation, destination, destinationName);
     };
 
-    // Función separada para crear la ruta
+    // Función para crear la ruta (estándar o personalizada)
     const createRoute = (userLocation, destination, destinationName) => {
-      if (routingControl) {
-        map.removeControl(routingControl);
-        setRoutingControl(null);
-        map.closePopup();
-        const existingContainers = document.querySelectorAll('.leaflet-routing-container');
-        existingContainers.forEach(container => container.remove());
-      }
-    
+      const map = mapRef.current;
+      if (!map) return;
+
       // Create route key based on location titles
       const routeKey = `Entrada principal-${destinationName}`;
       const customRoute = customRoutes[routeKey];
-    
+
       if (customRoute) {
-        // Use custom route with waypoints
+        // Usar ruta personalizada con waypoints
         const path = L.polyline(customRoute.waypoints, {
           color: '#2980b9',
           weight: 5,
           opacity: 0.8,
           dashArray: '10, 10'
         }).addTo(map);
-    
-        // Add markers for each waypoint with instructions
+
+        // Agregar marcadores para cada waypoint con instrucciones
         customRoute.waypoints.forEach((waypoint, index) => {
           if (index > 0 && index < customRoute.waypoints.length - 1) {
             L.circleMarker(waypoint, {
@@ -195,14 +196,14 @@ function MapComponent({ onBack }) {
               opacity: 1,
               fillOpacity: 0.8
             }).addTo(map)
-              .bindPopup(customRoute.instructions[index-1]);
+              .bindPopup(customRoute.instructions[index-1] || 'Punto de referencia');
           }
         });
-    
-        // Fit bounds to show the entire route
+
+        // Ajustar vista para mostrar toda la ruta
         map.fitBounds(path.getBounds(), { padding: [50, 50] });
-    
-        // Show route description
+
+        // Mostrar descripción de la ruta
         L.popup()
           .setLatLng(customRoute.waypoints[0])
           .setContent(`
@@ -214,7 +215,7 @@ function MapComponent({ onBack }) {
           `)
           .openOn(map);
       } else {
-        // Default routing code remains unchanged
+        // Ruta estándar usando Leaflet Routing Machine
         const newRoutingControl = L.Routing.control({
           waypoints: [
             L.latLng(userLocation[0], userLocation[1]),
@@ -235,8 +236,8 @@ function MapComponent({ onBack }) {
           language: 'es',
           showAlternatives: false
         }).addTo(map);
-    
-        // Ensure only one routing container is visible
+
+        // Manejar múltiples contenedores de ruta
         newRoutingControl.on('routesfound', function() {
           const containers = document.querySelectorAll('.leaflet-routing-container');
           if (containers.length > 1) {
@@ -245,18 +246,51 @@ function MapComponent({ onBack }) {
             });
           }
         });
-    
+
         setRoutingControl(newRoutingControl);
-      };
+      }
     };
 
-    // Función global para limpiar ruta
+    // Función global mejorada para limpiar rutas
     window.clearRoute = () => {
+      const map = mapRef.current;
+      if (!map) return;
+
+      // Limpiar control de ruteo estándar
       if (routingControl) {
         map.removeControl(routingControl);
         setRoutingControl(null);
-        map.closePopup();
       }
+
+      // Limpiar contenedores de ruteo
+      document.querySelectorAll('.leaflet-routing-container').forEach(el => el.remove());
+
+      // Limpiar elementos de ruta específicos manteniendo otros marcadores
+      map.eachLayer(layer => {
+        // Eliminar polilíneas de ruta
+        if (layer instanceof L.Polyline && 
+            (layer.options.color === '#2980b9' || layer.options.color === '#000000')) {
+          map.removeLayer(layer);
+        }
+        // Eliminar marcadores de waypoints (círculos azules)
+        else if (layer instanceof L.CircleMarker && layer.options.radius === 8) {
+          map.removeLayer(layer);
+        }
+        // Eliminar popups de ruta
+        else if (layer instanceof L.Popup && 
+                layer._content && 
+                layer._content.includes('Ruta personalizada')) {
+          map.removeLayer(layer);
+        }
+      });
+
+      map.closePopup();
+    };
+
+    // Función global para mostrar ruta desde los popups
+    window.showRouteToLocation = (destination, destinationName) => {
+      window.clearRoute(); // Limpiar antes de mostrar nueva ruta
+      showRoute(destination, destinationName);
     };
 
     // Manejar errores de geolocalización
@@ -440,6 +474,10 @@ function MapComponent({ onBack }) {
 
     // Función global para mostrar ruta
     window.showRouteToLocation = (destination, destinationName) => {
+      // Limpiar ruta existente antes de mostrar la nueva
+      if (window.clearRoute) {
+        window.clearRoute();
+      }
       showRoute(destination, destinationName);
     };
 
