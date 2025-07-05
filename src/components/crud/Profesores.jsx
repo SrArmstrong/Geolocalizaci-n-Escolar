@@ -8,7 +8,7 @@ const Profesores = () => {
   const [profesores, setProfesores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ id: '', nombre: '', cubiculo: '', planta: '', turno: '', materias: '' });
+  const [formData, setFormData] = useState({ id: '', nombre: '', cubiculo: '', planta: '', turno: '', materias: [] });
   const [isEditing, setIsEditing] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
@@ -23,7 +23,7 @@ const Profesores = () => {
   }, []);
 
   const handleEdit = (profesor) => {
-    setFormData({ ...profesor, materias: profesor.materias?.join(', ') || '' });
+    setFormData({ ...profesor, materias: profesor.materias || [] });
     setIsEditing(true);
     setShowForm(true);
   };
@@ -36,19 +36,19 @@ const Profesores = () => {
 
   const handleSubmit = async () => {
     const { id, nombre, cubiculo, planta, turno, materias } = formData;
-    const materiasArray = materias.split(',').map(m => m.trim());
     const docRef = doc(db, 'profesores', id);
     try {
       if (isEditing) {
-        await updateDoc(docRef, { nombre, cubiculo, planta, turno, materias: materiasArray });
+        await updateDoc(docRef, { nombre, cubiculo, planta, turno, materias });
       } else {
-        await setDoc(docRef, { nombre, cubiculo, planta, turno, materias: materiasArray });
+        await setDoc(docRef, { nombre, cubiculo, planta, turno, materias });
       }
       setShowForm(false);
     } catch (err) {
       console.error("Error al guardar profesor:", err);
     }
   };
+
 
   const handleDelete = async () => {
     try {
@@ -62,7 +62,7 @@ const Profesores = () => {
   return (
     <SectionContainer loading={loading} title="Profesores">
       <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
-        <button onClick={handleAdd} style={editButtonStyle}>+ Añadir Profesor</button>
+        <button onClick={handleAdd} style={addButtonStyle}>+ Añadir Profesor</button>
       </div>
       <div style={gridStyle}>
         {profesores.map((profesor) => (
@@ -97,7 +97,41 @@ const Profesores = () => {
             <input placeholder="Cubículo" value={formData.cubiculo} onChange={(e) => setFormData({ ...formData, cubiculo: e.target.value })} style={inputStyle} />
             <input placeholder="Planta" value={formData.planta} onChange={(e) => setFormData({ ...formData, planta: e.target.value })} style={inputStyle} />
             <input placeholder="Turno" value={formData.turno} onChange={(e) => setFormData({ ...formData, turno: e.target.value })} style={inputStyle} />
-            <input placeholder="Materias (separadas por coma)" value={formData.materias} onChange={(e) => setFormData({ ...formData, materias: e.target.value })} style={inputStyle} />
+            <div>
+              <label style={{ fontWeight: 'bold' }}>Materias:</label>
+              {formData.materias.map((materia, index) => (
+                <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <input
+                    type="text"
+                    value={materia}
+                    onChange={(e) => {
+                      const updated = [...formData.materias];
+                      updated[index] = e.target.value;
+                      setFormData({ ...formData, materias: updated });
+                    }}
+                    placeholder={`Materia ${index + 1}`}
+                    style={{ ...inputStyle, flex: 1 }}
+                  />
+                  <button
+                    onClick={() => {
+                      const updated = formData.materias.filter((_, i) => i !== index);
+                      setFormData({ ...formData, materias: updated });
+                    }}
+                    style={deleteButtonStyle}
+                    type="button"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, materias: [...formData.materias, ''] })}
+                style={{ ...editButtonStyle, marginTop: '0.5rem' }}
+              >
+                + Añadir Materia
+              </button>
+            </div>
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
               <button onClick={handleSubmit} style={editButtonStyle}>Guardar</button>
               <button onClick={() => setShowForm(false)} style={deleteButtonStyle}>Cancelar</button>
@@ -127,6 +161,7 @@ const textStyle = { color: '#333' };
 const buttonGroupStyle = { display: 'flex', justifyContent: 'space-between', marginTop: '1rem' };
 const editButtonStyle = { backgroundColor: '#f39c12', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
 const deleteButtonStyle = { backgroundColor: '#e74c3c', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
+const addButtonStyle = { backgroundColor: '#2ecc71', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
 
 const modalStyle = {
   position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',

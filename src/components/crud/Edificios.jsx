@@ -63,12 +63,12 @@ const Edificios = () => {
       console.error('Error al eliminar edificio:', error);
     }
   };
-
+/*
   const handleCubiculosChange = (e) => {
     const list = e.target.value.split(',').map(c => c.trim()).filter(Boolean);
     setFormData({ ...formData, cubiculos: list });
   };
-
+*/
   return (
     <SectionContainer loading={loading} title="Edificios">
       <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
@@ -124,12 +124,42 @@ const Edificios = () => {
               onChange={(e) => setFormData({ ...formData, ubicacion: e.target.value })}
               style={inputStyle}
             />
-            <input
-              placeholder="Cubículos (separados por coma)"
-              value={formData.cubiculos.join(', ')}
-              onChange={handleCubiculosChange}
-              style={inputStyle}
-            />
+            <div>
+            <label style={{ fontWeight: 'bold' }}>Cubículos:</label>
+            {formData.cubiculos.map((cubiculo, index) => (
+              <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <input
+                  type="text"
+                  value={cubiculo}
+                  onChange={(e) => {
+                    const updated = [...formData.cubiculos];
+                    updated[index] = e.target.value;
+                    setFormData({ ...formData, cubiculos: updated });
+                  }}
+                  style={{ ...inputStyle, flex: 1 }}
+                  placeholder={`Cubículo ${index + 1}`}
+                />
+                <button
+                  onClick={() => {
+                    const updated = formData.cubiculos.filter((_, i) => i !== index);
+                    setFormData({ ...formData, cubiculos: updated });
+                  }}
+                  style={{ ...deleteButtonStyle }}
+                  type="button"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => setFormData({ ...formData, cubiculos: [...formData.cubiculos, ''] })}
+              style={{ ...addButtonStyle, marginTop: '0.5rem' }}
+            >
+              + Añadir Cubículo
+            </button>
+          </div>
+
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
               <button onClick={handleSubmit} style={editButtonStyle}>Guardar</button>
               <button onClick={() => setShowForm(false)} style={deleteButtonStyle}>Cancelar</button>
