@@ -67,20 +67,24 @@ const Profesores = () => {
       <div style={gridStyle}>
         {profesores.map((profesor) => (
           <Card key={profesor.id}>
-            <p><strong style={labelStyle}>Nombre:</strong> <span style={textStyle}>{profesor.nombre || profesor.id}</span></p>
-            <p><strong style={labelStyle}>Cubículo:</strong> <span style={textStyle}>{profesor.cubiculo || 'No especificado'}</span></p>
-            <p><strong style={labelStyle}>Planta:</strong> <span style={textStyle}>{profesor.planta || 'No especificada'}</span></p>
-            <p><strong style={labelStyle}>Turno:</strong> <span style={textStyle}>{profesor.turno || 'No especificado'}</span></p>
-            <p><strong style={labelStyle}>Materias:</strong><span style={textStyle}>
-              <ul style={{ marginTop: '0.5rem', paddingLeft: '1rem' }}>
-                {profesor.materias?.length > 0 ? profesor.materias.map((materia, index) => (
-                  <li key={index}>{materia}</li>
-                )) : <li>No hay materias asignadas</li>}
-              </ul></span>
-            </p>
-            <div style={buttonGroupStyle}>
-              <button onClick={() => handleEdit(profesor)} style={editButtonStyle}>Editar</button>
-              <button onClick={() => setConfirmDeleteId(profesor.id)} style={deleteButtonStyle}>Eliminar</button>
+            <div style={cardContentStyle}>
+              <div>
+                <p><strong style={labelStyle}>Nombre:</strong> <span style={textStyle}>{profesor.nombre || profesor.id}</span></p>
+                <p><strong style={labelStyle}>Cubículo:</strong> <span style={textStyle}>{profesor.cubiculo || 'No especificado'}</span></p>
+                <p><strong style={labelStyle}>Planta:</strong> <span style={textStyle}>{profesor.planta || 'No especificada'}</span></p>
+                <p><strong style={labelStyle}>Turno:</strong> <span style={textStyle}>{profesor.turno || 'No especificado'}</span></p>
+                <p><strong style={labelStyle}>Materias:</strong><span style={textStyle}>
+                  <ul style={{ marginTop: '0.5rem', paddingLeft: '1rem' }}>
+                    {profesor.materias?.length > 0 ? profesor.materias.map((materia, index) => (
+                      <li key={index}>{materia}</li>
+                    )) : <li>No hay materias asignadas</li>}
+                  </ul></span>
+                </p>
+              </div>
+              <div style={buttonGroupStyle}>
+                <button onClick={() => handleEdit(profesor)} style={editButtonStyle}>Editar</button>
+                <button onClick={() => setConfirmDeleteId(profesor.id)} style={deleteButtonStyle}>Eliminar</button>
+              </div>
             </div>
           </Card>
         ))}
@@ -158,9 +162,38 @@ const Profesores = () => {
 const gridStyle = { display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' };
 const labelStyle = { color: '#1e3799', fontWeight: '600' };
 const textStyle = { color: '#333' };
-const buttonGroupStyle = { display: 'flex', justifyContent: 'space-between', marginTop: '1rem' };
-const editButtonStyle = { backgroundColor: '#f39c12', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
-const deleteButtonStyle = { backgroundColor: '#e74c3c', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
+const buttonGroupStyle = { 
+  display: 'flex', 
+  justifyContent: 'space-between', 
+  marginTop: 'auto',
+  gap: '0.5rem',
+  paddingTop: '1rem',
+  borderTop: '1px solid #eee'
+};
+
+const cardContentStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  height: '100%',
+  minHeight: '200px'
+};
+
+const editButtonStyle = { 
+  backgroundColor: '#f39c12', 
+  color: 'white', 
+  padding: '0.5rem 1rem', 
+  borderRadius: '5px',
+  flex: '1'
+};
+
+const deleteButtonStyle = { 
+  backgroundColor: '#e74c3c', 
+  color: 'white', 
+  padding: '0.5rem 1rem', 
+  borderRadius: '5px',
+  flex: '1'
+};
 const addButtonStyle = { backgroundColor: '#2ecc71', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
 
 const modalStyle = {

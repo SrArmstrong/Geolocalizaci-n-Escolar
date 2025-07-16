@@ -66,12 +66,16 @@ const Usuarios = () => {
       <div style={gridStyle}>
         {usuarios.map((usuario) => (
           <Card key={usuario.id}>
-            <p><strong style={labelStyle}>Correo:</strong> <span style={textStyle}>{usuario.id}</span></p>
-            <p><strong style={labelStyle}>Nombre:</strong> <span style={textStyle}>{usuario.nombre?.trim() || 'Sin nombre'}</span></p>
-            <p><strong style={labelStyle}>Edad:</strong> <span style={textStyle}>{usuario.edad ?? 'No especificada'}</span></p>
-            <div style={buttonGroupStyle}>
-              <button onClick={() => handleEdit(usuario)} style={editButtonStyle}>Editar</button>
-              <button onClick={() => setConfirmDeleteId(usuario.id)} style={deleteButtonStyle}>Eliminar</button>
+            <div style={cardContentStyle}>
+              <div>
+                <p><strong style={labelStyle}>Correo:</strong> <span style={textStyle}>{usuario.id}</span></p>
+                <p><strong style={labelStyle}>Nombre:</strong> <span style={textStyle}>{usuario.nombre?.trim() || 'Sin nombre'}</span></p>
+                <p><strong style={labelStyle}>Edad:</strong> <span style={textStyle}>{usuario.edad ?? 'No especificada'}</span></p>
+              </div>
+              <div style={buttonGroupStyle}>
+                <button onClick={() => handleEdit(usuario)} style={editButtonStyle}>Editar</button>
+                <button onClick={() => setConfirmDeleteId(usuario.id)} style={deleteButtonStyle}>Eliminar</button>
+              </div>
             </div>
           </Card>
         ))}
@@ -130,9 +134,39 @@ const Usuarios = () => {
 const gridStyle = { display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' };
 const labelStyle = { color: '#1e3799', fontWeight: '600' };
 const textStyle = { color: '#333' };
-const buttonGroupStyle = { display: 'flex', justifyContent: 'space-between', marginTop: '1rem' };
-const editButtonStyle = { backgroundColor: '#f39c12', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
-const deleteButtonStyle = { backgroundColor: '#e74c3c', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
+// Update these styles
+const buttonGroupStyle = { 
+  display: 'flex', 
+  justifyContent: 'space-between', 
+  marginTop: 'auto',
+  gap: '0.5rem',
+  paddingTop: '1rem',
+  borderTop: '1px solid #eee'
+};
+
+const cardContentStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  height: '100%',
+  minHeight: '200px'
+};
+
+const editButtonStyle = { 
+  backgroundColor: '#f39c12', 
+  color: 'white', 
+  padding: '0.5rem 1rem', 
+  borderRadius: '5px',
+  flex: '1'
+};
+
+const deleteButtonStyle = { 
+  backgroundColor: '#e74c3c', 
+  color: 'white', 
+  padding: '0.5rem 1rem', 
+  borderRadius: '5px',
+  flex: '1'
+};
 const addButtonStyle = { backgroundColor: '#2ecc71', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
 
 const modalStyle = {

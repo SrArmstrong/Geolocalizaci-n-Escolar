@@ -77,24 +77,28 @@ const Edificios = () => {
       <div style={gridStyle}>
         {edificios.map((edificio) => (
           <Card key={edificio.id}>
-            <p><strong style={labelStyle}>Nombre:</strong> <span style={textStyle}>{edificio.nombre || edificio.id}</span></p>
-            <p><strong style={labelStyle}>Ubicación:</strong> <span style={textStyle}>{edificio.ubicacion || 'No especificada'}</span></p>
-            <p><strong style={labelStyle}>Cubículos:</strong>
-              <span style={textStyle}>
-                <ul style={{ marginTop: '0.5rem', paddingLeft: '1rem' }}>
-                  {edificio.cubiculos?.length > 0 ? (
-                    edificio.cubiculos.map((cubiculo, index) => (
-                      <li key={index}>{cubiculo}</li>
-                    ))
-                  ) : (
-                    <li>No hay cubículos asignados</li>
-                  )}
-                </ul>
-              </span>
-            </p>
-            <div style={buttonGroupStyle}>
-              <button onClick={() => handleEdit(edificio)} style={editButtonStyle}>Editar</button>
-              <button onClick={() => setConfirmDeleteId(edificio.id)} style={deleteButtonStyle}>Eliminar</button>
+            <div style={cardContentStyle}>
+              <div>
+                <p><strong style={labelStyle}>Nombre:</strong> <span style={textStyle}>{edificio.nombre || edificio.id}</span></p>
+                <p><strong style={labelStyle}>Ubicación:</strong> <span style={textStyle}>{edificio.ubicacion || 'No especificada'}</span></p>
+                <p><strong style={labelStyle}>Cubículos:</strong>
+                  <span style={textStyle}>
+                    <ul style={{ marginTop: '0.5rem', paddingLeft: '1rem' }}>
+                      {edificio.cubiculos?.length > 0 ? (
+                        edificio.cubiculos.map((cubiculo, index) => (
+                          <li key={index}>{cubiculo}</li>
+                        ))
+                      ) : (
+                        <li>No hay cubículos asignados</li>
+                      )}
+                    </ul>
+                  </span>
+                </p>
+              </div>
+              <div style={buttonGroupStyle}>
+                <button onClick={() => handleEdit(edificio)} style={editButtonStyle}>Editar</button>
+                <button onClick={() => setConfirmDeleteId(edificio.id)} style={deleteButtonStyle}>Eliminar</button>
+              </div>
             </div>
           </Card>
         ))}
@@ -187,9 +191,38 @@ const Edificios = () => {
 const gridStyle = { display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' };
 const labelStyle = { color: '#1e3799', fontWeight: '600' };
 const textStyle = { color: '#333' };
-const buttonGroupStyle = { display: 'flex', justifyContent: 'space-between', marginTop: '1rem' };
-const editButtonStyle = { backgroundColor: '#f39c12', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
-const deleteButtonStyle = { backgroundColor: '#e74c3c', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
+// Add these new styles
+const cardContentStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  height: '100%',
+  minHeight: '200px' // Adjust this value as needed
+};
+
+const buttonGroupStyle = { 
+  display: 'flex', 
+  justifyContent: 'space-between', 
+  marginTop: 'auto',
+  gap: '0.5rem',
+  paddingTop: '1rem',
+  borderTop: '1px solid #eee'
+};
+const editButtonStyle = { 
+  backgroundColor: '#f39c12', 
+  color: 'white', 
+  padding: '0.5rem 1rem', 
+  borderRadius: '5px',
+  flex: '1' // Make buttons take equal width
+};
+
+const deleteButtonStyle = { 
+  backgroundColor: '#e74c3c', 
+  color: 'white', 
+  padding: '0.5rem 1rem', 
+  borderRadius: '5px',
+  flex: '1' // Make buttons take equal width
+};
 const addButtonStyle = { backgroundColor: '#2ecc71', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
 
 const modalStyle = {

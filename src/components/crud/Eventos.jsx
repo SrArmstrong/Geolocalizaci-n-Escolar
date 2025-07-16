@@ -124,18 +124,22 @@ const Eventos = () => {
       <div style={gridStyle}>
         {eventos.map((evento) => (
           <Card key={evento.id}>
-            <p><strong style={labelStyle}>Nombre:</strong> <span style={textStyle}>{evento.nombre || evento.id}</span></p>
-            <p><strong style={labelStyle}>Tipo de evento:</strong> <span style={textStyle}>{evento.tipoEvento || 'No especificado'}</span></p>
-            <p><strong style={labelStyle}>Lugar:</strong> <span style={textStyle}>{evento.lugar || 'No especificado'}</span></p>
-            <p><strong style={labelStyle}>Fecha de inicio:</strong> <span style={textStyle}>{formatFirebaseDate(evento.fechaInicio)}</span></p>
-            <p><strong style={labelStyle}>Fecha de fin:</strong> <span style={textStyle}>{formatFirebaseDate(evento.fechaFin)}</span></p>
-            <p><strong style={labelStyle}>Descripción:</strong></p>
-            <p style={{ ...textStyle, marginTop: '0.5rem' }}>
-              {evento.descripcion || 'No hay descripción disponible'}
-            </p>
-            <div style={buttonGroupStyle}>
-              <button onClick={() => handleEdit(evento)} style={editButtonStyle}>Editar</button>
-              <button onClick={() => setConfirmDeleteId(evento.id)} style={deleteButtonStyle}>Eliminar</button>
+            <div style={cardContentStyle}>
+              <div>
+                <p><strong style={labelStyle}>Nombre:</strong> <span style={textStyle}>{evento.nombre || evento.id}</span></p>
+                <p><strong style={labelStyle}>Tipo de evento:</strong> <span style={textStyle}>{evento.tipoEvento || 'No especificado'}</span></p>
+                <p><strong style={labelStyle}>Lugar:</strong> <span style={textStyle}>{evento.lugar || 'No especificado'}</span></p>
+                <p><strong style={labelStyle}>Fecha de inicio:</strong> <span style={textStyle}>{formatFirebaseDate(evento.fechaInicio)}</span></p>
+                <p><strong style={labelStyle}>Fecha de fin:</strong> <span style={textStyle}>{formatFirebaseDate(evento.fechaFin)}</span></p>
+                <p><strong style={labelStyle}>Descripción:</strong></p>
+                <p style={{ ...textStyle, marginTop: '0.5rem' }}>
+                  {evento.descripcion || 'No hay descripción disponible'}
+                </p>
+              </div>
+              <div style={buttonGroupStyle}>
+                <button onClick={() => handleEdit(evento)} style={editButtonStyle}>Editar</button>
+                <button onClick={() => setConfirmDeleteId(evento.id)} style={deleteButtonStyle}>Eliminar</button>
+              </div>
             </div>
           </Card>
         ))}
@@ -218,9 +222,39 @@ const Eventos = () => {
 const gridStyle = { display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' };
 const labelStyle = { color: '#1e3799', fontWeight: '600' };
 const textStyle = { color: '#333' };
-const buttonGroupStyle = { display: 'flex', justifyContent: 'space-between', marginTop: '1rem' };
-const editButtonStyle = { backgroundColor: '#f39c12', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
-const deleteButtonStyle = { backgroundColor: '#e74c3c', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
+// Update these styles
+const buttonGroupStyle = { 
+  display: 'flex', 
+  justifyContent: 'space-between', 
+  marginTop: 'auto',
+  gap: '0.5rem',
+  paddingTop: '1rem',
+  borderTop: '1px solid #eee'
+};
+
+const cardContentStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  height: '100%',
+  minHeight: '200px'
+};
+
+const editButtonStyle = { 
+  backgroundColor: '#f39c12', 
+  color: 'white', 
+  padding: '0.5rem 1rem', 
+  borderRadius: '5px',
+  flex: '1'
+};
+
+const deleteButtonStyle = { 
+  backgroundColor: '#e74c3c', 
+  color: 'white', 
+  padding: '0.5rem 1rem', 
+  borderRadius: '5px',
+  flex: '1'
+};
 const addButtonStyle = { backgroundColor: '#2ecc71', color: 'white', padding: '0.5rem 1rem', borderRadius: '5px' };
 
 const modalStyle = {
