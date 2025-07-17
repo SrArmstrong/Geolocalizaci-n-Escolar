@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from '../firebase';
 
-import Usuarios from './crud/usuarios';
+import Usuarios from './crud/Usuarios';
 import Eventos from './crud/Eventos';
 import Edificios from './crud/Edificios';
 import Profesores from './crud/Profesores';
@@ -229,12 +229,6 @@ const institutionBadgeStyle = {
 
 const institutionIconStyle = {
   fontSize: '1.5rem'
-};
-
-const institutionTextStyle = {
-  fontSize: '0.875rem',
-  fontWeight: '500',
-  whiteSpace: 'nowrap'
 };
 
 const titleSectionStyle = {

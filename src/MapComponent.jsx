@@ -7,6 +7,9 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import locations from './locations';
 import intersectionPoints from './intersectionPoints';
 import pathPairs from './pathPairs';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function MapComponent() {
   const navigate = useNavigate();
@@ -14,6 +17,8 @@ function MapComponent() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [routingControl, setRoutingControl] = useState(null);
   const currentLocationRef = useRef(null);
+  const [arrivalMessage, setArrivalMessage] = useState(false);
+
   //const [destination, setDestination] = useState([LAT, LNG]);
   const buttonStyle = {
     position: "absolute",
@@ -65,6 +70,20 @@ function MapComponent() {
     }
 
     setCurrentLocation(userLocation);
+
+    // Verificar si llegaste al destino
+    if (window.currentDestination) {
+        const distanceToDestination = getDistance(userLocation, window.currentDestination);
+        if (distanceToDestination < 10 && !window.arrivalNotified) {
+            window.arrivalNotified = true;
+            toast.success('🎉 ¡Has llegado a tu destino!');
+        } else if (distanceToDestination >= 10) {
+            window.arrivalNotified = false;
+        }
+    }
+
+
+
     currentLocationRef.current = userLocation;
 
     // Eliminar marcador y círculo previos si existen
@@ -982,6 +1001,8 @@ function MapComponent() {
           }
         `}
       </style>
+
+      <ToastContainer />
 
       <div style={{
         position: 'fixed',
