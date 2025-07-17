@@ -50,6 +50,7 @@ function MapComponent({ onBack }) {
   let lastRoute = null;
   let currentUserMarker = null;
   let currentAccuracyCircle = null;
+  let lastDestinationMarker = null;
 
   const showCurrentPosition = (position) => {
     const { latitude, longitude, accuracy } = position.coords;
@@ -69,7 +70,7 @@ function MapComponent({ onBack }) {
     if (currentAccuracyCircle) mapRef.current.removeLayer(currentAccuracyCircle);
 
     // Opcional: limpiar solo la ruta previa
-    if (lastRoute) mapRef.current.removeLayer(lastRoute);
+    //if (lastRoute) mapRef.current.removeLayer(lastRoute);
 
     // Recentrar mapa según preferencia
     const zoomLevel = Math.max(17, Math.min(20, Math.round(14 - Math.log(accuracy) / Math.LN2)));
@@ -105,7 +106,56 @@ function MapComponent({ onBack }) {
       `).openPopup();
 
     // Recalcular ruta hacia el destino
-    lastRoute = createRoute(userLocation, destination);
+    // Recalcular y recortar ruta conforme el usuario avanza
+    if (lastRoute && window.currentPathNodes) {
+      // Remover segmentos ya recorridos
+      window.currentPathNodes = removePassedSegments(userLocation, window.currentPathNodes);
+      
+      // Si aún quedan nodos en la ruta, actualizar
+      if (window.currentPathNodes.length > 0) {
+        mapRef.current.removeLayer(lastRoute);
+        
+        // Crear nueva ruta con los nodos restantes
+        const remainingPath = [userLocation, ...window.currentPathNodes];
+        lastRoute = L.polyline(remainingPath, {
+          color: '#FF5733',
+          weight: 6,
+          opacity: 1
+        }).addTo(mapRef.current);
+        
+        // Actualizar línea al destino final
+        const finalDestination = window.currentDestination;
+        if (finalDestination) {
+          // Remover línea anterior al destino
+          if (window.destinationLine) {
+            mapRef.current.removeLayer(window.destinationLine);
+          }
+          
+          // Crear nueva línea al destino desde el último nodo
+          window.destinationLine = L.polyline([window.currentPathNodes[window.currentPathNodes.length - 1], finalDestination], {
+            color: '#FF5733',
+            weight: 6,
+            opacity: 1,
+            dashArray: '5, 10'
+          }).addTo(mapRef.current);
+        }
+      } else {
+        // Si no quedan nodos, crear línea directa al destino
+        if (window.currentDestination) {
+          mapRef.current.removeLayer(lastRoute);
+          lastRoute = L.polyline([userLocation, window.currentDestination], {
+            color: '#FF5733',
+            weight: 6,
+            opacity: 1,
+            dashArray: '5, 10'
+          }).addTo(mapRef.current);
+        }
+      }
+    } else if (window.currentDestination) {
+      // Si no hay ruta activa pero hay destino, recalcular
+      if (lastRoute) mapRef.current.removeLayer(lastRoute);
+      lastRoute = createRoute(userLocation, window.currentDestination);
+    }
   };
 
   const startTracking = () => {
@@ -124,7 +174,7 @@ function MapComponent({ onBack }) {
     );
   };
 
-  const createRoute = useRef(null);
+  let createRoute; 
 
   useEffect(() => {
 
@@ -292,192 +342,117 @@ function MapComponent({ onBack }) {
       return nearest;
     }
 
-    const createRoute = (userLocation, destination) => {
-      // Clear any existing routes and popups
-      if (routingControl) {
-        map.removeControl(routingControl);
-        setRoutingControl(null);
+  const createRoute = (userLocation, destination, destinationName = "") => {
+    // Limpiar rutas y popups anteriores
+    if (routingControl) {
+      map.removeControl(routingControl);
+      setRoutingControl(null);
+    }
+    map.closePopup();
+
+    // Remover rutas previas
+    if (lastRoute) {
+      mapRef.current.removeLayer(lastRoute);
+      lastRoute = null;
+    }
+
+    // Remover polylines antiguas
+    map.eachLayer(layer => {
+      if (layer instanceof L.Polyline && !(layer instanceof L.Polygon)) {
+        map.removeLayer(layer);
       }
-      map.closePopup();
-      
-      // Remove all existing polylines (paths) from the map
-      map.eachLayer(layer => {
-        if (layer instanceof L.Polyline && !(layer instanceof L.Polygon)) {
-          map.removeLayer(layer);
+    });
+
+    // Remover marcador previo del destino
+    if (lastDestinationMarker) {
+      mapRef.current.removeLayer(lastDestinationMarker);
+      lastDestinationMarker = null;
+    }
+
+    // Encontrar nodo más cercano de inicio y fin
+    const startNode = findNearestIntersection(userLocation);
+    const endNode = findNearestIntersection(destination);
+
+    const graph = buildGraph();
+    let pathNodes = dijkstra(graph, JSON.stringify(startNode), JSON.stringify(endNode));
+
+    // Intentar rutas alternativas si es necesario
+    if (pathNodes.length <= 1) {
+      const allPaths = [];
+      const connectedNodes = Object.keys(graph)
+        .map(key => ({ key, connections: graph[key].length }))
+        .sort((a, b) => b.connections - a.connections)
+        .slice(0, 10)
+        .map(item => JSON.parse(item.key));
+
+      for (const midNode of connectedNodes) {
+        const midNodeKey = JSON.stringify(midNode);
+        const pathToMid = dijkstra(graph, JSON.stringify(startNode), midNodeKey);
+        const pathFromMid = dijkstra(graph, midNodeKey, JSON.stringify(endNode));
+
+        if (pathToMid.length > 1 && pathFromMid.length > 1) {
+          pathFromMid.shift();
+          const fullPath = [...pathToMid, ...pathFromMid];
+
+          const totalDist = fullPath.reduce((acc, val, idx, arr) =>
+            idx ? acc + getDistance(arr[idx - 1], val) : acc, 0
+          );
+          allPaths.push({ path: fullPath, distance: totalDist });
         }
-      });
-      
-      // Find the nearest intersection points to start and end
-      let startNode = findNearestIntersection(userLocation);
-      let endNode = findNearestIntersection(destination);
-      
-      // Build the graph of all paths
-      const graph = buildGraph();
-      
-      // Try to find a path using Dijkstra's algorithm
-      let pathNodes = dijkstra(graph, JSON.stringify(startNode), JSON.stringify(endNode));
-      
-      // If no path found, try with a more comprehensive approach
-      if (pathNodes.length <= 1) {
-        // Try all possible intermediate nodes to find a path
-        const allPaths = [];
-        
-        // Get top 10 most connected nodes as potential intermediate points
-        const connectedNodes = Object.keys(graph)
-          .map(key => ({ key, connections: graph[key].length }))
-          .sort((a, b) => b.connections - a.connections)
-          .slice(0, 10)
-          .map(item => JSON.parse(item.key));
-        
-        // Try to find paths through each connected node
-        for (const midNode of connectedNodes) {
-          const midNodeKey = JSON.stringify(midNode);
-          const pathToMid = dijkstra(graph, JSON.stringify(startNode), midNodeKey);
-          const pathFromMid = dijkstra(graph, midNodeKey, JSON.stringify(endNode));
-          
-          if (pathToMid.length > 1 && pathFromMid.length > 1) {
-            // Remove the duplicate middle node
-            pathFromMid.shift();
-            const fullPath = [...pathToMid, ...pathFromMid];
-            
-            // Calculate the total distance of this path
-            let totalDist = 0;
-            for (let i = 0; i < fullPath.length - 1; i++) {
-              totalDist += getDistance(fullPath[i], fullPath[i+1]);
-            }
-            
-            allPaths.push({ path: fullPath, distance: totalDist });
+      }
+
+      if (allPaths.length > 0) {
+        allPaths.sort((a, b) => a.distance - b.distance);
+        pathNodes = allPaths[0].path;
+      }
+
+      // Eliminar puntos ya recorridos
+      while (pathNodes.length && getDistance(userLocation, pathNodes[0]) < 10) {
+        pathNodes.shift();
+      }
+    }
+
+    // Agresivo: usar nodos centrales
+    if (pathNodes.length <= 1) {
+      const centralNodes = [
+        [20.654214, -100.405725],
+        [20.655093, -100.404981],
+        [20.654126, -100.404952],
+        [20.655531, -100.405378],
+        [20.654872, -100.406180],
+        [20.653815, -100.404486],
+        [20.656291, -100.405180]
+      ].map(n => JSON.stringify(n));
+
+      for (const mid1 of centralNodes) {
+        for (const mid2 of centralNodes) {
+          if (mid1 === mid2) continue;
+          const path1 = dijkstra(graph, JSON.stringify(startNode), mid1);
+          const path2 = dijkstra(graph, mid1, mid2);
+          const path3 = dijkstra(graph, mid2, JSON.stringify(endNode));
+          if (path1.length > 1 && path2.length > 1 && path3.length > 1) {
+            path2.shift();
+            path3.shift();
+            pathNodes = [...path1, ...path2, ...path3];
+            break;
           }
         }
-        
-        // If we found any paths, use the shortest one
-        if (allPaths.length > 0) {
-          allPaths.sort((a, b) => a.distance - b.distance);
-          pathNodes = allPaths[0].path;
-        }
-          // Elimina los puntos que ya has pasado
-          while (pathNodes.length && getDistance(userLocation, pathNodes[0]) < 10) {
-              pathNodes.shift();
-          }
+        if (pathNodes.length > 1) break;
       }
+    }
 
-      // If still no path, try a more aggressive approach with multiple hops
-      if (pathNodes.length <= 1) {
-        // Try to find a path with multiple intermediate points
-        const centralNodes = [
-          [20.654214, -100.405725], // Near Rectoría
-          [20.655093, -100.404981], // Central campus area
-          [20.654126, -100.404952], // Near DTAI
-          [20.655531, -100.405378], // Near Nanotecnología
-          [20.654872, -100.406180], // Near Edificio Medios
-          [20.653815, -100.404486], // Near entrance
-          [20.656291, -100.405180]  // North campus
-        ];
-        
-        // Convert to proper format
-        const centralNodeKeys = centralNodes.map(node => JSON.stringify(node));
-        
-        // Try to find a path through two intermediate nodes
-        for (const midNode1Key of centralNodeKeys) {
-          for (const midNode2Key of centralNodeKeys) {
-            if (midNode1Key === midNode2Key) continue;
-            
-            const path1 = dijkstra(graph, JSON.stringify(startNode), midNode1Key);
-            const path2 = dijkstra(graph, midNode1Key, midNode2Key);
-            const path3 = dijkstra(graph, midNode2Key, JSON.stringify(endNode));
-            
-            if (path1.length > 1 && path2.length > 1 && path3.length > 1) {
-              // Remove duplicate nodes
-              path2.shift();
-              path3.shift();
-              pathNodes = [...path1, ...path2, ...path3];
-              break;
-            }
-          }
-          if (pathNodes.length > 1) break;
-        }
-      }
+    // Si sigue sin ruta, línea directa
+    if (pathNodes.length <= 1) {
+      console.log("No path found, using direct line");
 
-      // If still no path, create a direct line with a warning
-      if (pathNodes.length <= 1) {
-        console.log("No path found, using direct line");
-        // Draw a direct line between the nearest intersection points
-        L.polyline([startNode, endNode], {
-          color: '#FF5733', // Bright orange-red color for visibility
-          weight: 6,
-          opacity: 0.9,
-          dashArray: '10, 10' // Dashed line to indicate it's not a real path
-        }).addTo(map);
-        
-        // Add markers for start and end points
-        L.marker(userLocation, {
-          icon: new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-            iconSize: [20, 32],
-            iconAnchor: [10, 32],
-            popupAnchor: [1, -28],
-            shadowSize: [32, 32]
-          })
-        })/*.addTo(map).bindPopup("Tu ubicación")*/;
-        
-        L.marker(destination, {
-          icon: new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-            iconSize: [20, 32],
-            iconAnchor: [10, 32],
-            popupAnchor: [1, -28],
-            shadowSize: [32, 32]
-          })
-        }).addTo(map).bindPopup(destinationName);
-
-        map.fitBounds(L.latLngBounds([userLocation, startNode, endNode, destination]), { padding: [50, 50] });
-
-        // Calculate direct distance
-        const distance = getDistance(userLocation, destination);
-        
-        L.popup()
-          .setLatLng([(startNode[0] + endNode[0])/2, (startNode[1] + endNode[1])/2])
-          .setContent(`
-            <div style="max-width: 300px; font-family: Arial, sans-serif;">
-              <h4 style="margin: 0 0 8px 0;">Ruta aproximada hacia ${destinationName}</h4>
-              <p style="margin: 0 0 8px 0; color: #e74c3c;"><strong>Nota:</strong> No se encontró una ruta peatonal exacta.</p>
-              <p style="margin: 0 0 8px 0;">Distancia aproximada: ${(distance / 1000).toFixed(2)} km</p>
-              <p style="margin: 0;">Se muestra una ruta directa aproximada. Sigue los caminos peatonales más cercanos.</p>
-              <button onclick="window.open('https://www.google.com/maps/dir/?api=1&origin=${userLocation[0]},${userLocation[1]}&destination=${destination[0]},${destination[1]}&travelmode=walking', '_blank')" 
-                      style="margin-top: 10px; background: #3498db; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%;">
-                🗺️ Ver alternativas en Google Maps
-              </button>
-            </div>
-          `)
-          .openOn(map);
-          
-        return;
-      }
-
-      console.log("Found path with nodes:", pathNodes.length);
-      
-      // Draw the optimal route with high visibility
-      L.polyline(pathNodes, {
-        color: '#FF5733', // Bright orange-red color for better visibility
+      lastRoute = L.polyline([startNode, endNode], {
+        color: '#FF5733',
         weight: 6,
-        opacity: 1
+        opacity: 0.9,
+        dashArray: '10, 10'
       }).addTo(map);
 
-      // Add markers for start and end points
-      L.marker(userLocation, {
-        icon: new L.Icon({
-          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-          iconSize: [20, 32],
-          iconAnchor: [10, 32],
-          popupAnchor: [1, -28],
-          shadowSize: [32, 32]
-        })
-      })/*.addTo(map).bindPopup("Tu ubicación")*/;
-      
-      L.marker(destination, {
+      lastDestinationMarker = L.marker(destination, {
         icon: new L.Icon({
           iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
           shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -488,53 +463,67 @@ function MapComponent({ onBack }) {
         })
       }).addTo(map).bindPopup(destinationName);
 
-      // Draw lines from user location to first node and from last node to destination
-      L.polyline([userLocation, pathNodes[0]], {
-        color: '#FF5733', // Match the route color
-        weight: 6,
-        opacity: 1,
-        dashArray: '5, 10' // Dashed line for the connection segments
-      }).addTo(map);
-      
-      L.polyline([pathNodes[pathNodes.length-1], destination], {
-        color: '#FF5733', // Match the route color
-        weight: 6,
-        opacity: 1,
-        dashArray: '5, 10' // Dashed line for the connection segments
-      }).addTo(map);
+      map.fitBounds(L.latLngBounds([userLocation, startNode, endNode, destination]), { padding: [50, 50] });
+      return;
+    }
 
-      map.fitBounds(L.latLngBounds([userLocation, ...pathNodes, destination]), { padding: [50, 50] });
+    // Ruta peatonal encontrada
+    console.log("Found path with nodes:", pathNodes.length);
 
-      // Calculate total distance
-      let totalDistance = 0;
-      for (let i = 0; i < pathNodes.length - 1; i++) {
-        totalDistance += getDistance(pathNodes[i], pathNodes[i+1]);
-      }
-      // Add distance from user to first node and from last node to destination
-      totalDistance += getDistance(userLocation, pathNodes[0]);
-      totalDistance += getDistance(pathNodes[pathNodes.length-1], destination);
+    lastRoute = L.polyline(pathNodes, {
+      color: '#FF5733',
+      weight: 6,
+      opacity: 1
+    }).addTo(map);
 
-      L.popup()
-        .setLatLng(pathNodes[Math.floor(pathNodes.length / 2)])
-        .setContent(`
-          <div style="max-width: 300px; font-family: Arial, sans-serif;">
-            <h4 style="margin: 0 0 8px 0;">Ruta peatonal hacia ${destinationName}</h4>
-            <p style="margin: 0 0 8px 0;">Distancia aproximada: ${(totalDistance / 1000).toFixed(2)} km</p>
-            <p style="margin: 0;">Esta ruta sigue los caminos peatonales del campus.</p>
-            <button onclick="window.open('https://www.google.com/maps/dir/?api=1&origin=${userLocation[0]},${userLocation[1]}&destination=${destination[0]},${destination[1]}&travelmode=walking', '_blank')" 
-                    style="margin-top: 10px; background: #3498db; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%;">
-              🗺️ Ver alternativas en Google Maps
-            </button>
-          </div>
-        `)
-        .openOn(map);
-    };
+    // Marcador destino único
+    lastDestinationMarker = L.marker(destination, {
+      icon: new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [20, 32],
+        iconAnchor: [10, 32],
+        popupAnchor: [1, -28],
+        shadowSize: [32, 32]
+      })
+    }).addTo(map).bindPopup(destinationName);
+
+    // Líneas hasta destino
+    L.polyline([userLocation, pathNodes[0]], {
+      color: '#FF5733',
+      weight: 6,
+      opacity: 1,
+      dashArray: '5, 10'
+    }).addTo(map);
+
+    L.polyline([pathNodes[pathNodes.length - 1], destination], {
+      color: '#FF5733',
+      weight: 6,
+      opacity: 1,
+      dashArray: '5, 10'
+    }).addTo(map);
+
+    map.fitBounds(L.latLngBounds([userLocation, ...pathNodes, destination]), { padding: [50, 50] });
+
+    // Guardar información de la ruta actual para el seguimiento
+    window.currentPathNodes = [...pathNodes];
+    window.currentDestination = destination;
+    window.destinationLine = null;
+  };
 
     window.clearRoute = () => {
       if (routingControl) {
         map.removeControl(routingControl);
         setRoutingControl(null);
         map.closePopup();
+      }
+      
+      // Limpiar variables de seguimiento
+      window.currentPathNodes = null;
+      window.currentDestination = null;
+      if (window.destinationLine) {
+        mapRef.current.removeLayer(window.destinationLine);
+        window.destinationLine = null;
       }
     };
 
@@ -859,6 +848,69 @@ function MapComponent({ onBack }) {
       mapRef.current = null;
     };
   }, []);
+
+  // Función para remover segmentos ya recorridos
+  function removePassedSegments(userLocation, pathNodes) {
+    const PROXIMITY_THRESHOLD = 15; // 15 metros de tolerancia
+    
+    // Encontrar el punto más cercano en la ruta
+    let closestIndex = 0;
+    let minDistance = Infinity;
+    
+    pathNodes.forEach((node, index) => {
+      const distance = getDistance(userLocation, node);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = index;
+      }
+    });
+    
+    // Si el usuario está muy cerca de un nodo, remover todos los nodos anteriores
+    if (minDistance < PROXIMITY_THRESHOLD) {
+      return pathNodes.slice(closestIndex + 1);
+    }
+    
+    // Si el usuario está entre dos nodos, remover los nodos anteriores
+    for (let i = 0; i < pathNodes.length - 1; i++) {
+      const distanceToSegment = getDistanceToLineSegment(userLocation, pathNodes[i], pathNodes[i + 1]);
+      if (distanceToSegment < PROXIMITY_THRESHOLD) {
+        return pathNodes.slice(i + 1);
+      }
+    }
+    
+    return pathNodes;
+  }
+
+  // Función para calcular distancia de un punto a un segmento de línea
+  function getDistanceToLineSegment(point, lineStart, lineEnd) {
+    const A = point[0] - lineStart[0];
+    const B = point[1] - lineStart[1];
+    const C = lineEnd[0] - lineStart[0];
+    const D = lineEnd[1] - lineStart[1];
+    
+    const dot = A * C + B * D;
+    const lenSq = C * C + D * D;
+    let param = -1;
+    
+    if (lenSq !== 0) {
+      param = dot / lenSq;
+    }
+    
+    let xx, yy;
+    
+    if (param < 0) {
+      xx = lineStart[0];
+      yy = lineStart[1];
+    } else if (param > 1) {
+      xx = lineEnd[0];
+      yy = lineEnd[1];
+    } else {
+      xx = lineStart[0] + param * C;
+      yy = lineStart[1] + param * D;
+    }
+    
+    return getDistance(point, [xx, yy]);
+  }
 
   return (
     <>
