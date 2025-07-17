@@ -1,15 +1,14 @@
+/*
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import locations from './locations';
 import intersectionPoints from './intersectionPoints';
-import pathPairs from './pathPairs';
+import pathPairs from '../pathPairs';
 
-function MapComponent() {
-  const navigate = useNavigate();
+function MapComponent({ onBack }) {
   const mapRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [routingControl, setRoutingControl] = useState(null);
@@ -983,24 +982,7 @@ function MapComponent() {
         `}
       </style>
 
-      <div style={{
-        position: 'fixed',
-        top: '15px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 9999,
-        background: 'rgba(255, 255, 255, 0.9)',
-        padding: '10px 20px',
-        borderRadius: '10px',
-        boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-        fontSize: 'clamp(20px, 3vw, 32px)',
-        fontWeight: 'bold',
-        color: '#1e3799'
-      }}>
-        Mapa UTEQ
-      </div>
-
-      <button onClick={() => navigate('/')} style={buttonStyle}>⬅ Volver</button>
+      <button onClick={onBack} style={buttonStyle}>⬅ Volver</button>
 
       <div id="map" style={mapStyle} />
 
@@ -1101,3 +1083,4 @@ function dijkstra(graph, start, end) {
   
   return path;
 }
+*/
