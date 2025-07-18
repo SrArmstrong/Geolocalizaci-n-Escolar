@@ -94,11 +94,19 @@ function MapComponent() {
     //if (lastRoute) mapRef.current.removeLayer(lastRoute);
 
     // Recentrar mapa según preferencia
-    const zoomLevel = Math.max(17, Math.min(20, Math.round(14 - Math.log(accuracy) / Math.LN2)));
-    const shouldRecenter = true; // Puedes controlar esto desde un state
-    if (shouldRecenter) {
-      mapRef.current.setView(userLocation, zoomLevel);
+    const shouldRecenter = true;
+    if (shouldRecenter && window.currentDestination) {
+      const bounds = L.latLngBounds([
+        [latitude, longitude],
+        window.currentDestination
+      ]);
+      mapRef.current.fitBounds(bounds, {
+        padding: [50, 50] // Margen visual para no estar pegado al borde
+      });
+    } else {
+      mapRef.current.setView(userLocation, 18); // Zoom fijo si no hay destino
     }
+
 
     // Mostrar círculo de precisión
     currentAccuracyCircle = L.circle(userLocation, {

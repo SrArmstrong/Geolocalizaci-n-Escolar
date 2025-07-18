@@ -1023,7 +1023,7 @@ function findNearestIntersection(point) {
   });
   return nearest;
 }
-*/
+
 
 function dijkstra(graph, start, end) {
   const queue = new Set(Object.keys(graph));

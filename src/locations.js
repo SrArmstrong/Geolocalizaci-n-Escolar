@@ -98,6 +98,15 @@ const locations = [
       details: 'Carreras: Ing. en Sistemas, Mecatrónica, TIC',
       contact: 'Tel: (442) 274-9000 ext. 2001'
     },
+    {
+      "latitude": 20.654917,
+      "longitude": -100.404439,
+      "title": "Laboratorio de Sistemas Informáticos",
+      "description": "Espacio académico especializado en tecnologías de la información",
+      "image": "https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp",
+      "details": "Áreas: Desarrollo de software, redes, bases de datos",
+      "contact": "Tel: (442) 274-9000 ext. 2002"
+    },
     { 
       latitude: 20.6541214, 
       longitude: -100.4041198, 
@@ -173,7 +182,7 @@ const locations = [
     { 
       latitude: 20.655227,
       longitude: -100.405485,
-      title: 'Laboratorios de mecatrónica y TIC\'s',
+      title: 'Laboratorios de mecatrónica y TICs',
       description: 'Laboratorios especializados',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Prácticas de mecatrónica y tecnologías de información',
