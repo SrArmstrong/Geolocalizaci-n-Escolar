@@ -59,6 +59,24 @@ function MapComponent() {
   let currentAccuracyCircle = null;
   let lastDestinationMarker = null;
 
+  function limpiarRutaYDestino() {
+    if (lastRoute) {
+      mapRef.current.removeLayer(lastRoute);
+      lastRoute = null;
+    }
+    if (lastDestinationMarker) {
+      mapRef.current.removeLayer(lastDestinationMarker);
+      lastDestinationMarker = null;
+    }
+    if (window.destinationLine) {
+      mapRef.current.removeLayer(window.destinationLine);
+      window.destinationLine = null;
+    }
+    window.currentDestination = null;
+    window.currentPathNodes = null;
+    window.arrivalNotified = false;
+  }
+
   const showCurrentPosition = (position) => {
     const { latitude, longitude, accuracy } = position.coords;
     const userLocation = [latitude, longitude];
@@ -74,13 +92,20 @@ function MapComponent() {
     // Verificar si llegaste al destino
     if (window.currentDestination) {
         const distanceToDestination = getDistance(userLocation, window.currentDestination);
-        if (distanceToDestination < 10 && !window.arrivalNotified) {
+        
+        if (distanceToDestination < 20 && !window.arrivalNotified) {
             window.arrivalNotified = true;
             toast.success('🎉 ¡Has llegado a tu destino!');
-        } else if (distanceToDestination >= 10) {
+            limpiarRutaYDestino();
+        } else if (distanceToDestination > 30) {
             window.arrivalNotified = false;
+            if (!window.currentPathNodes) {
+                console.log("Te alejaste del destino, recalculando ruta...");
+                createRoute(userLocation, window.currentDestination);
+            }
         }
     }
+
 
     currentLocationRef.current = userLocation;
 
