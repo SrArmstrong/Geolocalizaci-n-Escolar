@@ -1119,7 +1119,10 @@ function MapComponent() {
         `}
       </style>
 
-      <ToastContainer />
+      <ToastContainer
+        position="top-center"
+        style={{ zIndex: 99999 }}
+      />
 
       <div style={{
         position: 'fixed',
