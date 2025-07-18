@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logoUTEQ } from '../assets/logo_uteq.png'; // Adjust the import path as necessary
 
 function WelcomeScreen({ onStartClick, onAdminClick }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -91,7 +92,7 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
       overflowY: 'auto'
     }}>
       <img 
-        src="src/logo_uteq.png" 
+        src={logoUTEQ}
         alt="UTEQ Logo" 
         style={{
           width: '150px',
