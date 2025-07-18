@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { logoUTEQ } from '../assets/logo_uteq.png'; // Adjust the import path as necessary
+import logoUTEQ from '../assets/logo_uteq.png'; // Adjust the import path as necessary
 
 function WelcomeScreen({ onStartClick, onAdminClick }) {
   const [isLoaded, setIsLoaded] = useState(false);
