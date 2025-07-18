@@ -82,8 +82,6 @@ function MapComponent() {
         }
     }
 
-
-
     currentLocationRef.current = userLocation;
 
     // Eliminar marcador y círculo previos si existen
@@ -135,7 +133,7 @@ function MapComponent() {
       `).openPopup();
 
     // Recalcular ruta hacia el destino
-    // Recalcular y recortar ruta conforme el usuario avanza
+    /* Recalcular y recortar ruta conforme el usuario avanza
     if (lastRoute && window.currentPathNodes) {
       // Remover segmentos ya recorridos
       window.currentPathNodes = removePassedSegments(userLocation, window.currentPathNodes);
@@ -185,6 +183,92 @@ function MapComponent() {
       if (lastRoute) mapRef.current.removeLayer(lastRoute);
       lastRoute = createRoute(userLocation, window.currentDestination);
     }
+    */
+
+    // Reemplaza la sección de recálculo de rutas en showCurrentPosition
+    // Recalcular y recortar ruta conforme el usuario avanza
+    if (lastRoute && window.currentPathNodes && window.currentPathNodes.length > 0) {
+      // Remover segmentos ya recorridos
+      window.currentPathNodes = removePassedSegments(userLocation, window.currentPathNodes);
+      
+      // Si aún quedan nodos en la ruta, actualizar
+      if (window.currentPathNodes.length > 0) {
+        mapRef.current.removeLayer(lastRoute);
+        
+        // Crear nueva ruta con los nodos restantes
+        const remainingPath = [userLocation, ...window.currentPathNodes];
+        lastRoute = L.polyline(remainingPath, {
+          color: '#FF5733',
+          weight: 6,
+          opacity: 1
+        }).addTo(mapRef.current);
+        
+        // Actualizar línea al destino final
+        const finalDestination = window.currentDestination;
+        if (finalDestination) {
+          // Remover línea anterior al destino
+          if (window.destinationLine) {
+            mapRef.current.removeLayer(window.destinationLine);
+          }
+          
+          // Crear nueva línea al destino desde el último nodo
+          window.destinationLine = L.polyline([window.currentPathNodes[window.currentPathNodes.length - 1], finalDestination], {
+            color: '#FF5733',
+            weight: 6,
+            opacity: 1,
+            dashArray: '5, 10'
+          }).addTo(mapRef.current);
+        }
+      } else {
+        // Si no quedan nodos, verificar distancia al destino
+        if (window.currentDestination) {
+          const distanceToDestination = getDistance(userLocation, window.currentDestination);
+          
+          // Si está lejos del destino (>50m), recalcular ruta completa
+          if (distanceToDestination > 50) {
+            console.log("Usuario se alejó del destino, recalculando ruta completa");
+            mapRef.current.removeLayer(lastRoute);
+            if (window.destinationLine) {
+              mapRef.current.removeLayer(window.destinationLine);
+            }
+            
+            // Recalcular ruta completa
+            lastRoute = createRoute(userLocation, window.currentDestination);
+            return; // Salir para evitar crear línea directa
+          } else {
+            // Si está cerca, mantener línea directa
+            mapRef.current.removeLayer(lastRoute);
+            lastRoute = L.polyline([userLocation, window.currentDestination], {
+              color: '#FF5733',
+              weight: 6,
+              opacity: 1,
+              dashArray: '5, 10'
+            }).addTo(mapRef.current);
+          }
+        }
+      }
+    } else if (window.currentDestination) {
+      // Si no hay ruta activa pero hay destino, verificar distancia
+      const distanceToDestination = getDistance(userLocation, window.currentDestination);
+      
+      // Si está lejos, recalcular ruta completa
+      if (distanceToDestination > 50) {
+        console.log("Recalculando ruta completa desde posición alejada");
+        if (lastRoute) mapRef.current.removeLayer(lastRoute);
+        if (window.destinationLine) mapRef.current.removeLayer(window.destinationLine);
+        lastRoute = createRoute(userLocation, window.currentDestination);
+      } else {
+        // Si está cerca, línea directa
+        if (lastRoute) mapRef.current.removeLayer(lastRoute);
+        lastRoute = L.polyline([userLocation, window.currentDestination], {
+          color: '#FF5733',
+          weight: 6,
+          opacity: 1,
+          dashArray: '5, 10'
+        }).addTo(mapRef.current);
+      }
+    }
+
   };
 
   const startTracking = () => {
