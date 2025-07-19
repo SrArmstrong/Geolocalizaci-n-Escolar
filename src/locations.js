@@ -17,6 +17,15 @@ const locations = [
       details: 'Acceso peatonal. Horario: 6:00 AM - 10:00 PM',
       contact: 'Vigilancia: ext. 1001'
     },
+    { //[20.654754, -100.405005]
+      latitude: 20.654754,
+      longitude: -100.405005,
+      title: 'Cafetería UTEQ',
+      description: 'Zona de alimentos dentro del campus',
+      image: 'https://www.uteq.edu.mx/images/comedor.jpg', // puedes cambiarla si tienes una mejor opción
+      details: 'Cafetería estudiantil. Horario: 7:00 AM - 8:00 PM',
+      contact: 'Administración campus: ext. 1010'
+    },
     { 
       latitude: 20.653340, 
       longitude: -100.405064, 
@@ -152,14 +161,14 @@ const locations = [
       details: 'Carreras: Ing. Industrial, Procesos Industriales',
       contact: 'Tel: (442) 274-9000 ext. 4001'
     },
-    { 
-      latitude: 20.655343,
-      longitude: -100.404621,
-      title: 'Laboratorio de procesos industriales',
-      description: 'Laboratorio especializado para prácticas industriales',
-      image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
-      details: 'Prácticas y desarrollo de procesos industriales',
-      contact: 'Tel: ext. 4002'
+    { // [20.655357, -100.404595]
+      latitude: 20.655357,
+      longitude: -100.404595,
+      title: 'División de Tecnología Ambiental',
+      description: 'Área académica dedicada a tecnologías sustentables',
+      image: 'https://www.uteq.edu.mx/images/ambiental.jpg', // Sugerencia ilustrativa, puedes cambiarla por una imagen oficial
+      details: 'Instalaciones académicas. Horario: 8:00 AM - 7:00 PM',
+      contact: 'Coordinación académica: ext. 1025'
     },
     { 
       latitude: 20.653774,
@@ -245,11 +254,20 @@ const locations = [
     { 
       latitude: 20.6549875, 
       longitude: -100.4062969, 
-      title: 'División de tecnología ambiental', 
-      description: 'Edificio G',
-      image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
-      details: 'Carreras: Ing. Ambiental, Energías Renovables',
-      contact: 'Tel: (442) 274-9000 ext. 5001'
+      title: 'Edificio de Medios (División Idiomas)',
+      description: 'Espacio académico dedicado a lenguas extranjeras y medios digitales',
+      image: 'https://www.uteq.edu.mx/images/idiomas.jpg', // Puedes sustituirla por una imagen oficial más representativa
+      details: 'Aulas multimedia e idiomas. Horario: 7:30 AM - 7:00 PM',
+      contact: 'Coordinación de idiomas: ext. 1030'
+    },
+    { // [20.656181, -100.404196]
+      latitude: 20.656181,
+      longitude: -100.404196,
+      title: 'Módulo Sanitario 2',
+      description: 'Baños disponibles para uso estudiantil y docente',
+      image: 'https://www.uteq.edu.mx/images/sanitario.jpg', // Imagen sugerida, puedes ajustarla si tienes una mejor referencia visual
+      details: 'Instalación sanitaria. Horario: 6:30 AM - 9:00 PM',
+      contact: 'Servicios generales: ext. 1045'
     },
     { 
       latitude: 20.6557433, 

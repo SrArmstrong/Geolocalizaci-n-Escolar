@@ -19,6 +19,8 @@ function MapComponent() {
   const currentLocationRef = useRef(null);
   const [arrivalMessage, setArrivalMessage] = useState(false);
 
+  const DEBUG_MODE = false; // Cambiar entre true/false para mostrar o no los nodos  
+
   //const [destination, setDestination] = useState([LAT, LNG]);
   const buttonStyle = {
     position: "absolute",
@@ -351,6 +353,29 @@ function MapComponent() {
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       maxZoom: 20
     }).addTo(map);
+
+    // DEBUG para mostrar nodos
+    if (DEBUG_MODE) {
+      pathPairs.forEach(pair => {
+        L.polyline(pair, {
+          color: '#2980b9',
+          weight: 3,
+          opacity: 0.8
+        }).addTo(map);
+      });
+
+      const uniquePoints = [...new Set(pathPairs.flat().map(JSON.stringify))].map(JSON.parse);
+      uniquePoints.forEach((point) => {
+        L.circleMarker(point, {
+          radius: 4,
+          fillColor: '#e74c3c',
+          color: '#c0392b',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.7
+        }).addTo(map);
+      });
+    }
 
     const showRoute = (destination, destinationName) => {
       // Clear any existing routes first
@@ -891,6 +916,7 @@ function MapComponent() {
         .openOn(map);
     });
 
+    /*
     pathPairs.forEach(pair => {
       L.polyline(pair, {
         color: '#2980b9', // Cambiado de verde a azul
@@ -910,6 +936,7 @@ function MapComponent() {
         fillOpacity: 0.7
       }).addTo(map);
     });
+    */
 
     const campusBoundary = L.polygon([
       [20.653705, -100.407463],
