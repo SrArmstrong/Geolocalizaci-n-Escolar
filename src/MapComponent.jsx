@@ -9,6 +9,8 @@ import intersectionPoints from './intersectionPoints';
 import pathPairs from './pathPairs';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import BuildingList from './components/commons/BuildingList';
+
 
 
 function MapComponent() {
@@ -1175,6 +1177,9 @@ function MapComponent() {
       <div id="map-loading" style={loadingStyle}>
         <p>Cargando mapa...</p>
       </div>
+      <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 2000 }}>
+      <BuildingList />
+    </div>
     </>
     
   );
