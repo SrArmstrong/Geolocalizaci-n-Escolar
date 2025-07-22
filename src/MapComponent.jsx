@@ -30,14 +30,18 @@ function MapComponent() {
     top: "10px",
     right: "10px",
     zIndex: 1000,
-    backgroundColor: "#f39c12",
+    background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
     color: "white",
     border: "none",
-    padding: "8px 12px",
-    borderRadius: "6px",
+    padding: "0.9rem 1.8rem",
+    fontSize: "1rem",
+    fontWeight: "600",
+    borderRadius: "40px",
     cursor: "pointer",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.3)"
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    boxShadow: "0 10px 20px rgba(30, 58, 138, 0.3)"
   };
+
 
 
   const mapStyle = {
@@ -1173,7 +1177,21 @@ function MapComponent() {
         Mapa UTEQ
       </div>
 
-      <button onClick={() => navigate('/')} style={buttonStyle}>⬅ Volver</button>
+      <button
+        onClick={() => navigate('/')}
+        style={buttonStyle}
+        onMouseEnter={(e) => {
+          e.target.style.transform = 'translateY(-2px) scale(1.03)';
+          e.target.style.boxShadow = '0 15px 30px rgba(30, 58, 138, 0.4)';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = 'translateY(0) scale(1)';
+          e.target.style.boxShadow = '0 10px 20px rgba(30, 58, 138, 0.3)';
+        }}
+      >
+        ⬅ Volver
+      </button>
+
 
       <div id="map" style={mapStyle} />
 

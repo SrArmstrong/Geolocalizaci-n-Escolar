@@ -130,6 +130,7 @@ const BuildingList = () => {
               transition: 'all 0.2s ease',
               boxSizing: 'border-box',
               backgroundColor: 'white',
+              color: '#1e3a8a',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06)',
             }}
             onFocus={(e) => {
