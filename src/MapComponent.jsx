@@ -20,6 +20,7 @@ function MapComponent() {
   const [routingControl, setRoutingControl] = useState(null);
   const currentLocationRef = useRef(null);
   const [arrivalMessage, setArrivalMessage] = useState(false);
+  const [debugMode, setDebugMode] = useState(false);
 
   const DEBUG_MODE = false; // Cambiar entre true/false para mostrar o no los nodos  
 
@@ -892,6 +893,8 @@ function MapComponent() {
     };
 
     map.on('click', function(e) {
+      if (!DEBUG_MODE) return;
+
       const lat = e.latlng.lat.toFixed(6);
       const lng = e.latlng.lng.toFixed(6);
       const coordsString = `[${lat}, ${lng}]`;
@@ -905,10 +908,9 @@ function MapComponent() {
             Longitud: ${lng}<br>
             <div style="margin-top: 8px;">
               <input type="text" value="${coordsString}" 
-                     id="coordsInput" 
-                     readonly 
-                     style="width: 200px; padding: 4px; border: 1px solid #ccc; border-radius: 4px;">
-              <button onclick="this.innerHTML='✓ Copiado'; setTimeout(() => this.innerHTML='📋 Copiar', 1000); navigator.clipboard.writeText('${coordsString}')"
+                    readonly 
+                    style="width: 200px; padding: 4px; border: 1px solid #ccc; border-radius: 4px;">
+              <button onclick="navigator.clipboard.writeText('${coordsString}'); this.innerHTML='✓ Copiado'; setTimeout(() => this.innerHTML='📋 Copiar', 1000);" 
                       style="margin-left: 4px; padding: 4px 8px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
                 📋 Copiar
               </button>
@@ -917,6 +919,7 @@ function MapComponent() {
         `)
         .openOn(map);
     });
+
 
     /*
     pathPairs.forEach(pair => {

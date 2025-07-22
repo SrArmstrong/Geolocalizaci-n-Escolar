@@ -2,11 +2,12 @@ const locations = [
     { 
       latitude: 20.6532215, 
       longitude: -100.4040249, 
-      title: 'Entrada principal', 
+      title: 'Entrada principal UTEQ', 
       description: 'Acceso principal UTEQ',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Acceso principal para estudiantes y visitantes',
-      contact: 'Vigilancia: ext. 1001'
+      contact: 'Vigilancia: ext. 1001',
+      codigo: ""
     },
     { 
       latitude: 20.653641, 
@@ -15,16 +16,18 @@ const locations = [
       description: 'Acceso peatonal norte del campus',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Acceso peatonal. Horario: 6:00 AM - 10:00 PM',
-      contact: 'Vigilancia: ext. 1001'
+      contact: 'Vigilancia: ext. 1001',
+      codigo: ''
     },
-    { //[20.654754, -100.405005]
+    {
       latitude: 20.654754,
       longitude: -100.405005,
       title: 'Cafetería UTEQ',
       description: 'Zona de alimentos dentro del campus',
-      image: 'https://www.uteq.edu.mx/images/comedor.jpg', // puedes cambiarla si tienes una mejor opción
+      image: 'https://www.uteq.edu.mx/images/comedor.jpg',
       details: 'Cafetería estudiantil. Horario: 7:00 AM - 8:00 PM',
-      contact: 'Administración campus: ext. 1010'
+      contact: 'Administración campus: ext. 1010',
+      codigo: ''
     },
     { 
       latitude: 20.653340, 
@@ -33,7 +36,8 @@ const locations = [
       description: 'Acceso peatonal este del campus',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Acceso peatonal. Horario: 6:00 AM - 10:00 PM',
-      contact: 'Vigilancia: ext. 1001'
+      contact: 'Vigilancia: ext. 1001',
+      codigo: ''
     },
     { 
       latitude: 20.653506, 
@@ -42,7 +46,8 @@ const locations = [
       description: 'Acceso peatonal sureste del campus',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Acceso peatonal. Horario: 6:00 AM - 10:00 PM',
-      contact: 'Vigilancia: ext. 1001'
+      contact: 'Vigilancia: ext. 1001',
+      codigo: ''
     },
     { 
       latitude: 20.653676, 
@@ -51,7 +56,8 @@ const locations = [
       description: 'Acceso peatonal sur del campus',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Acceso peatonal. Horario: 6:00 AM - 10:00 PM',
-      contact: 'Vigilancia: ext. 1001'
+      contact: 'Vigilancia: ext. 1001',
+      codigo: ''
     },
     { 
       latitude: 20.655536, 
@@ -60,7 +66,8 @@ const locations = [
       description: 'Acceso central del campus',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Acceso vehicular y peatonal. Horario: 24 horas',
-      contact: 'Vigilancia: ext. 1001'
+      contact: 'Vigilancia: ext. 1001',
+      codigo: ''
     },
     { 
       latitude: 20.656298, 
@@ -69,7 +76,8 @@ const locations = [
       description: 'Acceso noreste del campus',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Acceso peatonal. Horario: 6:00 AM - 10:00 PM',
-      contact: 'Vigilancia: ext. 1001'
+      contact: 'Vigilancia: ext. 1001',
+      codigo: ''
     },
     { 
       latitude: 20.656935, 
@@ -78,7 +86,8 @@ const locations = [
       description: 'Acceso norte superior del campus',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Acceso peatonal. Horario: 6:00 AM - 10:00 PM',
-      contact: 'Vigilancia: ext. 1001'
+      contact: 'Vigilancia: ext. 1001',
+      codigo: ''
     },
     { 
       latitude: 20.653954,
@@ -87,7 +96,8 @@ const locations = [
       description: 'Laboratorio especializado',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Prácticas y desarrollo de procesos industriales',
-      contact: 'Tel: ext. 4003'
+      contact: 'Tel: ext. 4003',
+      codigo: ''
     },
     { 
       latitude: 20.6538499, 
@@ -96,25 +106,28 @@ const locations = [
       description: 'Laboratorio especializado',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Prácticas de mantenimiento industrial',
-      contact: 'Tel: ext. 2002'
+      contact: 'Tel: ext. 2002',
+      codigo: ''
     },
     { 
       latitude: 20.6543228, 
       longitude: -100.4046271, 
-      title: 'Edificio DTAI', 
+      title: 'División de Tecnologías de Automatización e Información', 
       description: 'División de Tecnologías de Automatización e Información',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Carreras: Ing. en Sistemas, Mecatrónica, TIC',
-      contact: 'Tel: (442) 274-9000 ext. 2001'
+      contact: 'Tel: (442) 274-9000 ext. 2001',
+      codigo: ''
     },
     {
-      "latitude": 20.654917,
-      "longitude": -100.404439,
-      "title": "Laboratorio de Sistemas Informáticos",
-      "description": "Espacio académico especializado en tecnologías de la información",
-      "image": "https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp",
-      "details": "Áreas: Desarrollo de software, redes, bases de datos",
-      "contact": "Tel: (442) 274-9000 ext. 2002"
+      latitude: 20.654917,
+      longitude: -100.404439,
+      title: "Laboratorio de Sistemas Informáticos",
+      description: "Espacio académico especializado en tecnologías de la información",
+      image: "https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp",
+      details: "Áreas: Desarrollo de software, redes, bases de datos",
+      contact: "Tel: (442) 274-9000 ext. 2002",
+      codigo: ''
     },
     { 
       latitude: 20.6541214, 
@@ -123,7 +136,8 @@ const locations = [
       description: 'Servicios sanitarios',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Disponible 24/7',
-      contact: 'Mantenimiento: ext. 1050'
+      contact: 'Mantenimiento: ext. 1050',
+      codigo: ''
     },
     { 
       latitude: 20.6543096, 
@@ -132,7 +146,8 @@ const locations = [
       description: 'Tramites institucionales',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Horario: Lunes a Viernes 8:00 AM - 4:00 PM',
-      contact: 'Tel: (442) 274-9000 ext. 1000'
+      contact: 'Tel: (442) 274-9000 ext. 1000',
+      codigo: ''
     },
     { 
       latitude: 20.6540485, 
@@ -141,7 +156,8 @@ const locations = [
       description: 'Inscripciones, becas, etc.',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Servicios: Inscripciones, Becas, Titulación',
-      contact: 'Tel: (442) 274-9000 ext. 1200'
+      contact: 'Tel: (442) 274-9000 ext. 1200',
+      codigo: ''
     },
     { 
       latitude: 20.6549875, 
@@ -150,7 +166,8 @@ const locations = [
       description: 'División Idiomas',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Idiomas: Inglés, Francés, Alemán',
-      contact: 'Tel: (442) 274-9000 ext. 3001'
+      contact: 'Tel: (442) 274-9000 ext. 3001',
+      codigo: ''
     },
     { 
       latitude: 20.6544725, 
@@ -159,16 +176,18 @@ const locations = [
       description: 'Edificio F',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Carreras: Ing. Industrial, Procesos Industriales',
-      contact: 'Tel: (442) 274-9000 ext. 4001'
+      contact: 'Tel: (442) 274-9000 ext. 4001',
+      codigo: ''
     },
-    { // [20.655357, -100.404595]
+    {
       latitude: 20.655357,
       longitude: -100.404595,
       title: 'División de Tecnología Ambiental',
       description: 'Área académica dedicada a tecnologías sustentables',
-      image: 'https://www.uteq.edu.mx/images/ambiental.jpg', // Sugerencia ilustrativa, puedes cambiarla por una imagen oficial
+      image: 'https://www.uteq.edu.mx/images/ambiental.jpg',
       details: 'Instalaciones académicas. Horario: 8:00 AM - 7:00 PM',
-      contact: 'Coordinación académica: ext. 1025'
+      contact: 'Coordinación académica: ext. 1025',
+      codigo: ''
     },
     { 
       latitude: 20.653774,
@@ -177,7 +196,8 @@ const locations = [
       description: 'División de carreras administrativas y económicas',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Carreras: Administración, Contabilidad, Negocios',
-      contact: 'Tel: ext. 5000'
+      contact: 'Tel: ext. 5000',
+      codigo: ''
     },
     { 
       latitude: 20.654914,
@@ -186,7 +206,8 @@ const locations = [
       description: 'Biblioteca central universitaria',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Horario: Lunes a Viernes 8:00 AM - 8:00 PM',
-      contact: 'Tel: ext. 6000'
+      contact: 'Tel: ext. 6000',
+      codigo: ''
     },
     { 
       latitude: 20.655227,
@@ -195,7 +216,8 @@ const locations = [
       description: 'Laboratorios especializados',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Prácticas de mecatrónica y tecnologías de información',
-      contact: 'Tel: ext. 2003'
+      contact: 'Tel: ext. 2003',
+      codigo: ''
     },
     { 
       latitude: 20.655563,
@@ -204,16 +226,18 @@ const locations = [
       description: 'Edificio de la División Económica Administrativa',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Aulas y oficinas administrativas',
-      contact: 'Tel: ext. 5001'
+      contact: 'Tel: ext. 5001',
+      codigo: ''
     },
     { 
       latitude: 20.656080,
       longitude: -100.403857,
-      title: 'Almacén general y taller de mantenimiento',
+      title: 'Área de mantenimiento y almacenamiento',
       description: 'Área de mantenimiento y almacenamiento',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Horario: Lunes a Viernes 7:00 AM - 3:00 PM',
-      contact: 'Tel: ext. 1100'
+      contact: 'Tel: ext. 1100',
+      codigo: 'AGTM'
     },
     { 
       latitude: 20.656449,
@@ -222,16 +246,18 @@ const locations = [
       description: 'Área deportiva',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Horario: 7:00 AM - 8:00 PM',
-      contact: 'Deportes: ext. 8001'
+      contact: 'Deportes: ext. 8001',
+      codigo: ''
     },
     { 
       latitude: 20.657298,
       longitude: -100.403444,
-      title: 'CEPRODI 4.0',
+      title: 'Centro de Productividad e Innovación para la Industria 4.0',
       description: 'Centro de Productividad e Innovación para la Industria 4.0',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Centro especializado en tecnologías de Industria 4.0',
-      contact: 'Tel: ext. 7000'
+      contact: 'Tel: ext. 7000',
+      codigo: 'CIC 4.0'
     },
     { 
       latitude: 20.657857,
@@ -240,7 +266,8 @@ const locations = [
       description: 'Posgrado, Innovación, Desarrollo y Emprendimiento Tecnológico',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Posgrados y desarrollo tecnológico',
-      contact: 'Tel: ext. 7100'
+      contact: 'Tel: ext. 7100',
+      codigo: ''
     },
     { 
       latitude: 20.657509,
@@ -249,25 +276,28 @@ const locations = [
       description: 'Creativity and Innovation Center 4.0',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Centro de creatividad e innovación',
-      contact: 'Tel: ext. 7200'
+      contact: 'Tel: ext. 7200',
+      codigo: ''
     },
     { 
       latitude: 20.6549875, 
       longitude: -100.4062969, 
       title: 'Edificio de Medios (División Idiomas)',
       description: 'Espacio académico dedicado a lenguas extranjeras y medios digitales',
-      image: 'https://www.uteq.edu.mx/images/idiomas.jpg', // Puedes sustituirla por una imagen oficial más representativa
+      image: 'https://www.uteq.edu.mx/images/idiomas.jpg', 
       details: 'Aulas multimedia e idiomas. Horario: 7:30 AM - 7:00 PM',
-      contact: 'Coordinación de idiomas: ext. 1030'
+      contact: 'Coordinación de idiomas: ext. 1030',
+      codigo: ''
     },
-    { // [20.656181, -100.404196]
+    { 
       latitude: 20.656181,
       longitude: -100.404196,
       title: 'Módulo Sanitario 2',
       description: 'Baños disponibles para uso estudiantil y docente',
-      image: 'https://www.uteq.edu.mx/images/sanitario.jpg', // Imagen sugerida, puedes ajustarla si tienes una mejor referencia visual
+      image: 'https://www.uteq.edu.mx/images/sanitario.jpg', 
       details: 'Instalación sanitaria. Horario: 6:30 AM - 9:00 PM',
-      contact: 'Servicios generales: ext. 1045'
+      contact: 'Servicios generales: ext. 1045',
+      codigo: ''
     },
     { 
       latitude: 20.6557433, 
@@ -276,7 +306,8 @@ const locations = [
       description: 'Edificio H',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Laboratorios especializados en nanotecnología',
-      contact: 'Tel: (442) 274-9000 ext. 6001'
+      contact: 'Tel: (442) 274-9000 ext. 6001',
+      codigo: ''
     },
     { 
       latitude: 20.6560881, 
@@ -285,7 +316,8 @@ const locations = [
       description: 'Eventos y conferencias',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Capacidad: 500 personas. Eventos académicos y culturales',
-      contact: 'Reservaciones: ext. 7001'
+      contact: 'Reservaciones: ext. 7001',
+      codigo: ''
     },
     { 
       latitude: 20.656819, 
@@ -294,7 +326,8 @@ const locations = [
       description: 'Área deportiva',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Horario: 7:00 AM - 8:00 PM',
-      contact: 'Deportes: ext. 8002'
+      contact: 'Deportes: ext. 8002',
+      codigo: ''
     },
     { 
       latitude: 20.657146, 
@@ -303,7 +336,8 @@ const locations = [
       description: 'Campo de futbol principal',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Campo reglamentario',
-      contact: 'Deportes: ext. 8003'
+      contact: 'Deportes: ext. 8003',
+      codigo: ''
     }
   ];
   
