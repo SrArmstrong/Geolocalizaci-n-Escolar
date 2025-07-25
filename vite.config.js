@@ -11,21 +11,21 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon-192.png', 'icon-512.png'],
       manifest: {
-        name: 'Mapa PWA',
-        short_name: 'Mapa',
+        name: 'Mapa UTEQ',
+        short_name: 'UTEQ',
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#4caf50',
         icons: [
           {
-            src: 'icon-192.png',
+            src: 'logo_uteq192.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any maskable'
           },
           {
-            src: 'icon-512.png',
+            src: 'logo_uteq512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
