@@ -1,0 +1,570 @@
+/* Variables CSS para consistencia */
+:root {
+  --primary-color: #1e3a8a;
+  --primary-light: #3b82f6;
+  --primary-gradient: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  --white-alpha-90: rgba(255, 255, 255, 0.9);
+  --white-alpha-10: rgba(255, 255, 255, 0.1);
+  --black-alpha-30: rgba(0, 0, 0, 0.3);
+  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 8px 25px rgba(30, 58, 138, 0.3);
+  --shadow-heavy: 0 15px 35px rgba(30, 58, 138, 0.4);
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 20px;
+  --border-radius-xl: 40px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Contenedor principal */
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Header del mapa */
+.map-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(10px, 2vw, 20px);
+  pointer-events: none;
+}
+
+.map-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--white-alpha-90);
+  padding: clamp(8px, 2vw, 15px) clamp(15px, 4vw, 30px);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-light);
+  font-size: clamp(18px, 4vw, 32px);
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0;
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--white-alpha-10);
+}
+
+/* Botón de regreso */
+.back-button {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px);
+  font-size: clamp(14px, 2.5vw, 16px);
+  font-weight: 600;
+  border-radius: var(--border-radius-xl);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-medium);
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 1vw, 8px);
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--white-alpha-10);
+}
+
+.back-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-heavy);
+}
+
+.back-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.back-icon {
+  font-size: 1.2em;
+}
+
+.back-text {
+  display: inline;
+}
+
+/* Sistema de notificaciones */
+.toast-container {
+  z-index: 99999;
+  margin-top: clamp(60px, 10vw, 80px);
+}
+
+.toast {
+  background: var(--primary-gradient) !important;
+  color: white !important;
+  border-radius: var(--border-radius-md) !important;
+  box-shadow: var(--shadow-medium) !important;
+  border: 1px solid var(--white-alpha-10) !important;
+  font-size: clamp(12px, 2.5vw, 14px) !important;
+  font-weight: 500 !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.toast-progress {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.toast-close-button {
+  background: none !important;
+  border: none !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: clamp(16px, 3vw, 20px) !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: var(--transition-smooth) !important;
+}
+
+.toast-close-button:hover {
+  color: white !important;
+  transform: scale(1.1);
+}
+
+/* Ventana flotante de instrucciones */
+.floating-instructions {
+  position: fixed;
+  top: clamp(90px, 15vh, 120px);
+  left: clamp(10px, 2vw, 20px);
+  width: clamp(240px, 28vw, 320px);
+  max-height: clamp(250px, 60vh, 500px);
+  background: rgba(30, 58, 138, 0.75);
+  color: white;
+  border-radius: var(--border-radius-md);
+  z-index: 800;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: var(--transition-smooth);
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.floating-instructions:hover {
+  background: rgba(30, 58, 138, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+.floating-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+/* ETA destacado */
+.floating-eta {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  margin: 0;
+  padding: clamp(10px, 2.5vw, 16px);
+  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-eta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.1) 75%, transparent 75%);
+  background-size: 20px 20px;
+  animation: eta-shine 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes eta-shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.eta-content {
+  font-size: clamp(13px, 3vw, 16px);
+  font-weight: 700;
+  text-align: center;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.5px;
+}
+
+/* Header de instrucciones */
+.floating-header {
+  flex-shrink: 0;
+  margin: 0;
+  padding: clamp(8px, 2vw, 12px) clamp(10px, 2.5vw, 16px);
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.floating-title {
+  color: white;
+  font-size: clamp(12px, 2.8vw, 14px);
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1.5vw, 8px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.floating-icon {
+  font-size: 1.1em;
+  opacity: 0.9;
+}
+
+/* Cuerpo de instrucciones */
+.floating-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: clamp(6px, 1.5vw, 10px) clamp(8px, 2vw, 12px);
+}
+
+/* Scrollbar personalizada para la ventana flotante */
+.floating-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.floating-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.floating-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  transition: var(--transition-smooth);
+}
+
+.floating-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.floating-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step-counter;
+}
+
+.floating-item {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(8px, 2vw, 10px);
+  margin-bottom: clamp(8px, 2vw, 12px);
+  padding: clamp(6px, 1.5vw, 10px);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: clamp(6px, 1.5vw, 8px);
+  border-left: 3px solid rgba(59, 130, 246, 0.7);
+  transition: var(--transition-smooth);
+  counter-increment: step-counter;
+  position: relative;
+}
+
+.floating-item::before {
+  content: counter(step-counter);
+  background: rgba(59, 130, 246, 0.8);
+  color: white;
+  border-radius: 50%;
+  width: clamp(16px, 3.5vw, 20px);
+  height: clamp(16px, 3.5vw, 20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(9px, 2vw, 11px);
+  font-weight: 600;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.floating-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-left-color: #60a5fa;
+  transform: translateX(3px);
+}
+
+.floating-item:hover::before {
+  background: #60a5fa;
+  transform: scale(1.1);
+}
+
+.floating-item:last-child {
+  margin-bottom: 0;
+}
+
+.floating-text {
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.4;
+  font-size: clamp(10px, 2.2vw, 12px);
+  flex: 1;
+  word-wrap: break-word;
+  hyphens: auto;
+  font-weight: 400;
+}
+
+/* Animación de pulso para instrucciones activas */
+@keyframes instruction-pulse {
+  0%, 100% { 
+    border-left-color: rgba(59, 130, 246, 0.7);
+    box-shadow: 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  50% { 
+    border-left-color: #60a5fa;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+  }
+}
+
+.floating-item:first-child {
+  animation: instruction-pulse 2s ease-in-out infinite;
+}
+
+/* Área principal del mapa */
+.map-main {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.map-element {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  touch-action: manipulation;
+}
+
+.map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  text-align: center;
+  background: var(--white-alpha-90);
+  padding: clamp(20px, 4vw, 30px);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-light);
+  backdrop-filter: blur(10px);
+}
+
+.loading-spinner {
+  width: clamp(30px, 6vw, 40px);
+  height: clamp(30px, 6vw, 40px);
+  border: 3px solid rgba(30, 58, 138, 0.1);
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto clamp(10px, 2vw, 15px);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: clamp(14px, 2.5vw, 16px);
+  font-weight: 500;
+}
+
+/* Sección de edificios */
+.building-section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+  pointer-events: none;
+}
+
+.building-list-container {
+  pointer-events: auto;
+}
+
+/* Responsive Design */
+
+/* Mobile Portrait */
+@media (max-width: 480px) {
+  .map-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  
+  .map-title {
+    position: static;
+    transform: none;
+    text-align: center;
+  }
+  
+  .back-button {
+    align-self: flex-end;
+  }
+  
+  .floating-instructions {
+    width: clamp(200px, 50vw, 240px);
+    max-height: clamp(180px, 40vh, 300px);
+    top: clamp(70px, 12vh, 90px);
+    left: 5px;
+  }
+  
+  .floating-eta {
+    padding: clamp(8px, 2vw, 12px);
+  }
+  
+  .eta-content {
+    font-size: clamp(11px, 2.5vw, 13px);
+  }
+  
+  .floating-title {
+    font-size: clamp(10px, 2.2vw, 12px);
+  }
+  
+  .floating-text {
+    font-size: clamp(9px, 2vw, 10px);
+  }
+  
+  .floating-item::before {
+    width: clamp(14px, 3vw, 16px);
+    height: clamp(14px, 3vw, 16px);
+    font-size: clamp(8px, 1.8vw, 9px);
+  }
+  
+  .back-text {
+    display: none;
+  }
+}
+
+/* Mobile Landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  .map-header {
+    padding: 10px;
+  }
+  
+  .floating-instructions {
+    width: clamp(220px, 35vw, 260px);
+    max-height: clamp(140px, 45vh, 250px);
+    top: clamp(60px, 10vh, 80px);
+  }
+  
+  .eta-content {
+    font-size: clamp(12px, 2.8vw, 14px);
+  }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .floating-instructions {
+    width: clamp(260px, 32vw, 300px);
+    max-height: clamp(200px, 50vh, 400px);
+  }
+  
+  .eta-content {
+    font-size: clamp(14px, 3vw, 16px);
+  }
+  
+  .floating-text {
+    font-size: clamp(11px, 2.3vw, 12px);
+  }
+}
+
+/* Desktop Large */
+@media (min-width: 1440px) {
+  .floating-instructions {
+    width: clamp(280px, 25vw, 340px);
+    max-height: clamp(220px, 55vh, 480px);
+  }
+  
+  .eta-content {
+    font-size: 16px;
+  }
+  
+  .floating-text {
+    font-size: 12px;
+  }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+  .map-title {
+    font-size: 36px;
+    padding: 18px 35px;
+  }
+  
+  .floating-instructions {
+    width: clamp(300px, 22vw, 380px);
+    max-height: clamp(240px, 60vh, 550px);
+  }
+  
+  .eta-content {
+    font-size: 18px;
+  }
+  
+  .floating-title {
+    font-size: 15px;
+  }
+  
+  .floating-text {
+    font-size: 13px;
+  }
+  
+  .floating-item::before {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .map-element {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .loading-spinner {
+    animation: none;
+    border: 3px solid var(--primary-color);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .map-loading {
+    background: rgba(17, 24, 39, 0.95);
+    color: white;
+  }
+  
+  .loading-text {
+    color: white;
+  }
+  
+  .map-title {
+    background: rgba(17, 24, 39, 0.95);
+    color: #60a5fa;
+  }
+}

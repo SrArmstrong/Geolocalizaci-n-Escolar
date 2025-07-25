@@ -10,6 +10,7 @@ import pathPairs from './pathPairs';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BuildingList from './components/commons/BuildingList';
+import './mapstyle.css';
 
 
 
@@ -19,48 +20,10 @@ function MapComponent() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [routingControl, setRoutingControl] = useState(null);
   const currentLocationRef = useRef(null);
-  const [arrivalMessage, setArrivalMessage] = useState(false);
-  const [debugMode, setDebugMode] = useState(false);
+  //const [debugMode, setDebugMode] = useState(false);
+  const [myInstructions, setMyInstructions] = useState([]);
 
-  const DEBUG_MODE = false; // Cambiar entre true/false para mostrar o no los nodos  
-
-  //const [destination, setDestination] = useState([LAT, LNG]);
-  const buttonStyle = {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-    zIndex: 1000,
-    background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
-    color: "white",
-    border: "none",
-    padding: "0.9rem 1.8rem",
-    fontSize: "1rem",
-    fontWeight: "600",
-    borderRadius: "40px",
-    cursor: "pointer",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    boxShadow: "0 10px 20px rgba(30, 58, 138, 0.3)"
-  };
-
-
-
-  const mapStyle = {
-    height: "100vh",
-    width: "100%",
-    position: "relative",
-    zIndex: 1,
-    touchAction: "none",
-    backgroundColor: "#f0f0f0"
-  };
-
-  const loadingStyle = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    zIndex: 3,
-    textAlign: "center"
-  };
+  const DEBUG_MODE = false; // Cambiar entre true/false para mostrar o no los nodos al igual que las coordenadas
 
   const positionWatcher = useRef(null);
   let lastRoute = null;
@@ -84,6 +47,48 @@ function MapComponent() {
     window.currentDestination = null;
     window.currentPathNodes = null;
     window.arrivalNotified = false;
+  }
+
+  function generateInstructions(userLocation, pathNodes) {
+    const instructions = [];
+
+    // Paso inicial: desde la ubicación actual al primer nodo
+    if (userLocation && pathNodes.length > 0) {
+      const firstNode = pathNodes[0];
+      const dist = getDistance(userLocation, firstNode);
+      const dir = getDirection(userLocation, firstNode);
+      instructions.push(`Desde tu ubicación actual, camina ${dist.toFixed(1)} metros hacia el ${dir}.`);
+    }
+
+    // Recorre todos los nodos intermedios
+    for (let i = 1; i < pathNodes.length; i++) {
+      const prev = pathNodes[i - 1];
+      const curr = pathNodes[i];
+      const dist = getDistance(prev, curr);
+      const dir = getDirection(prev, curr);
+
+      instructions.push(`Luego, continúa ${dist.toFixed(1)} metros hacia el ${dir}.`);
+    }
+
+    return instructions;
+  }
+
+  function getDirection(from, to) {
+    const latDiff = to[0] - from[0];
+    const lngDiff = to[1] - from[1];
+
+    const angle = Math.atan2(latDiff, lngDiff) * (180 / Math.PI);
+
+    if (angle >= -22.5 && angle < 22.5) return "este";
+    if (angle >= 22.5 && angle < 67.5) return "sureste";
+    if (angle >= 67.5 && angle < 112.5) return "sur";
+    if (angle >= 112.5 && angle < 157.5) return "suroeste";
+    if (angle >= 157.5 || angle < -157.5) return "oeste";
+    if (angle >= -157.5 && angle < -112.5) return "noroeste";
+    if (angle >= -112.5 && angle < -67.5) return "norte";
+    if (angle >= -67.5 && angle < -22.5) return "noreste";
+
+    return "desconocido";
   }
 
   const showCurrentPosition = (position) => {
@@ -166,64 +171,23 @@ function MapComponent() {
         Precisión: ${Math.round(accuracy)} metros
       `).openPopup();
 
-    // Recalcular ruta hacia el destino
-    /* Recalcular y recortar ruta conforme el usuario avanza
-    if (lastRoute && window.currentPathNodes) {
-      // Remover segmentos ya recorridos
-      window.currentPathNodes = removePassedSegments(userLocation, window.currentPathNodes);
-      
-      // Si aún quedan nodos en la ruta, actualizar
-      if (window.currentPathNodes.length > 0) {
-        mapRef.current.removeLayer(lastRoute);
-        
-        // Crear nueva ruta con los nodos restantes
-        const remainingPath = [userLocation, ...window.currentPathNodes];
-        lastRoute = L.polyline(remainingPath, {
-          color: '#FF5733',
-          weight: 6,
-          opacity: 1
-        }).addTo(mapRef.current);
-        
-        // Actualizar línea al destino final
-        const finalDestination = window.currentDestination;
-        if (finalDestination) {
-          // Remover línea anterior al destino
-          if (window.destinationLine) {
-            mapRef.current.removeLayer(window.destinationLine);
-          }
-          
-          // Crear nueva línea al destino desde el último nodo
-          window.destinationLine = L.polyline([window.currentPathNodes[window.currentPathNodes.length - 1], finalDestination], {
-            color: '#FF5733',
-            weight: 6,
-            opacity: 1,
-            dashArray: '5, 10'
-          }).addTo(mapRef.current);
-        }
-      } else {
-        // Si no quedan nodos, crear línea directa al destino
-        if (window.currentDestination) {
-          mapRef.current.removeLayer(lastRoute);
-          lastRoute = L.polyline([userLocation, window.currentDestination], {
-            color: '#FF5733',
-            weight: 6,
-            opacity: 1,
-            dashArray: '5, 10'
-          }).addTo(mapRef.current);
-        }
-      }
-    } else if (window.currentDestination) {
-      // Si no hay ruta activa pero hay destino, recalcular
-      if (lastRoute) mapRef.current.removeLayer(lastRoute);
-      lastRoute = createRoute(userLocation, window.currentDestination);
-    }
-    */
-
-    // Reemplaza la sección de recálculo de rutas en showCurrentPosition
     // Recalcular y recortar ruta conforme el usuario avanza
     if (lastRoute && window.currentPathNodes && window.currentPathNodes.length > 0) {
       // Remover segmentos ya recorridos
       window.currentPathNodes = removePassedSegments(userLocation, window.currentPathNodes);
+
+      // Actualizar instrucciones y ETA
+      if (window.currentPathNodes.length > 0 && window.currentDestination) {
+        const newInstructions = generateInstructions(userLocation, window.currentPathNodes);
+        const remainingDistance = window.currentPathNodes.reduce((acc, val, idx, arr) =>
+          idx ? acc + getDistance(arr[idx - 1], val) : acc + getDistance(userLocation, val), 0
+        ) + getDistance(window.currentPathNodes[window.currentPathNodes.length - 1], window.currentDestination);
+
+        const ETA = formatETA(remainingDistance / 1.4); // velocidad de caminata promedio
+        newInstructions.push(`🕒 Tiempo estimado restante: ${ETA}`);
+        setMyInstructions(newInstructions);
+      }
+
       
       // Si aún quedan nodos en la ruta, actualizar
       if (window.currentPathNodes.length > 0) {
@@ -333,7 +297,7 @@ function MapComponent() {
     const map = L.map("map", {
       minZoom: 2,
       maxZoom: 20,
-      zoomControl: true,
+      zoomControl: false,
       dragging: true,
       scrollWheelZoom: true
     });
@@ -512,116 +476,142 @@ function MapComponent() {
       return nearest;
     }
 
-  const createRoute = (userLocation, destination, destinationName = "") => {
-    // Limpiar rutas y popups anteriores
-    if (routingControl) {
-      map.removeControl(routingControl);
-      setRoutingControl(null);
-    }
-    map.closePopup();
+    const createRoute = (userLocation, destination, destinationName = "") => {
 
-    // Remover rutas previas
-    if (lastRoute) {
-      mapRef.current.removeLayer(lastRoute);
-      lastRoute = null;
-    }
-
-    // Remover polylines antiguas
-    map.eachLayer(layer => {
-      if (layer instanceof L.Polyline && !(layer instanceof L.Polygon)) {
-        map.removeLayer(layer);
+      // Limpiar rutas y popups anteriores
+      if (routingControl) {
+        map.removeControl(routingControl);
+        setRoutingControl(null);
       }
-    });
+      map.closePopup();
 
-    // Remover marcador previo del destino
-    if (lastDestinationMarker) {
-      mapRef.current.removeLayer(lastDestinationMarker);
-      lastDestinationMarker = null;
-    }
+      // Remover rutas previas
+      if (lastRoute) {
+        mapRef.current.removeLayer(lastRoute);
+        lastRoute = null;
+      }
 
-    // Encontrar nodo más cercano de inicio y fin
-    const startNode = findNearestIntersection(userLocation);
-    const endNode = findNearestIntersection(destination);
-
-    const graph = buildGraph();
-    let pathNodes = dijkstra(graph, JSON.stringify(startNode), JSON.stringify(endNode));
-
-    // Intentar rutas alternativas si es necesario
-    if (pathNodes.length <= 1) {
-      const allPaths = [];
-      const connectedNodes = Object.keys(graph)
-        .map(key => ({ key, connections: graph[key].length }))
-        .sort((a, b) => b.connections - a.connections)
-        .slice(0, 10)
-        .map(item => JSON.parse(item.key));
-
-      for (const midNode of connectedNodes) {
-        const midNodeKey = JSON.stringify(midNode);
-        const pathToMid = dijkstra(graph, JSON.stringify(startNode), midNodeKey);
-        const pathFromMid = dijkstra(graph, midNodeKey, JSON.stringify(endNode));
-
-        if (pathToMid.length > 1 && pathFromMid.length > 1) {
-          pathFromMid.shift();
-          const fullPath = [...pathToMid, ...pathFromMid];
-
-          const totalDist = fullPath.reduce((acc, val, idx, arr) =>
-            idx ? acc + getDistance(arr[idx - 1], val) : acc, 0
-          );
-          allPaths.push({ path: fullPath, distance: totalDist });
+      // Remover polylines antiguas
+      map.eachLayer(layer => {
+        if (layer instanceof L.Polyline && !(layer instanceof L.Polygon)) {
+          map.removeLayer(layer);
         }
+      });
+
+      // Remover marcador previo del destino
+      if (lastDestinationMarker) {
+        mapRef.current.removeLayer(lastDestinationMarker);
+        lastDestinationMarker = null;
       }
 
-      if (allPaths.length > 0) {
-        allPaths.sort((a, b) => a.distance - b.distance);
-        pathNodes = allPaths[0].path;
-      }
+      // Encontrar nodo más cercano de inicio y fin
+      const startNode = findNearestIntersection(userLocation);
+      const endNode = findNearestIntersection(destination);
 
-      // Eliminar puntos ya recorridos
-      while (pathNodes.length && getDistance(userLocation, pathNodes[0]) < 10) {
-        pathNodes.shift();
-      }
-    }
+      const graph = buildGraph();
+      let pathNodes = dijkstra(graph, JSON.stringify(startNode), JSON.stringify(endNode));
 
-    // Agresivo: usar nodos centrales
-    if (pathNodes.length <= 1) {
-      const centralNodes = [
-        [20.654214, -100.405725],
-        [20.655093, -100.404981],
-        [20.654126, -100.404952],
-        [20.655531, -100.405378],
-        [20.654872, -100.406180],
-        [20.653815, -100.404486],
-        [20.656291, -100.405180]
-      ].map(n => JSON.stringify(n));
+      // Intentar rutas alternativas si es necesario
+      if (pathNodes.length <= 1) {
+        const allPaths = [];
+        const connectedNodes = Object.keys(graph)
+          .map(key => ({ key, connections: graph[key].length }))
+          .sort((a, b) => b.connections - a.connections)
+          .slice(0, 10)
+          .map(item => JSON.parse(item.key));
 
-      for (const mid1 of centralNodes) {
-        for (const mid2 of centralNodes) {
-          if (mid1 === mid2) continue;
-          const path1 = dijkstra(graph, JSON.stringify(startNode), mid1);
-          const path2 = dijkstra(graph, mid1, mid2);
-          const path3 = dijkstra(graph, mid2, JSON.stringify(endNode));
-          if (path1.length > 1 && path2.length > 1 && path3.length > 1) {
-            path2.shift();
-            path3.shift();
-            pathNodes = [...path1, ...path2, ...path3];
-            break;
+        for (const midNode of connectedNodes) {
+          const midNodeKey = JSON.stringify(midNode);
+          const pathToMid = dijkstra(graph, JSON.stringify(startNode), midNodeKey);
+          const pathFromMid = dijkstra(graph, midNodeKey, JSON.stringify(endNode));
+
+          if (pathToMid.length > 1 && pathFromMid.length > 1) {
+            pathFromMid.shift();
+            const fullPath = [...pathToMid, ...pathFromMid];
+
+            const totalDist = fullPath.reduce((acc, val, idx, arr) =>
+              idx ? acc + getDistance(arr[idx - 1], val) : acc, 0
+            );
+            allPaths.push({ path: fullPath, distance: totalDist });
           }
         }
-        if (pathNodes.length > 1) break;
+
+        if (allPaths.length > 0) {
+          allPaths.sort((a, b) => a.distance - b.distance);
+          pathNodes = allPaths[0].path;
+        }
+
+        // Eliminar puntos ya recorridos
+        while (pathNodes.length && getDistance(userLocation, pathNodes[0]) < 10) {
+          pathNodes.shift();
+        }
       }
-    }
 
-    // Si sigue sin ruta, línea directa
-    if (pathNodes.length <= 1) {
-      console.log("No path found, using direct line");
+      // Agresivo: usar nodos centrales
+      if (pathNodes.length <= 1) {
+        const centralNodes = [
+          [20.654214, -100.405725],
+          [20.655093, -100.404981],
+          [20.654126, -100.404952],
+          [20.655531, -100.405378],
+          [20.654872, -100.406180],
+          [20.653815, -100.404486],
+          [20.656291, -100.405180]
+        ].map(n => JSON.stringify(n));
 
-      lastRoute = L.polyline([startNode, endNode], {
+        for (const mid1 of centralNodes) {
+          for (const mid2 of centralNodes) {
+            if (mid1 === mid2) continue;
+            const path1 = dijkstra(graph, JSON.stringify(startNode), mid1);
+            const path2 = dijkstra(graph, mid1, mid2);
+            const path3 = dijkstra(graph, mid2, JSON.stringify(endNode));
+            if (path1.length > 1 && path2.length > 1 && path3.length > 1) {
+              path2.shift();
+              path3.shift();
+              pathNodes = [...path1, ...path2, ...path3];
+              break;
+            }
+          }
+          if (pathNodes.length > 1) break;
+        }
+      }
+
+      // Si sigue sin ruta, línea directa
+      if (pathNodes.length <= 1) {
+        console.log("No path found, using direct line");
+
+        lastRoute = L.polyline([startNode, endNode], {
+          color: '#FF5733',
+          weight: 6,
+          opacity: 0.9,
+          dashArray: '10, 10'
+        }).addTo(map);
+
+        lastDestinationMarker = L.marker(destination, {
+          icon: new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [20, 32],
+            iconAnchor: [10, 32],
+            popupAnchor: [1, -28],
+            shadowSize: [32, 32]
+          })
+        }).addTo(map).bindPopup(destinationName);
+
+        map.fitBounds(L.latLngBounds([userLocation, startNode, endNode, destination]), { padding: [50, 50] });
+        return;
+      }
+
+      // Ruta peatonal encontrada
+      console.log("Found path with nodes:", pathNodes.length);
+
+      lastRoute = L.polyline(pathNodes, {
         color: '#FF5733',
         weight: 6,
-        opacity: 0.9,
-        dashArray: '10, 10'
+        opacity: 1
       }).addTo(map);
 
+      // Marcador destino único
       lastDestinationMarker = L.marker(destination, {
         icon: new L.Icon({
           iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
@@ -633,53 +623,37 @@ function MapComponent() {
         })
       }).addTo(map).bindPopup(destinationName);
 
-      map.fitBounds(L.latLngBounds([userLocation, startNode, endNode, destination]), { padding: [50, 50] });
-      return;
-    }
+      // Líneas hasta destino
+      L.polyline([userLocation, pathNodes[0]], {
+        color: '#FF5733',
+        weight: 6,
+        opacity: 1,
+        dashArray: '5, 10'
+      }).addTo(map);
 
-    // Ruta peatonal encontrada
-    console.log("Found path with nodes:", pathNodes.length);
+      L.polyline([pathNodes[pathNodes.length - 1], destination], {
+        color: '#FF5733',
+        weight: 6,
+        opacity: 1,
+        dashArray: '5, 10'
+      }).addTo(map);
 
-    lastRoute = L.polyline(pathNodes, {
-      color: '#FF5733',
-      weight: 6,
-      opacity: 1
-    }).addTo(map);
+      map.fitBounds(L.latLngBounds([userLocation, ...pathNodes, destination]), { padding: [50, 50] });
 
-    // Marcador destino único
-    lastDestinationMarker = L.marker(destination, {
-      icon: new L.Icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [20, 32],
-        iconAnchor: [10, 32],
-        popupAnchor: [1, -28],
-        shadowSize: [32, 32]
-      })
-    }).addTo(map).bindPopup(destinationName);
+      // Guardar información de la ruta actual para el seguimiento
+      window.currentPathNodes = [...pathNodes];
+      window.currentDestination = destination;
+      window.destinationLine = null;
+      
+      const instrucciones = generateInstructions(userLocation, pathNodes);
+      const remainingDistance = pathNodes.reduce((acc, val, idx, arr) =>
+        idx ? acc + getDistance(arr[idx - 1], val) : acc + getDistance(userLocation, val), 0
+      ) + getDistance(pathNodes[pathNodes.length - 1], destination);
 
-    // Líneas hasta destino
-    L.polyline([userLocation, pathNodes[0]], {
-      color: '#FF5733',
-      weight: 6,
-      opacity: 1,
-      dashArray: '5, 10'
-    }).addTo(map);
-
-    L.polyline([pathNodes[pathNodes.length - 1], destination], {
-      color: '#FF5733',
-      weight: 6,
-      opacity: 1,
-      dashArray: '5, 10'
-    }).addTo(map);
-
-    map.fitBounds(L.latLngBounds([userLocation, ...pathNodes, destination]), { padding: [50, 50] });
-
-    // Guardar información de la ruta actual para el seguimiento
-    window.currentPathNodes = [...pathNodes];
-    window.currentDestination = destination;
-    window.destinationLine = null;
-  };
+      const ETA = formatETA(remainingDistance / 1.4);
+      instrucciones.push(`🕒 Tiempo estimado total: ${ETA}`);
+      setMyInstructions(instrucciones);
+    };
 
     window.clearRoute = () => {
       if (routingControl) {
@@ -924,29 +898,6 @@ function MapComponent() {
         .openOn(map);
     });
 
-
-    /*
-    pathPairs.forEach(pair => {
-      L.polyline(pair, {
-        color: '#2980b9', // Cambiado de verde a azul
-        weight: 3,
-        opacity: 0.8
-      }).addTo(map);
-    });
-
-    const uniquePoints = [...new Set(pathPairs.flat().map(JSON.stringify))].map(JSON.parse);
-    uniquePoints.forEach((point, index) => {
-      L.circleMarker(point, {
-        radius: 4,
-        fillColor: '#e74c3c',
-        color: '#c0392b',
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.7
-      }).addTo(map);
-    });
-    */
-
     const campusBoundary = L.polygon([
       [20.653705, -100.407463],
       [20.659572, -100.406165],
@@ -1088,121 +1039,190 @@ function MapComponent() {
 
   return (
     <>
+      {/* Estilos globales del componente */}
       <style>
         {`
+          /* Estilos del popup personalizado */
           .custom-popup .leaflet-popup-content-wrapper {
             padding: 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            max-width: 90vw;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            max-width: min(350px, 90vw);
+            backdrop-filter: blur(10px);
           }
           .custom-popup .leaflet-popup-content {
             margin: 0;
-            line-height: 1.3;
+            line-height: 1.4;
             width: auto !important;
+            font-size: clamp(12px, 2.5vw, 14px);
           }
           .custom-popup .leaflet-popup-tip {
             background: white;
           }
+
+          /* Estilos del contenedor de rutas */
           .leaflet-routing-container {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            max-width: 90vw;
-            font-size: 12px;
-            color: black !important;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            max-width: min(400px, 90vw);
+            font-size: clamp(11px, 2vw, 13px);
+            color: #333 !important;
+            backdrop-filter: blur(10px);
           }
           .leaflet-routing-container h2 {
-            background: #3498db;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
             color: white;
             margin: 0;
-            padding: 8px;
-            border-radius: 8px 8px 0 0;
-            font-size: 13px;
+            padding: clamp(8px, 2vw, 12px);
+            border-radius: 12px 12px 0 0;
+            font-size: clamp(12px, 2.5vw, 14px);
+            font-weight: 600;
           }
           .leaflet-routing-alt {
-            color: black !important;
+            color: #333 !important;
           }
           .leaflet-routing-alt table {
-            color: black !important;
+            color: #333 !important;
           }
           .leaflet-routing-alt tr:hover {
-            background-color: rgba(0, 0, 0, 0.05) !important;
-            color: black !important;
+            background-color: rgba(59, 130, 246, 0.1) !important;
+            color: #333 !important;
           }
           .leaflet-routing-icon {
-            filter: brightness(0) !important;
+            filter: brightness(0.3) !important;
           }
+
+          /* Controles del mapa */
           .leaflet-touch .leaflet-control-layers,
           .leaflet-touch .leaflet-bar {
             border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-radius: 8px;
           }
           .leaflet-control-zoom a {
-            width: 30px !important;
-            height: 30px !important;
-            line-height: 30px !important;
-            font-size: 16px;
+            width: clamp(28px, 5vw, 34px) !important;
+            height: clamp(28px, 5vw, 34px) !important;
+            line-height: clamp(28px, 5vw, 34px) !important;
+            font-size: clamp(14px, 3vw, 18px);
+            border-radius: 6px;
           }
+
+          /* Responsividad para dispositivos móviles */
           @media (max-width: 768px) {
             .leaflet-control-zoom {
-              margin-bottom: 70px !important;
+              margin-bottom: 80px !important;
+              margin-right: 10px !important;
             }
             .leaflet-control-scale {
-              margin-bottom: 20px !important;
+              margin-bottom: 25px !important;
+              margin-left: 10px !important;
+            }
+          }
+
+          /* Responsividad para tablets */
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .leaflet-control-zoom {
+              margin-bottom: 60px !important;
+            }
+          }
+
+          /* Responsividad para pantallas grandes */
+          @media (min-width: 1920px) {
+            .leaflet-control-zoom a {
+              width: 40px !important;
+              height: 40px !important;
+              line-height: 40px !important;
+              font-size: 20px;
             }
           }
         `}
       </style>
 
-      <ToastContainer
-        position="top-center"
-        style={{ zIndex: 99999 }}
-      />
+      {/* Contenedor principal del mapa */}
+      <div className="map-container">
+        {/* Header con título y botón de regreso */}
+        <header className="map-header">
+          <h1 className="map-title">Mapa UTEQ</h1>
+          <button
+            onClick={() => navigate('/')}
+            className="back-button"
+            aria-label="Volver al inicio"
+          >
+            <span className="back-icon">⬅</span>
+            <span className="back-text">Volver</span>
+          </button>
+        </header>
 
-      <div style={{
-        position: 'fixed',
-        top: '15px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 9999,
-        background: 'rgba(255, 255, 255, 0.9)',
-        padding: '10px 20px',
-        borderRadius: '10px',
-        boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-        fontSize: 'clamp(20px, 3vw, 32px)',
-        fontWeight: 'bold',
-        color: '#1e3799'
-      }}>
-        Mapa UTEQ
+        {/* Sistema de notificaciones */}
+        <ToastContainer
+          position="top-center"
+          className="toast-container"
+          toastClassName="toast"
+          progressClassName="toast-progress"
+          closeButton={({ closeToast }) => (
+            <button 
+              className="toast-close-button" 
+              onClick={closeToast}
+              aria-label="Cerrar notificación"
+            >
+              ×
+            </button>
+          )}
+        />
+
+        {/* Ventana flotante de instrucciones */}
+        {myInstructions.length > 0 && (
+          <aside className="floating-instructions">
+            <div className="floating-content">
+              {/* ETA destacado */}
+              {myInstructions.length > 0 && myInstructions[myInstructions.length - 1].includes('🕒') && (
+                <div className="floating-eta">
+                  <div className="eta-content">
+                    {myInstructions[myInstructions.length - 1]}
+                  </div>
+                </div>
+              )}
+              
+              {/* Header de instrucciones */}
+              <header className="floating-header">
+                <h3 className="floating-title">
+                  <span className="floating-icon">📍</span>
+                  Navegación
+                </h3>
+              </header>
+              
+              {/* Lista de instrucciones */}
+              <div className="floating-body">
+                <ol className="floating-list">
+                  {myInstructions.slice(0, -1).map((step, idx) => (
+                    <li key={idx} className="floating-item">
+                      <span className="floating-text">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          </aside>
+        )}
+
+        {/* Área principal del mapa */}
+        <main className="map-main">
+          <div id="map" className="map-element" />
+          <div id="map-loading" className="map-loading">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">Cargando mapa...</p>
+          </div>
+        </main>
+
+        {/* Lista de edificios */}
+        <section className="building-section">
+          <div className="building-list-container">
+            <BuildingList />
+          </div>
+        </section>
       </div>
-
-      <button
-        onClick={() => navigate('/')}
-        style={buttonStyle}
-        onMouseEnter={(e) => {
-          e.target.style.transform = 'translateY(-2px) scale(1.03)';
-          e.target.style.boxShadow = '0 15px 30px rgba(30, 58, 138, 0.4)';
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.transform = 'translateY(0) scale(1)';
-          e.target.style.boxShadow = '0 10px 20px rgba(30, 58, 138, 0.3)';
-        }}
-      >
-        ⬅ Volver
-      </button>
-
-
-      <div id="map" style={mapStyle} />
-
-      <div id="map-loading" style={loadingStyle}>
-        <p>Cargando mapa...</p>
-      </div>
-      <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 2000 }}>
-      <BuildingList />
-    </div>
     </>
-    
   );
 }
 
@@ -1222,20 +1242,6 @@ function getDistance(a, b) {
   const C = 2 * Math.atan2(Math.sqrt(A), Math.sqrt(1-A));
   return R * C;
 }
-
-/* Utility: Find nearest intersection point
-function findNearestIntersection(point) {
-  let minDist = Infinity, nearest = null;
-  intersectionPoints.forEach(ip => {
-    const dist = getDistance(point, ip);
-    if (dist < minDist) {
-      minDist = dist;
-      nearest = ip;
-    }
-  });
-  return nearest;
-}
-*/
 
 function dijkstra(graph, start, end) {
   const queue = new Set(Object.keys(graph));
@@ -1294,4 +1300,10 @@ function dijkstra(graph, start, end) {
   }
   
   return path;
+}
+
+function formatETA(seconds) {
+  const min = Math.floor(seconds / 60);
+  const sec = Math.floor(seconds % 60);
+  return `${min} min ${sec < 10 ? '0' : ''}${sec} s`;
 }

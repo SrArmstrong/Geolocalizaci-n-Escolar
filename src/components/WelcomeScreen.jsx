@@ -149,6 +149,37 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
         }}>
           Explora nuestra universidad de manera interactiva
         </p>
+
+        <button 
+          onClick={onStartClick}
+          style={{
+            marginTop: '1.5rem',
+            padding: '1rem 2.5rem',
+            fontSize: '1.8rem',
+            fontWeight: '700',
+            background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '50px',
+            cursor: 'pointer',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: '0 10px 30px rgba(30, 58, 138, 0.3)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.6rem'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-3px) scale(1.05)';
+            e.target.style.boxShadow = '0 15px 40px rgba(30, 58, 138, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0) scale(1)';
+            e.target.style.boxShadow = '0 10px 30px rgba(30, 58, 138, 0.3)';
+          }}
+        >
+          🗺️ Explorar Mapa
+        </button>
+
       </div>
 
       {/* Navigation Tabs */}
@@ -392,34 +423,6 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
           justifyContent: 'center',
           flexWrap: 'wrap'
         }}>
-          <button 
-            onClick={onStartClick}
-            style={{
-              padding: '1.2rem 3rem',
-              fontSize: '1.2rem',
-              fontWeight: '700',
-              background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '50px',
-              cursor: 'pointer',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              boxShadow: '0 10px 30px rgba(30, 58, 138, 0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.8rem'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateY(-3px) scale(1.05)';
-              e.target.style.boxShadow = '0 15px 40px rgba(30, 58, 138, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0) scale(1)';
-              e.target.style.boxShadow = '0 10px 30px rgba(30, 58, 138, 0.3)';
-            }}
-          >
-            🗺️ Explorar Mapa
-          </button>
 
           <button 
             onClick={onAdminClick}
