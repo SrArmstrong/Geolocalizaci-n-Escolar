@@ -10,9 +10,8 @@ import pathPairs from './pathPairs';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BuildingList from './components/commons/BuildingList';
+import ProfesorList from "./components/commons/ProfesorList";
 import './mapstyle.css';
-
-
 
 function MapComponent() {
   const navigate = useNavigate();
@@ -20,10 +19,23 @@ function MapComponent() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [routingControl, setRoutingControl] = useState(null);
   const currentLocationRef = useRef(null);
-  //const [debugMode, setDebugMode] = useState(false);
+  const [mostrarProfesores, setMostrarProfesores] = useState(false);
   const [myInstructions, setMyInstructions] = useState([]);
 
   const DEBUG_MODE = false; // Cambiar entre true/false para mostrar o no los nodos al igual que las coordenadas
+    
+  const goToProfesor = (profesor) => {
+    const destino = [20.6543228, -100.4046271];
+
+    if (mapRef.current) {
+      mapRef.current.setView(destino, 19, { animate: true });
+      L.popup()
+        .setLatLng(destino)
+        .setContent(`<b>${profesor.nombre}</b><br>${profesor.cubiculo}`)
+        .openOn(mapRef.current);
+    }
+
+  };
 
   const positionWatcher = useRef(null);
   let lastRoute = null;
@@ -1037,7 +1049,7 @@ function MapComponent() {
     return getDistance(point, [xx, yy]);
   }
 
-  return (
+return (
     <>
       {/* Estilos globales del componente */}
       <style>
@@ -1215,15 +1227,14 @@ function MapComponent() {
           </div>
         </main>
 
-        {/* Lista de edificios */}
-        <section className="building-section">
-          <div className="building-list-container">
-            <BuildingList />
-          </div>
-        </section>
+        {/* BOTONES FLOTANTES - Versión nueva y mejorada */}
+        <ProfesorList goToProfesor={goToProfesor} />
+        <BuildingList />
+        
       </div>
     </>
   );
+
 }
 
 export default MapComponent;

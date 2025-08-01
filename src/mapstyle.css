@@ -385,11 +385,16 @@
 
 /* Sección de edificios */
 .building-section {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: fixed; /* Cambiado de absolute a fixed */
+  bottom: 20px; /* Posicionamos en la parte inferior */
+  left: 20px;
+  right: 20px;
+  top: auto; /* Anulamos cualquier top heredado */
   z-index: 2000;
   pointer-events: none;
+  width: auto; /* Ancho automático */
+  height: auto; /* Alto automático */
+  max-width: 400px; /* Máximo ancho para no ocupar toda la pantalla */
 }
 
 .building-list-container {
@@ -567,4 +572,99 @@
     background: rgba(17, 24, 39, 0.95);
     color: #60a5fa;
   }
+}
+
+/* Estilos para la lista de profesores */
+.professor-list-container {
+  background: var(--white-alpha-90);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-light);
+  padding: 12px;
+  margin-bottom: 10px;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--white-alpha-10);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.professor-list-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.professor-list-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.professor-list-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.professor-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition-smooth);
+  cursor: pointer;
+}
+
+.professor-item:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
+}
+
+.professor-item:last-child {
+  margin-bottom: 0;
+}
+
+.professor-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+  background-color: #e0f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--primary-color);
+}
+
+.professor-info {
+  flex: 1;
+}
+
+.professor-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--primary-color);
+  margin-bottom: 2px;
+}
+
+.professor-office {
+  font-size: 11px;
+  color: #4b5563;
+}
+
+.professor-button {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.professor-button:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-medium);
 }
