@@ -1,17 +1,37 @@
 import React, { useState, useEffect } from "react";
-import profesores from "../../profesores";
+import { obtenerProfesores } from "../../getProfesores";
 
 function ProfesorList({ goToProfesor }) {
   const [busqueda, setBusqueda] = useState("");
-  const [resultados, setResultados] = useState(profesores);
+  const [todosLosProfesores, setTodosLosProfesores] = useState([]);
+  const [resultados, setResultados] = useState([]);
   const [visible, setVisible] = useState(false);
 
+/*
   useEffect(() => {
     const filtro = profesores.filter((p) =>
       p.nombre.toLowerCase().includes(busqueda.toLowerCase())
     );
     setResultados(filtro);
   }, [busqueda]);
+*/
+
+  useEffect(() => {
+    const cargarProfesores = async () => {
+      const todos = await obtenerProfesores();
+      setTodosLosProfesores(todos);
+      setResultados(todos); // Mostrar todos por defecto
+    };
+
+    cargarProfesores();
+  }, []);
+
+  useEffect(() => {
+    const filtro = todosLosProfesores.filter((p) =>
+      p.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    );
+    setResultados(filtro);
+  }, [busqueda, todosLosProfesores]);
 
   const handleProfesorClick = (prof) => {
     goToProfesor(prof);

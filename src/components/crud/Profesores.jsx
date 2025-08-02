@@ -7,13 +7,36 @@ const Profesores = () => {
   const [profesores, setProfesores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ id: '', nombre: '', cubiculo: '', planta: '', turno: '', materias: [] });
+  const [formData, setFormData] = useState({ 
+    id: '', 
+    nombre: '', 
+    cubiculo: '', 
+    coordenadas: [0, 0],
+    materias: [] 
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'profesores'), (snapshot) => {
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const data = snapshot.docs.map(doc => {
+        const profesorData = doc.data();
+        const tieneCoordenadas = profesorData.coordenadas && profesorData.coordenadas["0"] && profesorData.coordenadas["1"];
+        
+        return {
+          id: doc.id,
+          nombre: profesorData.nombre || "Desconocido",
+          cubiculo: profesorData.cubiculo || "No especificado",
+          coordenadas: tieneCoordenadas
+            ? [
+                parseFloat(profesorData.coordenadas["0"]),
+                parseFloat(profesorData.coordenadas["1"]),
+              ]
+            : [0, 0],
+          materias: profesorData.materias || []
+        };
+      }).filter(prof => prof.coordenadas[0] !== 0 && prof.coordenadas[1] !== 0);
+      
       setProfesores(data);
       setLoading(false);
     });
@@ -22,25 +45,51 @@ const Profesores = () => {
   }, []);
 
   const handleEdit = (profesor) => {
-    setFormData({ ...profesor, materias: profesor.materias || [] });
+    setFormData({ 
+      ...profesor, 
+      materias: profesor.materias || [],
+      coordenadas: profesor.coordenadas || [0, 0]
+    });
     setIsEditing(true);
     setShowForm(true);
   };
 
   const handleAdd = () => {
-    setFormData({ id: '', nombre: '', cubiculo: '', planta: '', turno: '', materias: [] });
+    setFormData({ 
+      id: '', 
+      nombre: '', 
+      cubiculo: '', 
+      coordenadas: [0, 0],
+      materias: [] 
+    });
     setIsEditing(false);
     setShowForm(true);
   };
 
   const handleSubmit = async () => {
-    const { id, nombre, cubiculo, planta, turno, materias } = formData;
+    const { id, nombre, cubiculo, coordenadas, materias } = formData;
     try {
       const docRef = doc(db, 'profesores', id);
       if (isEditing) {
-        await updateDoc(docRef, { nombre, cubiculo, planta, turno, materias });
+        await updateDoc(docRef, { 
+          nombre, 
+          cubiculo, 
+          coordenadas: {
+            "0": coordenadas[0],
+            "1": coordenadas[1]
+          },
+          materias 
+        });
       } else {
-        await setDoc(docRef, { nombre, cubiculo, planta, turno, materias });
+        await setDoc(docRef, { 
+          nombre, 
+          cubiculo, 
+          coordenadas: {
+            "0": coordenadas[0],
+            "1": coordenadas[1]
+          },
+          materias 
+        });
       }
       setShowForm(false);
     } catch (error) {
@@ -132,13 +181,10 @@ const Profesores = () => {
                   </div>
                   
                   <div style={infoRowStyle}>
-                    <span style={labelStyle}>📍 Planta:</span>
-                    <span style={valueStyle}>{profesor.planta || 'No especificada'}</span>
-                  </div>
-                  
-                  <div style={infoRowStyle}>
-                    <span style={labelStyle}>🕐 Turno:</span>
-                    <span style={valueStyle}>{profesor.turno || 'No especificado'}</span>
+                    <span style={labelStyle}>📍 Coordenadas:</span>
+                    <span style={valueStyle}>
+                      {profesor.coordenadas ? `${profesor.coordenadas[0]}, ${profesor.coordenadas[1]}` : 'No especificadas'}
+                    </span>
                   </div>
                   
                   <div style={infoRowStyle}>
@@ -221,23 +267,29 @@ const Profesores = () => {
               </div>
               
               <div style={fieldGroupStyle}>
-                <label style={fieldLabelStyle}>Planta</label>
-                <input
-                  placeholder="Ej: Planta Baja"
-                  value={formData.planta}
-                  onChange={(e) => setFormData({ ...formData, planta: e.target.value })}
-                  style={inputStyle}
-                />
-              </div>
-              
-              <div style={fieldGroupStyle}>
-                <label style={fieldLabelStyle}>Turno</label>
-                <input
-                  placeholder="Ej: Matutino"
-                  value={formData.turno}
-                  onChange={(e) => setFormData({ ...formData, turno: e.target.value })}
-                  style={inputStyle}
-                />
+                <label style={fieldLabelStyle}>Coordenadas</label>
+                <div style={coordenadasContainerStyle}>
+                  <input
+                    type="number"
+                    placeholder="Latitud"
+                    value={formData.coordenadas[0]}
+                    onChange={(e) => setFormData({ 
+                      ...formData, 
+                      coordenadas: [parseFloat(e.target.value) || 0, formData.coordenadas[1]] 
+                    })}
+                    style={coordenadaInputStyle}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Longitud"
+                    value={formData.coordenadas[1]}
+                    onChange={(e) => setFormData({ 
+                      ...formData, 
+                      coordenadas: [formData.coordenadas[0], parseFloat(e.target.value) || 0] 
+                    })}
+                    style={coordenadaInputStyle}
+                  />
+                </div>
               </div>
               
               <div style={fieldGroupStyle}>
@@ -767,6 +819,16 @@ const confirmButtonsStyle = {
   display: 'flex',
   gap: '1rem',
   justifyContent: 'center'
+};
+const coordenadasContainerStyle = { 
+  display: 'flex',
+  gap: '8px'
+};
+const coordenadaInputStyle = {
+  flex: 1,
+  padding: '8px',
+  border: '1px solid #ccc',
+  borderRadius: '4px'
 };
 
 export default Profesores;
