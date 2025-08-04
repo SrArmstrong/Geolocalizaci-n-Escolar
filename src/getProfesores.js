@@ -6,27 +6,36 @@ export const obtenerProfesores = async () => {
   const profesoresRef = collection(db, "profesores");
   const snapshot = await getDocs(profesoresRef);
 
-  return snapshot.docs
+  console.log("Cantidad total de documentos:", snapshot.size);
+
+  const profesoresConCoordenadas = snapshot.docs
     .map((doc) => {
       const data = doc.data();
-
-      // Verifica que coordenadas existan y sean válidas
       const tieneCoordenadas = data.coordenadas && data.coordenadas["0"] && data.coordenadas["1"];
+
+      if (!tieneCoordenadas) return null; // ❌ Ignora si no tiene coordenadas
+
+      const coordenadas = [
+        parseFloat(data.coordenadas["0"]),
+        parseFloat(data.coordenadas["1"]),
+      ];
+
+      console.log(`✅ Profesor válido (${doc.id}):`, {
+        nombre: data.nombre,
+        cubiculo: data.cubiculo,
+        coordenadas,
+      });
 
       return {
         id: doc.id,
         nombre: data.nombre || "Desconocido",
         cubiculo: data.cubiculo || "No especificado",
-        coordenadas: tieneCoordenadas
-          ? [
-              parseFloat(data.coordenadas["0"]),
-              parseFloat(data.coordenadas["1"]),
-            ]
-          : [0, 0], // Valor por defecto o podrías omitir este profesor
+        coordenadas,
       };
     })
-    // Opcional: filtra los que no tienen coordenadas válidas
-    .filter(prof => prof.coordenadas[0] !== 0 && prof.coordenadas[1] !== 0);
-    
+    .filter(Boolean); // 🧹 Elimina los nulls
+
+  return profesoresConCoordenadas;
 };
+
 

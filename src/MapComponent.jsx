@@ -19,23 +19,24 @@ function MapComponent() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [routingControl, setRoutingControl] = useState(null);
   const currentLocationRef = useRef(null);
-  const [mostrarProfesores, setMostrarProfesores] = useState(false);
   const [myInstructions, setMyInstructions] = useState([]);
 
   const DEBUG_MODE = false; // Cambiar entre true/false para mostrar o no los nodos al igual que las coordenadas
     
   const goToProfesor = (profesor) => {
-    const destino = [20.6543228, -100.4046271];
+    //const destino = [20.6543228, -100.4046271];
+    const destino = profesor.coordenadas;
 
-    if (mapRef.current) {
-      mapRef.current.setView(destino, 19, { animate: true });
-      L.popup()
-        .setLatLng(destino)
-        .setContent(`<b>${profesor.nombre}</b><br>${profesor.cubiculo}`)
-        .openOn(mapRef.current);
-    }
-
-  };
+    if (mapRef.current && destino && destino.length === 2) {
+        mapRef.current.setView(destino, 19, { animate: true });
+        L.popup()
+          .setLatLng(destino)
+          .setContent(`<b>${profesor.nombre}</b><br>${profesor.cubiculo}`)
+          .openOn(mapRef.current);
+      } else {
+        console.warn("Coordenadas inválidas para el profesor:", profesor);
+      }
+    };
 
   const positionWatcher = useRef(null);
   let lastRoute = null;
