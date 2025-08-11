@@ -7,15 +7,6 @@ function ProfesorList({ goToProfesor }) {
   const [resultados, setResultados] = useState([]);
   const [visible, setVisible] = useState(false);
 
-/*
-  useEffect(() => {
-    const filtro = profesores.filter((p) =>
-      p.nombre.toLowerCase().includes(busqueda.toLowerCase())
-    );
-    setResultados(filtro);
-  }, [busqueda]);
-*/
-
   useEffect(() => {
     const cargarProfesores = async () => {
       const todos = await obtenerProfesores();

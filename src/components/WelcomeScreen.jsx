@@ -423,7 +423,7 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
           justifyContent: 'center',
           flexWrap: 'wrap'
         }}>
-
+          {/*
           <button 
             onClick={onAdminClick}
             style={{
@@ -452,7 +452,7 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
           >
             ⚙️ Administrar
           </button>
-
+          */}
         </div>
       </div>
 

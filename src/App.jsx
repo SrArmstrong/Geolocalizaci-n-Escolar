@@ -16,7 +16,7 @@ function App() {
       }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/admin" element={<AdminPanel />} />
+          {/* <Route path="/admin" element={<AdminPanel />} /> */}
           <Route path="/map" element={<MapComponent />} />
         </Routes>
       </div>
