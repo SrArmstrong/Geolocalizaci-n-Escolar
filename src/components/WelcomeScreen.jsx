@@ -1,13 +1,49 @@
 import { useState, useEffect } from 'react';
+import { doc, getDoc, setDoc, increment, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebase';
 import logoUTEQ from '../assets/logo_uteq.png'; // Adjust the import path as necessary
 
 function WelcomeScreen({ onStartClick, onAdminClick }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeSection, setActiveSection] = useState('main');
+  const [mapClicks, setMapClicks] = useState(0);
+  const [showStats, setShowStats] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
+    
+    // Suscribirse a cambios en tiempo real del contador
+    const statsRef = doc(db, "stats", "mapClicks");
+    const unsubscribe = onSnapshot(statsRef, (doc) => {
+      if (doc.exists()) {
+        setMapClicks(doc.data().count);
+      }
+    });
+    
+    return () => unsubscribe();
   }, []);
+
+    // Función para registrar el clic en Firebase
+  const handleMapClick = async () => {
+    try {
+      const statsRef = doc(db, "stats", "mapClicks");
+      const docSnap = await getDoc(statsRef);
+      
+      if (docSnap.exists()) {
+        await setDoc(statsRef, {
+          count: increment(1)
+        }, { merge: true });
+      } else {
+        await setDoc(statsRef, {
+          count: 1
+        });
+      }
+    } catch (error) {
+      console.error("Error al actualizar el contador:", error);
+    }
+    
+    onStartClick();
+  };
 
   const sections = {
     main: {
@@ -106,6 +142,92 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
       padding: '2rem 1rem',
       overflowY: 'auto'
     }}>
+
+            {/* Botón para mostrar/ocultar estadísticas */}
+      <button 
+        onClick={() => setShowStats(!showStats)}
+        style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          zIndex: 1000,
+          padding: '0.5rem 1rem',
+          backgroundColor: '#1e3a8a',
+          color: 'white',
+          border: 'none',
+          borderRadius: '50px',
+          cursor: 'pointer',
+          fontSize: '0.9rem',
+          fontWeight: '600',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}
+      >
+        📊 {showStats ? 'Ocultar Stats' : 'Mostrar Stats'}
+      </button>
+
+      {/* Ventana de estadísticas */}
+      {showStats && (
+        <div style={{
+          position: 'fixed',
+          top: '70px',
+          right: '20px',
+          zIndex: 999,
+          backgroundColor: 'white',
+          borderRadius: '15px',
+          padding: '1.5rem',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+          minWidth: '250px',
+          border: '2px solid #e2e8f0',
+          animation: 'fadeIn 0.3s ease-out'
+        }}>
+          <h3 style={{
+            margin: '0 0 1rem 0',
+            color: '#1e3a8a',
+            fontSize: '1.2rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}>
+            📊 Estadísticas
+          </h3>
+          
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.8rem'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0.8rem',
+              backgroundColor: '#2990f7ff',
+              borderRadius: '10px'
+            }}>
+              <span style={{ fontWeight: '500' }}>Visitas al mapa:</span>
+              <span style={{
+                fontWeight: '700',
+                fontSize: '1.3rem',
+                color: '#ffffffff'
+              }}>{mapClicks}</span>
+            </div>
+            
+            <div style={{
+              fontSize: '0.8rem',
+              color: '#64748b',
+              textAlign: 'center',
+              marginTop: '0.5rem',
+              fontStyle: 'italic'
+            }}>
+              Actualizado en tiempo real
+            </div>
+          </div>
+        </div>
+      )}
+
       
       {/* Header Section */}
       <div style={{
@@ -151,7 +273,7 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
         </p>
 
         <button 
-          onClick={onStartClick}
+          onClick={handleMapClick}
           style={{
             marginTop: '1.5rem',
             padding: '1rem 2.5rem',
