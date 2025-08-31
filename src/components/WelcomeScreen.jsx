@@ -25,7 +25,6 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
 
     // Función para registrar el clic en Firebase
   const handleMapClick = async () => {
-    /*
     try {
       const statsRef = doc(db, "stats", "mapClicks");
       const docSnap = await getDoc(statsRef);
@@ -44,8 +43,6 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
     }
     
     onStartClick();
-    */
-     window.location.href = '/map';
   };
 
   const sections = {
