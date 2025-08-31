@@ -7,7 +7,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Acceso principal para estudiantes y visitantes',
       contact: 'Vigilancia: ext. 1001',
-      codigo: ""
+      codigo: ''
     },
     { 
       latitude: 20.653641, 
@@ -17,7 +17,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Acceso peatonal. Horario: 6:00 AM - 10:00 PM',
       contact: 'Vigilancia: ext. 1001',
-      codigo: ''
+      codigo: 'Entrada Pie de la Cuesta'
     },
     {
       latitude: 20.654754,
@@ -27,7 +27,7 @@ const locations = [
       image: 'https://www.uteq.edu.mx/images/comedor.jpg',
       details: 'Cafetería estudiantil. Horario: 7:00 AM - 8:00 PM',
       contact: 'Administración campus: ext. 1010',
-      codigo: ''
+      codigo: 'Edificio N'
     },
     { 
       latitude: 20.653340, 
@@ -97,7 +97,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Prácticas y desarrollo de procesos industriales',
       contact: 'Tel: ext. 4003',
-      codigo: ''
+      codigo: 'Edificio D'
     },
     { 
       latitude: 20.6538499, 
@@ -107,7 +107,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Prácticas de mantenimiento industrial',
       contact: 'Tel: ext. 2002',
-      codigo: ''
+      codigo: 'Edificio E'
     },
     { 
       latitude: 20.6543228, 
@@ -117,7 +117,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Carreras: Ing. en Sistemas, Mecatrónica, TIC',
       contact: 'Tel: (442) 274-9000 ext. 2001',
-      codigo: ''
+      codigo: 'Edificio K'
     },
     {
       latitude: 20.654917,
@@ -127,7 +127,7 @@ const locations = [
       image: "https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp",
       details: "Áreas: Desarrollo de software, redes, bases de datos",
       contact: "Tel: (442) 274-9000 ext. 2002",
-      codigo: ''
+      codigo: 'Edificio I'
     },
     { 
       latitude: 20.6541214, 
@@ -137,7 +137,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Disponible 24/7',
       contact: 'Mantenimiento: ext. 1050',
-      codigo: ''
+      codigo: 'Edificio O'
     },
     { 
       latitude: 20.6543096, 
@@ -147,17 +147,17 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Horario: Lunes a Viernes 8:00 AM - 4:00 PM',
       contact: 'Tel: (442) 274-9000 ext. 1000',
-      codigo: ''
+      codigo: 'Edificio A'
     },
     { 
       latitude: 20.6540485, 
       longitude: -100.4060981, 
       title: 'Vinculación escolar', 
-      description: 'Inscripciones, becas, etc.',
+      description: 'Student Talent HUB',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Servicios: Inscripciones, Becas, Titulación',
       contact: 'Tel: (442) 274-9000 ext. 1200',
-      codigo: ''
+      codigo: 'Edificio B'
     },
     { 
       latitude: 20.6549875, 
@@ -167,7 +167,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Idiomas: Inglés, Francés, Alemán',
       contact: 'Tel: (442) 274-9000 ext. 3001',
-      codigo: ''
+      codigo: 'Edificio L'
     },
     { 
       latitude: 20.6544725, 
@@ -177,7 +177,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Carreras: Ing. Industrial, Procesos Industriales',
       contact: 'Tel: (442) 274-9000 ext. 4001',
-      codigo: ''
+      codigo: 'Edificio F'
     },
     {
       latitude: 20.655357,
@@ -187,7 +187,7 @@ const locations = [
       image: 'https://www.uteq.edu.mx/images/ambiental.jpg',
       details: 'Instalaciones académicas. Horario: 8:00 AM - 7:00 PM',
       contact: 'Coordinación académica: ext. 1025',
-      codigo: ''
+      codigo: 'Edificio H'
     },
     { 
       latitude: 20.653774,
@@ -197,7 +197,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Carreras: Administración, Contabilidad, Negocios',
       contact: 'Tel: ext. 5000',
-      codigo: ''
+      codigo: 'Edificio C'
     },
     { 
       latitude: 20.654914,
@@ -207,7 +207,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Horario: Lunes a Viernes 8:00 AM - 8:00 PM',
       contact: 'Tel: ext. 6000',
-      codigo: ''
+      codigo: 'Edificio M'
     },
     { 
       latitude: 20.655227,
@@ -217,27 +217,27 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Prácticas de mecatrónica y tecnologías de información',
       contact: 'Tel: ext. 2003',
-      codigo: ''
+      codigo: 'Edificio J'
     },
     { 
       latitude: 20.655563,
       longitude: -100.403884,
-      title: 'Edificio DEA G',
-      description: 'Edificio de la División Económica Administrativa',
+      title: 'Desarrollo de Negocios',
+      description: '',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Aulas y oficinas administrativas',
       contact: 'Tel: ext. 5001',
-      codigo: ''
+      codigo: 'Edificio G'
     },
     { 
       latitude: 20.656080,
       longitude: -100.403857,
       title: 'Área de mantenimiento y almacenamiento',
-      description: 'Área de mantenimiento y almacenamiento',
+      description: 'Almacen general y taller de mantenimiento',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Horario: Lunes a Viernes 7:00 AM - 3:00 PM',
       contact: 'Tel: ext. 1100',
-      codigo: 'AGTM'
+      codigo: 'Edificio R'
     },
     { 
       latitude: 20.656449,
@@ -267,27 +267,17 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Posgrados y desarrollo tecnológico',
       contact: 'Tel: ext. 7100',
-      codigo: ''
-    },
-    { 
-      latitude: 20.657509,
-      longitude: -100.403452,
-      title: 'CIC 4.0 UTEQ',
-      description: 'Creativity and Innovation Center 4.0',
-      image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
-      details: 'Centro de creatividad e innovación',
-      contact: 'Tel: ext. 7200',
-      codigo: ''
+      codigo: 'PIDET'
     },
     { 
       latitude: 20.6549875, 
       longitude: -100.4062969, 
-      title: 'Edificio de Medios (División Idiomas)',
+      title: 'División Idiomas',
       description: 'Espacio académico dedicado a lenguas extranjeras y medios digitales',
       image: 'https://www.uteq.edu.mx/images/idiomas.jpg', 
       details: 'Aulas multimedia e idiomas. Horario: 7:30 AM - 7:00 PM',
       contact: 'Coordinación de idiomas: ext. 1030',
-      codigo: ''
+      codigo: 'Edificio L'
     },
     { 
       latitude: 20.656181,
@@ -297,17 +287,17 @@ const locations = [
       image: 'https://www.uteq.edu.mx/images/sanitario.jpg', 
       details: 'Instalación sanitaria. Horario: 6:30 AM - 9:00 PM',
       contact: 'Servicios generales: ext. 1045',
-      codigo: ''
+      codigo: 'Edificio U'
     },
     { 
       latitude: 20.6557433, 
       longitude: -100.4048658, 
       title: 'Edificio de Nanotecnología', 
-      description: 'Edificio H',
+      description: 'Nanotecnología y Laboratorios',
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Laboratorios especializados en nanotecnología',
       contact: 'Tel: (442) 274-9000 ext. 6001',
-      codigo: ''
+      codigo: 'Edificio H-1'
     },
     { 
       latitude: 20.6560881, 
@@ -317,7 +307,7 @@ const locations = [
       image: 'https://oem.com.mx/diariodequeretaro/img/18759784/1624017791/BASE_LANDSCAPE/480/image.webp',
       details: 'Capacidad: 500 personas. Eventos académicos y culturales',
       contact: 'Reservaciones: ext. 7001',
-      codigo: ''
+      codigo: 'Edificio S'
     },
     { 
       latitude: 20.656819, 

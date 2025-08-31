@@ -5,9 +5,23 @@ const BuildingList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [visible, setVisible] = useState(false);
 
-  const filtered = locations.filter(loc =>
-    loc.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const normalizeText = (text) => {
+    return text
+      .toLowerCase()
+      .normalize("NFD") // Separa caracteres y acentos
+      .replace(/[\u0300-\u036f]/g, "") // Elimina diacríticos (acentos)
+      .replace(/\s+/g, ""); // Elimina todos los espacios
+  };
+
+  const filtered = locations.filter(loc => {
+    const normalizedSearch = normalizeText(searchTerm);
+    
+    return (
+      normalizeText(loc.title).includes(normalizedSearch) ||
+      normalizeText(loc.description).includes(normalizedSearch) ||
+      normalizeText(loc.codigo).includes(normalizedSearch)
+    );
+  });
 
   const goToBuilding = (location) => {
     if (window && typeof window.showRouteToLocation === 'function') {
