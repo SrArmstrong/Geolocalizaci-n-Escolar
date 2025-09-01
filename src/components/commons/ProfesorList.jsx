@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { obtenerProfesores } from "../../getProfesores";
 
-function ProfesorList({ goToProfesor }) {
+const ProfesorList = ({ goToProfesor, activeList, setActiveList }) => {
+  const visible = activeList === "profesor"; 
+
+  const toggleList = () => {
+    setActiveList(visible ? null : "profesor");
+  };
+
   const [busqueda, setBusqueda] = useState("");
   const [todosLosProfesores, setTodosLosProfesores] = useState([]);
   const [resultados, setResultados] = useState([]);
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const cargarProfesores = async () => {
@@ -26,18 +31,18 @@ function ProfesorList({ goToProfesor }) {
 
   const handleProfesorClick = (prof) => {
     goToProfesor(prof);
-    setVisible(false);
+    setActiveList(null);
   };
 
   return (
     <>
       {/* Botón flotante para abrir/cerrar */}
       <button
-        onClick={() => setVisible(!visible)}
+        onClick={toggleList}
         style={{
           position: 'fixed',
           right: '20px',
-          bottom: '80px', // Posicionado arriba del botón de edificios
+          bottom: visible ? '65vh' : '80px', // 👈 Se sube cuando la lista está abierta
           zIndex: 9999,
           backgroundColor: '#059669',
           color: 'white',
@@ -71,6 +76,7 @@ function ProfesorList({ goToProfesor }) {
       >
         {visible ? '✕' : 'Profesores'}
       </button>
+
 
       {/* Panel de lista de profesores */}
       {visible && (

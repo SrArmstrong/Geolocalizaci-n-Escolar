@@ -22,6 +22,8 @@ function MapComponent() {
   const [myInstructions, setMyInstructions] = useState([]);
 
   const DEBUG_MODE = false; // Cambiar entre true/false para mostrar o no los nodos al igual que las coordenadas
+
+  const [activeList, setActiveList] = useState(null); 
     
   const goToProfesor = (profesor) => {
     //const destino = [20.6543228, -100.4046271];
@@ -1229,8 +1231,15 @@ return (
         </main>
 
         {/* BOTONES FLOTANTES - Versión nueva y mejorada */}
-        <ProfesorList goToProfesor={goToProfesor} />
-        <BuildingList />
+        <ProfesorList 
+          goToProfesor={goToProfesor} 
+          activeList={activeList} 
+          setActiveList={setActiveList} 
+        />
+        <BuildingList 
+          activeList={activeList} 
+          setActiveList={setActiveList} 
+        />
         
       </div>
     </>

@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import locations from '../../locations';
 
-const BuildingList = () => {
+const BuildingList = ({ activeList, setActiveList }) => {
+  const visible = activeList === "building"; 
+
+  const toggleList = () => {
+    setActiveList(visible ? null : "building");
+  };
   const [searchTerm, setSearchTerm] = useState('');
-  const [visible, setVisible] = useState(false);
 
   const normalizeText = (text) => {
     return text
@@ -27,9 +31,10 @@ const BuildingList = () => {
     if (window && typeof window.showRouteToLocation === 'function') {
       window.showRouteToLocation(
         [location.latitude, location.longitude],
-        location.title
+        location.title,
+        location.codigo
       );
-      setVisible(false); 
+      setActiveList(null);
     } else {
       alert("La función de navegación no está disponible");
     }
@@ -38,45 +43,46 @@ const BuildingList = () => {
   return (
     <>
       {/* Botón flotante para abrir/cerrar */}
-      <button
-        onClick={() => setVisible(!visible)}
-        style={{
-          position: 'fixed',
-          right: '20px',
-          bottom: '20px',
-          zIndex: 9999,
-          backgroundColor: '#1e3a8a',
-          color: 'white',
-          border: 'none',
-          borderRadius: visible ? '12px' : '24px',
-          width: visible ? '60px' : 'auto',
-          height: '48px',
-          minWidth: '48px',
-          padding: visible ? '0' : '12px 16px',
-          fontSize: visible ? '20px' : '14px',
-          fontWeight: visible ? 'normal' : '500',
-          boxShadow: '0 6px 20px rgba(30, 58, 138, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1)',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'all 0.3s ease',
-          whiteSpace: 'nowrap',
-        }}
-        title={visible ? "Ocultar lista" : "Mostrar lista"}
-        onMouseOver={(e) => {
-          e.target.style.backgroundColor = '#1e40af';
-          e.target.style.transform = 'scale(1.05)';
-          e.target.style.boxShadow = '0 8px 25px rgba(30, 58, 138, 0.5), 0 4px 12px rgba(0, 0, 0, 0.15)';
-        }}
-        onMouseOut={(e) => {
-          e.target.style.backgroundColor = '#1e3a8a';
-          e.target.style.transform = 'scale(1)';
-          e.target.style.boxShadow = '0 6px 20px rgba(30, 58, 138, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1)';
-        }}
-      >
-        {visible ? '✕' : 'Edificios'}
-      </button>
+        <button
+          onClick={toggleList}
+          style={{
+            position: 'fixed',
+            right: '20px',
+            bottom: visible ? '65vh' : '20px', // 👈 Cuando visible, se sube
+            zIndex: 9999,
+            backgroundColor: '#1e3a8a',
+            color: 'white',
+            border: 'none',
+            borderRadius: visible ? '12px' : '24px',
+            width: visible ? '60px' : 'auto',
+            height: '48px',
+            minWidth: '48px',
+            padding: visible ? '0' : '12px 16px',
+            fontSize: visible ? '20px' : '14px',
+            fontWeight: visible ? 'normal' : '500',
+            boxShadow: '0 6px 20px rgba(30, 58, 138, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.3s ease',
+            whiteSpace: 'nowrap',
+          }}
+          title={visible ? "Ocultar lista" : "Mostrar lista"}
+          onMouseOver={(e) => {
+            e.target.style.backgroundColor = '#1e40af';
+            e.target.style.transform = 'scale(1.05)';
+            e.target.style.boxShadow = '0 8px 25px rgba(30, 58, 138, 0.5), 0 4px 12px rgba(0, 0, 0, 0.15)';
+          }}
+          onMouseOut={(e) => {
+            e.target.style.backgroundColor = '#1e3a8a';
+            e.target.style.transform = 'scale(1)';
+            e.target.style.boxShadow = '0 6px 20px rgba(30, 58, 138, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1)';
+          }}
+        >
+          {visible ? '✕' : 'Edificios'}
+        </button>
+
 
       {/* Panel de lista de edificios */}
       {visible && (
@@ -180,6 +186,7 @@ const BuildingList = () => {
                       textAlign: 'left',
                       display: 'flex',
                       alignItems: 'center',
+                      justifyContent: 'space-between', // 👈 Esto alinea título y código
                       gap: '12px',
                       transition: 'all 0.2s ease',
                       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)',
@@ -203,23 +210,31 @@ const BuildingList = () => {
                       if (text) text.style.color = '#1e3a8a';
                     }}
                   >
-                    <span 
-                      className="building-icon"
-                      style={{ 
-                        fontSize: '18px',
-                        transition: 'transform 0.2s ease',
-                        display: 'inline-block',
-                      }}
-                    >
-                      📍
-                    </span>
-                    <span
-                      className="building-text"
-                      style={{
-                        transition: 'color 0.2s ease',
-                      }}
-                    >
-                      {loc.title}
+                    {/* IZQUIERDA: ícono + título */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span 
+                        className="building-icon"
+                        style={{ 
+                          fontSize: '18px',
+                          transition: 'transform 0.2s ease',
+                          display: 'inline-block',
+                        }}
+                      >
+                        📍
+                      </span>
+                      <span
+                        className="building-text"
+                        style={{
+                          transition: 'color 0.2s ease',
+                        }}
+                      >
+                        {loc.title}
+                      </span>
+                    </div>
+
+                    {/* DERECHA: código */}
+                    <span style={{ fontSize: '14px', color: '#475569', fontWeight: '600' }}>
+                      {loc.codigo}
                     </span>
                   </button>
                 </li>
@@ -235,6 +250,7 @@ const BuildingList = () => {
               </li>
             )}
           </ul>
+
         </div>
       )}
     </>
