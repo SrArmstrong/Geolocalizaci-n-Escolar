@@ -65,7 +65,7 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
         { name: "División de Idiomas", icon: "🌍" }
       ],
       gradient: "linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)" // Azul medio a azul celeste
-    },
+    },/*
     instalaciones: {
       title: "Instalaciones",
       icon: "🏢",
@@ -117,7 +117,7 @@ function WelcomeScreen({ onStartClick, onAdminClick }) {
         }
       ],
       gradient: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%)" // Azul turquesa a azul clásico
-    }
+    }*/
   };
 
 

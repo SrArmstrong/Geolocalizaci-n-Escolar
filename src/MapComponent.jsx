@@ -26,7 +26,7 @@ function MapComponent() {
   const [activeList, setActiveList] = useState(null); 
     
   const goToProfesor = (profesor) => {
-    //const destino = [20.6543228, -100.4046271];
+    
     const destino = profesor.coordenadas;
 
     if (mapRef.current && destino && destino.length === 2) {
@@ -1231,11 +1231,11 @@ return (
         </main>
 
         {/* BOTONES FLOTANTES - Versión nueva y mejorada */}
-        <ProfesorList 
+        {/*<ProfesorList 
           goToProfesor={goToProfesor} 
           activeList={activeList} 
           setActiveList={setActiveList} 
-        />
+        />*/}
         <BuildingList 
           activeList={activeList} 
           setActiveList={setActiveList} 
