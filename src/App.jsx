@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import Home from './pages/Home';
 import { db } from './firebase';
 import { doc, getDoc, setDoc, increment } from 'firebase/firestore';
-import MapComponent from './MapComponent';
+import MapComponent from './components/map/MapComponent';
 import AdminPanel from './pages/AdminPanel';
 import './index.css';
 
@@ -55,7 +55,7 @@ function App() {
       }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          {/* <Route path="/admin" element={<AdminPanel />} /> */}
+          
           <Route path="/map" element={<MapComponent />} />
         </Routes>
       </div>

@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /login/
+Disallow: /private/
+Disallow: /cart/
+Disallow: /checkout/
+Allow: /
+
+Sitemap: https://tusitio.com/sitemap.xml

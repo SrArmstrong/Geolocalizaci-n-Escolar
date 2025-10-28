@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MapComponent from "../MapComponent";
+import MapComponent from "../components/map/MapComponent";
 import WelcomeScreen from "../components/WelcomeScreen";
 
 function Home() {

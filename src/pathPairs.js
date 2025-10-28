@@ -1,3 +1,5 @@
+// pathPairs.js
+
 const pathPairs = [
     // Entrada principal connections
     [[20.6532215, -100.4040249], [20.653621, -100.404156]], // Entrada principal

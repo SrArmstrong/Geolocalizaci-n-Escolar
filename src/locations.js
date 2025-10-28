@@ -1,3 +1,4 @@
+// location.js
 const locations = [
     { 
       latitude: 20.6532215, 

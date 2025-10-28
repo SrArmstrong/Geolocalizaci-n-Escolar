@@ -1,3 +1,4 @@
+// profesores.js
 const profesores = [
     {
         "nombre": "Jorge Alvarado",

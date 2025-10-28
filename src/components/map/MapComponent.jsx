@@ -4,19 +4,21 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
-import locations from './locations';
-import intersectionPoints from './intersectionPoints';
-import pathPairs from './pathPairs';
+import locations from '../../locations';
+import intersectionPoints from '../../intersectionPoints';
+import pathPairs from '../../pathPairs';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import BuildingList from './components/commons/BuildingList';
-import ProfesorList from "./components/commons/ProfesorList";
+import BuildingList from '../commons/BuildingList';
+import ProfesorList from "../commons/ProfesorList";
+import EventsList from "../commons/eventsList";
+import bus from "../../bus";
 import './mapstyle.css';
 
 function MapComponent() {
   const navigate = useNavigate();
   const mapRef = useRef(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const [ setCurrentLocation ] = useState(null);
   const [routingControl, setRoutingControl] = useState(null);
   const currentLocationRef = useRef(null);
   const [myInstructions, setMyInstructions] = useState([]);
@@ -24,21 +26,6 @@ function MapComponent() {
   const DEBUG_MODE = false; // Cambiar entre true/false para mostrar o no los nodos al igual que las coordenadas
 
   const [activeList, setActiveList] = useState(null); 
-    
-  const goToProfesor = (profesor) => {
-    
-    const destino = profesor.coordenadas;
-
-    if (mapRef.current && destino && destino.length === 2) {
-        mapRef.current.setView(destino, 19, { animate: true });
-        L.popup()
-          .setLatLng(destino)
-          .setContent(`<b>${profesor.nombre}</b><br>${profesor.cubiculo}`)
-          .openOn(mapRef.current);
-      } else {
-        console.warn("Coordenadas inválidas para el profesor:", profesor);
-      }
-    };
 
   const positionWatcher = useRef(null);
   let lastRoute = null;
@@ -304,6 +291,16 @@ function MapComponent() {
 
   useEffect(() => {
 
+    bus.on('evento.seleccionado', (evento) => {
+      const eventData = evento.datos;
+      const destination = [eventData.latitude, eventData.longitude];
+      
+      // Usar función existente del mapa
+      if (window.showRouteToLocation) {
+        window.showRouteToLocation(destination, eventData.title);
+      }
+    });
+
     if (mapRef.current) {
       mapRef.current.remove();
       mapRef.current = null;
@@ -363,7 +360,7 @@ function MapComponent() {
       });
     }
 
-    const showRoute = (destination, destinationName) => {
+    const showRoute = (destination) => {
       // Clear any existing routes first
       map.eachLayer(layer => {
         if (layer instanceof L.Polyline && !(layer instanceof L.Polygon)) {
@@ -833,11 +830,11 @@ function MapComponent() {
       }
       
       // Draw a direct line between points
-      const pathLine = L.polyline([start, end], {
+      /*const pathLine = L.polyline([start, end], {
         color: '#2980b9',
         weight: 6,
         opacity: 0.9
-      }).addTo(map);
+      }).addTo(map);*/
       
       // Add markers for start and end points
       L.marker(start, {
@@ -1230,16 +1227,22 @@ return (
           </div>
         </main>
 
-        {/* BOTONES FLOTANTES - Versión nueva y mejorada */}
-        {/*<ProfesorList 
-          goToProfesor={goToProfesor} 
-          activeList={activeList} 
-          setActiveList={setActiveList} 
-        />*/}
+        <EventsList 
+          activeList={activeList}
+          setActiveList={setActiveList}
+        />
         <BuildingList 
           activeList={activeList} 
           setActiveList={setActiveList} 
         />
+
+        <button 
+          className="floating-button"
+          onClick={() => setActiveList(activeList === 'events' ? null : 'events')}
+          aria-label="Mostrar u ocultar eventos"
+        >
+        📅
+        </button>
         
       </div>
     </>
