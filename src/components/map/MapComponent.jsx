@@ -18,7 +18,7 @@ import './mapstyle.css';
 function MapComponent() {
   const navigate = useNavigate();
   const mapRef = useRef(null);
-  const [ setCurrentLocation ] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [routingControl, setRoutingControl] = useState(null);
   const currentLocationRef = useRef(null);
   const [myInstructions, setMyInstructions] = useState([]);
@@ -360,7 +360,7 @@ function MapComponent() {
       });
     }
 
-    const showRoute = (destination) => {
+    const showRoute = (destination, destinationName) => {
       // Clear any existing routes first
       map.eachLayer(layer => {
         if (layer instanceof L.Polyline && !(layer instanceof L.Polygon)) {
