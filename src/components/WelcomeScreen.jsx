@@ -5,6 +5,7 @@ import EventsList from '../components/commons/eventsList.jsx';
 import logoUTEQ from '../assets/logo_uteq.png';
 import bus from '../bus.js';
 import eventService from '../services/eventService.js';
+import './WelcomeScreen.css';
 
 function WelcomeScreen({ onStartClick }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -12,8 +13,8 @@ function WelcomeScreen({ onStartClick }) {
   const [mapClicks, setMapClicks] = useState(0);
   const [showStats, setShowStats] = useState(false);
   const [activeList, setActiveList] = useState(null);
-  const [eventosData, setEventosData] = useState([]); // Nuevo estado para eventos
-  const [showEventsList, setShowEventsList] = useState(false); // Controlar qué vista mostrar
+  const [eventosData, setEventosData] = useState([]);
+  const [showEventsList, setShowEventsList] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -26,7 +27,6 @@ function WelcomeScreen({ onStartClick }) {
     });
 
     const handleEventosCargados = (evento) => {
-      // Guardar los eventos en el estado
       setEventosData(evento.datos.map(e => ({
         name: e.title,
         location: e.description,
@@ -104,220 +104,72 @@ function WelcomeScreen({ onStartClick }) {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: `
-        radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(30, 58, 138, 0.1) 0%, transparent 50%),
-        linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)
-      `,
-      opacity: isLoaded ? 1 : 0,
-      transform: `translateY(${isLoaded ? 0 : '30px'})`,
-      transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1)',
-      padding: '2rem 1rem',
-      overflowY: 'auto'
-    }}>
+    <div className={`welcome-container ${isLoaded ? 'loaded' : ''}`}>
 
       {/* Botón para mostrar/ocultar estadísticas */}
       <button 
         onClick={() => setShowStats(!showStats)}
-        style={{
-          position: 'fixed',
-          top: '20px',
-          right: '20px',
-          zIndex: 1000,
-          padding: '0.5rem 1rem',
-          backgroundColor: '#1e3a8a',
-          color: 'white',
-          border: 'none',
-          borderRadius: '50px',
-          cursor: 'pointer',
-          fontSize: '0.9rem',
-          fontWeight: '600',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem'
-        }}
+        className="stats-button"
       >
         📊 {showStats ? 'Ocultar Stats' : 'Mostrar Stats'}
       </button>
 
       {/* Ventana de estadísticas */}
       {showStats && (
-        <div style={{
-          position: 'fixed',
-          top: '70px',
-          right: '20px',
-          zIndex: 999,
-          backgroundColor: 'white',
-          borderRadius: '15px',
-          padding: '1.5rem',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
-          minWidth: '250px',
-          border: '2px solid #e2e8f0',
-          animation: 'fadeIn 0.3s ease-out'
-        }}>
-          <h3 style={{
-            margin: '0 0 1rem 0',
-            color: '#1e3a8a',
-            fontSize: '1.2rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}>
+        <div className="stats-panel">
+          <h3 className="stats-title">
             📊 Estadísticas
           </h3>
           
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.8rem'
-          }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '0.8rem',
-              backgroundColor: '#2990f7ff',
-              borderRadius: '10px'
-            }}>
+          <div className="stats-content">
+            <div className="stats-counter">
               <span style={{ fontWeight: '500' }}>Visitas al mapa:</span>
-              <span style={{
-                fontWeight: '700',
-                fontSize: '1.3rem',
-                color: '#ffffffff'
-              }}>{mapClicks}</span>
+              <span className="stats-count">{mapClicks}</span>
             </div>
             
-            <div style={{
-              fontSize: '0.8rem',
-              color: '#64748b',
-              textAlign: 'center',
-              marginTop: '0.5rem',
-              fontStyle: 'italic'
-            }}>
+            <div className="stats-note">
               Actualizado en tiempo real
             </div>
           </div>
         </div>
       )}
 
-      
       {/* Header Section */}
-      <div style={{
-        textAlign: 'center',
-        marginBottom: '3rem',
-        animation: 'fadeInDown 1s ease-out'
-      }}>
+      <div className="header-section">
         <img 
           src={logoUTEQ}
           alt="UTEQ Logo" 
-          style={{
-            width: '360px',
-            height: 'auto',
-            margin: '0 auto 2rem',
-            filter: 'drop-shadow(0 8px 16px rgba(30, 58, 138, 0.3))',
-            animation: 'float 3s ease-in-out infinite',
-            borderRadius: '15px'
-          }}
+          className="logo-image"
         />
         
-        <h1 style={{ 
-          color: '#1e3a8a',
-          fontSize: 'clamp(2.5rem, 6vw, 4rem)',
-          fontWeight: '800',
-          margin: '0 0 0.5rem',
-          letterSpacing: '-0.02em',
-          background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text'
-        }}>
-          Croquis UTEQ
+        <h1 className="main-title">
+          Mapa UTEQ
         </h1>
         
-        <p style={{
-          color: '#64748b',
-          fontSize: '1.2rem',
-          maxWidth: '600px',
-          margin: '0 auto',
-          lineHeight: '1.6'
-        }}>
+        <p className="subtitle">
           Explora nuestra universidad de manera interactiva
         </p>
 
         <button 
           onClick={handleMapClick}
-          style={{
-            marginTop: '1.5rem',
-            padding: '1rem 2.5rem',
-            fontSize: '1.8rem',
-            fontWeight: '700',
-            background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '50px',
-            cursor: 'pointer',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            boxShadow: '0 10px 30px rgba(30, 58, 138, 0.3)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.6rem'
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.transform = 'translateY(-3px) scale(1.05)';
-            e.target.style.boxShadow = '0 15px 40px rgba(30, 58, 138, 0.4)';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = 'translateY(0) scale(1)';
-            e.target.style.boxShadow = '0 10px 30px rgba(30, 58, 138, 0.3)';
-          }}
+          className="explore-button"
         >
           🗺️ Explorar Mapa
         </button>
-
       </div>
 
       {/* Navigation Tabs */}
-      <div style={{
-        display: 'flex',
-        gap: '1rem',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        marginBottom: '3rem',
-        padding: '0.5rem',
-        backgroundColor: 'white',
-        borderRadius: '20px',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-        maxWidth: '800px',
-        margin: '0 auto 3rem'
-      }}>
+      <div className="nav-tabs">
         {Object.keys(sections).map(section => (
           <button
             key={section}
             onClick={() => {
               setActiveSection(section);
               if (section === 'eventos') {
-                setShowEventsList(false); // Resetear a vista de tarjetas al cambiar sección
+                setShowEventsList(false);
               }
             }}
-            style={{
-              padding: '1rem 1.5rem',
-              backgroundColor: activeSection === section ? '#1e3a8a' : 'transparent',
-              color: activeSection === section ? 'white' : '#64748b',
-              border: 'none',
-              borderRadius: '15px',
-              cursor: 'pointer',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              fontSize: '0.95rem',
-              fontWeight: '600',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              transform: activeSection === section ? 'translateY(-2px)' : 'translateY(0)',
-              boxShadow: activeSection === section ? '0 8px 20px rgba(30, 58, 138, 0.3)' : 'none'
-            }}
+            className={`nav-button ${activeSection === section ? 'active' : ''}`}
           >
             <span style={{ fontSize: '1.2rem' }}>{sections[section].icon}</span>
             {sections[section].title}
@@ -326,41 +178,15 @@ function WelcomeScreen({ onStartClick }) {
       </div>
 
       {/* Content Section */}
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        animation: 'fadeInUp 0.6s ease-out'
-      }}>
-        <div style={{
-          background: sections[activeSection].gradient || 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
-          borderRadius: '25px',
-          padding: '2rem',
-          marginBottom: '3rem',
-          color: 'white',
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
-        }}>
-          <div style={{
-            position: 'absolute',
-            top: '-50px',
-            right: '-50px',
-            width: '200px',
-            height: '200px',
-            background: 'rgba(255,255,255,0.1)',
-            borderRadius: '50%',
-            animation: 'pulse 4s ease-in-out infinite'
-          }} />
+      <div className="content-section">
+        <div 
+          className="section-card"
+          style={{ background: sections[activeSection].gradient }}
+        >
+          <div className="section-pulse" />
           
-          <h2 style={{ 
-            fontSize: '2.5rem',
-            fontWeight: '700',
-            marginBottom: '1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem'
-          }}>
-            <span style={{ fontSize: '3rem' }}>{sections[activeSection].icon}</span>
+          <h2 className="section-title">
+            <span className="section-icon">{sections[activeSection].icon}</span>
             {sections[activeSection].title}
           </h2>
           
@@ -371,34 +197,11 @@ function WelcomeScreen({ onStartClick }) {
           )}
 
           {activeSection === 'carreras' && (
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '1.5rem' 
-            }}>
+            <div className="careers-grid">
               {sections.carreras.content.map((carrera, index) => (
                 <div
                   key={index}
-                  style={{
-                    backgroundColor: 'rgba(255,255,255,0.15)',
-                    backdropFilter: 'blur(10px)',
-                    padding: '1.5rem',
-                    borderRadius: '15px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                    border: '1px solid rgba(255,255,255,0.2)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-5px)';
-                    e.target.style.backgroundColor = 'rgba(255,255,255,0.25)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.backgroundColor = 'rgba(255,255,255,0.15)';
-                  }}
+                  className="career-item"
                 >
                   <span style={{ fontSize: '2rem' }}>{carrera.icon}</span>
                   <span style={{ fontSize: '1.1rem', fontWeight: '500' }}>{carrera.name}</span>
@@ -410,114 +213,47 @@ function WelcomeScreen({ onStartClick }) {
           {activeSection === 'eventos' && (
             <div>
               {/* Botones para cambiar entre vistas */}
-              <div style={{
-                display: 'flex',
-                gap: '1rem',
-                marginBottom: '2rem',
-                justifyContent: 'center',
-                flexWrap: 'wrap'
-              }}>
+              <div className="view-buttons">
                 <button
                   onClick={() => setShowEventsList(false)}
-                  style={{
-                    padding: '0.8rem 1.5rem',
-                    backgroundColor: !showEventsList ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)',
-                    color: 'white',
-                    border: '2px solid rgba(255,255,255,0.3)',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    transition: 'all 0.3s ease'
-                  }}
+                  className={`view-button ${!showEventsList ? 'active' : ''}`}
                 >
                   🗂️ Vista de Tarjetas
                 </button>
                 <button
                   onClick={() => setShowEventsList(true)}
-                  style={{
-                    padding: '0.8rem 1.5rem',
-                    backgroundColor: showEventsList ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)',
-                    color: 'white',
-                    border: '2px solid rgba(255,255,255,0.3)',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    transition: 'all 0.3s ease'
-                  }}
+                  className={`view-button ${showEventsList ? 'active' : ''}`}
                 >
                   📋 Lista Completa
                 </button>
               </div>
 
-              {/* Vista de Tarjetas (similar a carreras) */}
+              {/* Vista de Tarjetas */}
               {!showEventsList && (
-                <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-                  gap: '1.5rem' 
-                }}>
+                <div className="events-grid">
                   {eventosData.map((event, index) => (
                     <div
                       key={index}
                       onClick={() => handleEventClick(event.coords, event.location)}
-                      style={{
-                        backgroundColor: 'rgba(255,255,255,0.15)',
-                        backdropFilter: 'blur(10px)',
-                        padding: '2rem',
-                        borderRadius: '20px',
-                        cursor: 'pointer',
-                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        position: 'relative',
-                        overflow: 'hidden'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.transform = 'translateY(-8px) scale(1.03)';
-                        e.target.style.backgroundColor = 'rgba(255,255,255,0.25)';
-                        e.target.style.boxShadow = '0 20px 40px rgba(0,0,0,0.2)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.transform = 'translateY(0) scale(1)';
-                        e.target.style.backgroundColor = 'rgba(255,255,255,0.15)';
-                        e.target.style.boxShadow = 'none';
-                      }}
+                      className="event-card"
                     >
-                      <div style={{
-                        position: 'absolute',
-                        top: '1rem',
-                        right: '1rem',
-                        width: '40px',
-                        height: '40px',
-                        backgroundColor: event.color,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.2rem'
-                      }}>
+                      <div 
+                        className="event-icon"
+                        style={{ backgroundColor: event.color }}
+                      >
                         {event.icon}
                       </div>
                       
-                      <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '0.8rem', paddingRight: '3rem' }}>
+                      <h3 className="event-title">
                         {event.name}
                       </h3>
-                      <p style={{ fontSize: '1rem', opacity: 0.9, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <p className="event-location">
                         <span>📍</span> {event.location}
                       </p>
-                      <p style={{ fontSize: '0.9rem', opacity: 0.8, marginBottom: '1rem' }}>
+                      <p className="event-code">
                         Código: {event.codigo}
                       </p>
-                      <div style={{
-                        marginTop: '1rem',
-                        padding: '0.5rem 1rem',
-                        backgroundColor: 'rgba(255,255,255,0.2)',
-                        borderRadius: '10px',
-                        fontSize: '0.9rem',
-                        textAlign: 'center',
-                        fontWeight: '500'
-                      }}>
+                      <div className="event-action">
                         👆 Click para ubicar en el mapa
                       </div>
                     </div>
@@ -525,17 +261,9 @@ function WelcomeScreen({ onStartClick }) {
                 </div>
               )}
 
-              {/* Vista de Lista Completa (EventsList integrado) */}
+              {/* Vista de Lista Completa */}
               {showEventsList && (
-                <div style={{
-                  minHeight: '400px',
-                  backgroundColor: 'rgba(255,255,255,0.1)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  padding: '2rem',
-                  position: 'relative'
-                }}>
+                <div className="events-list-container">
                   <EventsList 
                     integrated={true}
                     activeList={activeList}
@@ -546,63 +274,7 @@ function WelcomeScreen({ onStartClick }) {
             </div>
           )}
         </div>
-
-        {/* Action Buttons */}
-        <div style={{ 
-          display: 'flex', 
-          gap: '1.5rem', 
-          justifyContent: 'center',
-          flexWrap: 'wrap'
-        }}>
-        </div>
       </div>
-
-      <style>
-        {`
-          @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            33% { transform: translateY(-10px) rotate(1deg); }
-            66% { transform: translateY(-5px) rotate(-1deg); }
-          }
-          
-          @keyframes fadeInDown {
-            from {
-              opacity: 0;
-              transform: translateY(-30px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(30px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          
-          @keyframes pulse {
-            0%, 100% { 
-              opacity: 0.1;
-              transform: scale(1);
-            }
-            50% { 
-              opacity: 0.2;
-              transform: scale(1.1);
-            }
-          }
-          
-          * {
-            box-sizing: border-box;
-          }
-        `}
-      </style>
     </div>
   );
 }

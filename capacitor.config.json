@@ -1,0 +1,15 @@
+{
+  "appId": "com.uteq.mapa",
+  "appName": "geo-escolar",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#ffffff",
+      "showSpinner": false
+    }
+  }
+}

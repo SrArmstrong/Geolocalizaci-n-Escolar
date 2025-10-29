@@ -8,7 +8,6 @@ function Home() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const navigate = useNavigate();
 
-  // Cambio de pantalla con transición
   const changeScreenWithTransition = (target) => {
     setIsTransitioning(true);
     setTimeout(() => {

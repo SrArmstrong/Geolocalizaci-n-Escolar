@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 texto.txt
 .env
+
+android/
+ios/
+*.orig
+.DS_Store
