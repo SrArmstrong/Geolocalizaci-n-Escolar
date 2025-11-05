@@ -5,6 +5,8 @@ import { db } from './firebase';
 import { doc, getDoc, setDoc, increment } from 'firebase/firestore';
 import MapComponent from './components/map/MapComponent';
 import AdminPanel from './pages/AdminPanel';
+import TermsAndConditions from './pages/TermsAndConditions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import './index.css';
 
 function VisitTracker() {
@@ -55,8 +57,9 @@ function App() {
       }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          
           <Route path="/map" element={<MapComponent />} />
+          <Route path="/terminos" element={<TermsAndConditions />} />
+          <Route path="/privacidad" element={<PrivacyPolicy />} />
         </Routes>
       </div>
     </Router>

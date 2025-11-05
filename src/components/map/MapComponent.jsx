@@ -757,64 +757,92 @@ function MapComponent() {
       `;
     };
 
-    window.showRouteToLocation = (destination, destinationName) => {
-      // If user location is available, use it as starting point
-      if (currentLocationRef.current) {
-        //startTracking();
-        const userLocation = currentLocationRef.current;
+window.showRouteToLocation = (destination, destinationName) => {
+  // Mostrar el popup inmediatamente con opciones genéricas
+  const showPopup = (userLocation = null) => {
+    let buttonsContent = '';
+    
+    if (userLocation) {
+      // Ubicación disponible - mostrar todas las opciones
+      const startStr = `${userLocation[0]},${userLocation[1]}`;
+      const endStr = `${destination[0]},${destination[1]}`;
+      const url = `https://www.google.com/maps/dir/?api=1&origin=${startStr}&destination=${endStr}&travelmode=walking`;
+      
+      buttonsContent = `
+        <button onclick="window.open('${url}', '_blank')" 
+                style="background: #3498db; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 13px; width: 100%;">
+          🗺️ Abrir en Google Maps
+        </button>
+        <button onclick="showPathOnMap([${userLocation}], [${destination}], '${destinationName}')" 
+                style="background: #2ecc71; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 13px; width: 100%;">
+          📍 Mostrar línea directa en el mapa
+        </button>
+        <button onclick="showRoute([${destination}], '${destinationName}')" 
+                style="background: #e67e22; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 13px; width: 100%;">
+          🚶 Mostrar ruta por caminos peatonales
+        </button>
+      `;
+    } else {
+      // Ubicación no disponible - mostrar opciones limitadas
+      const endStr = `${destination[0]},${destination[1]}`;
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${endStr}&travelmode=walking`;
+      
+      buttonsContent = `
+        <button onclick="window.open('${url}', '_blank')" 
+                style="background: #3498db; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 13px; width: 100%;">
+          🗺️ Abrir en Google Maps
+        </button>
+        <button onclick="showRoute([${destination}], '${destinationName}')" 
+                style="background: #e67e22; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 13px; width: 100%;">
+          🚶 Mostrar ruta por caminos peatonales
+        </button>
+        <div style="background: #fff3cd; color: #856404; padding: 8px; border-radius: 4px; font-size: 12px; margin-top: 8px;">
+          🔍 Obteniendo tu ubicación para más opciones...
+        </div>
+      `;
+    }
+    
+    L.popup()
+      .setLatLng(destination)
+      .setContent(`
+        <div style="max-width: 300px; font-family: Arial, sans-serif;">
+          <h4 style="margin: 0 0 8px 0;">Ruta hacia ${destinationName}</h4>
+          <p style="margin: 0 0 12px 0;">Selecciona cómo quieres ver la ruta:</p>
+          <div style="display: flex; gap: 8px; flex-direction: column;">
+            ${buttonsContent}
+          </div>
+        </div>
+      `)
+      .openOn(map);
+  };
+  
+  // Mostrar popup inmediatamente con opciones básicas
+  showPopup(currentLocationRef.current);
+  
+  // Si no tenemos ubicación actual, intentar obtenerla en segundo plano
+  if (!currentLocationRef.current && navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const userLocation = [latitude, longitude];
+        currentLocationRef.current = userLocation;
+        setCurrentLocation(userLocation);
         
-        // Open Google Maps with directions
-        const startStr = `${userLocation[0]},${userLocation[1]}`;
-        const endStr = `${destination[0]},${destination[1]}`;
-        const url = `https://www.google.com/maps/dir/?api=1&origin=${startStr}&destination=${endStr}&travelmode=walking`;
-        
-        // Create a popup with options
-        L.popup()
-          .setLatLng(destination)
-          .setContent(`
-            <div style="max-width: 300px; font-family: Arial, sans-serif;">
-              <h4 style="margin: 0 0 8px 0;">Ruta hacia ${destinationName}</h4>
-              <p style="margin: 0 0 12px 0;">Selecciona cómo quieres ver la ruta:</p>
-              <div style="display: flex; gap: 8px; flex-direction: column;">
-                <button onclick="window.open('${url}', '_blank')" 
-                        style="background: #3498db; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 13px; width: 100%;">
-                  🗺️ Abrir en Google Maps
-                </button>
-                <button onclick="showPathOnMap([${userLocation}], [${destination}], '${destinationName}')" 
-                        style="background: #2ecc71; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 13px; width: 100%;">
-                  📍 Mostrar línea directa en el mapa
-                </button>
-                <button onclick="showRoute([${destination}], '${destinationName}')" 
-                        style="background: #e67e22; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 13px; width: 100%;">
-                  🚶 Mostrar ruta por caminos peatonales
-                </button>
-              </div>
-            </div>
-          `)
-          .openOn(map);
-      } else {
-        // If user location is not available, request it
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              const userLocation = [latitude, longitude];
-              currentLocationRef.current = userLocation;
-              setCurrentLocation(userLocation);
-              
-              // Recursively call this function now that we have the location
-              window.showRouteToLocation(destination, destinationName);
-            },
-            (error) => {
-              console.error("Error getting location:", error);
-              alert("No se pudo obtener tu ubicación. Verifica los permisos de ubicación en tu navegador.");
-            }
-          );
-        } else {
-          alert("Tu navegador no soporta geolocalización.");
-        }
+        // Cerrar el popup anterior y mostrar uno nuevo con todas las opciones
+        map.closePopup();
+        showPopup(userLocation);
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000, // 10 segundos máximo
+        maximumAge: 30000 // Usar ubicación cacheada de hasta 30 segundos
       }
-    };
+    );
+  }
+};
     
     // Make showRoute available globally
     window.showRoute = showRoute;

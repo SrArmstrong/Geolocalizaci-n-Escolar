@@ -6,6 +6,7 @@ import logoUTEQ from '../assets/logo_uteq.png';
 import bus from '../bus.js';
 import eventService from '../services/eventService.js';
 import './WelcomeScreen.css';
+import { Link } from "react-router-dom";
 
 function WelcomeScreen({ onStartClick }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -100,7 +101,7 @@ function WelcomeScreen({ onStartClick }) {
     onStartClick();
     setTimeout(() => {
       window.showRouteToLocation && window.showRouteToLocation(coords, locationName);
-    }, 1000);
+    }, 500);
   };
 
   return (
@@ -275,6 +276,16 @@ function WelcomeScreen({ onStartClick }) {
           )}
         </div>
       </div>
+      <footer className="footer">
+        <Link to="/terminos" className="footer-link">
+          Términos y Condiciones
+        </Link>
+        <span style={{ margin: "0 8px" }}>|</span>
+        <Link to="/privacidad" className="footer-link">
+          Aviso de Privacidad
+        </Link>
+      </footer>
+
     </div>
   );
 }
