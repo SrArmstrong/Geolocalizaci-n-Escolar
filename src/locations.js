@@ -12,7 +12,7 @@ import HUB from './assets/HUB.jpeg';
 import IDIOMAS from './assets/IDIOMAS.jpeg';
 import LABORATORIOI from './assets/LABORATORIOI.jpeg';
 import LABORATORIOJ from './assets/LABORATORIOJ.jpeg';
-import NANOTECNOLOGIA from './assets/NANOTECNOLOGIA.jpeg';
+import NANO from './assets/NANO.jpeg';
 import RECTORIA from './assets/RECTORIA.jpeg';
 
 
@@ -313,7 +313,7 @@ const locations = [
       longitude: -100.4048658, 
       title: 'Edificio de Nanotecnología', 
       description: 'Nanotecnología y Laboratorios',
-      image: NANOTECNOLOGIA,
+      image: NANO,
       details: 'Laboratorios especializados en nanotecnología',
       contact: 'Tel: (442) 274-9000 ext. 6001',
       codigo: 'Edificio H-1'
