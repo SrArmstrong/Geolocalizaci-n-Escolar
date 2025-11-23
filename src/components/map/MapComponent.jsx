@@ -10,7 +10,7 @@ import pathPairs from '../../pathPairs';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BuildingList from '../commons/BuildingList';
-import ProfesorList from "../commons/ProfesorList";
+//import ProfesorList from "../commons/ProfesorList";
 import EventsList from "../commons/eventsList";
 import bus from "../../bus";
 import './mapstyle.css';
@@ -911,32 +911,15 @@ window.showRouteToLocation = (destination, destinationName) => {
     };
 
     map.on('click', function(e) {
-      if (!DEBUG_MODE) return;
-
       const lat = e.latlng.lat.toFixed(6);
       const lng = e.latlng.lng.toFixed(6);
-      const coordsString = `[${lat}, ${lng}]`;
 
       L.popup()
         .setLatLng(e.latlng)
-        .setContent(`
-          <div style="font-family: Arial, sans-serif;">
-            <b>Coordenadas del punto:</b><br>
-            Latitud: ${lat}<br>
-            Longitud: ${lng}<br>
-            <div style="margin-top: 8px;">
-              <input type="text" value="${coordsString}" 
-                    readonly 
-                    style="width: 200px; padding: 4px; border: 1px solid #ccc; border-radius: 4px;">
-              <button onclick="navigator.clipboard.writeText('${coordsString}'); this.innerHTML='✓ Copiado'; setTimeout(() => this.innerHTML='📋 Copiar', 1000);" 
-                      style="margin-left: 4px; padding: 4px 8px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                📋 Copiar
-              </button>
-            </div>
-          </div>
-        `)
+        .setContent(`Lat: ${lat}, Lng: ${lng}`)
         .openOn(map);
     });
+
 
     const campusBoundary = L.polygon([
       [20.653705, -100.407463],

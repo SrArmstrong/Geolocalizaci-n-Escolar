@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import { doc, getDoc, setDoc, increment, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebase';
 import EventsList from '../components/commons/eventsList.jsx';
 import logoUTEQ from '../assets/logo_uteq.png';
 import bus from '../bus.js';
@@ -11,21 +9,12 @@ import { Link } from "react-router-dom";
 function WelcomeScreen({ onStartClick }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeSection, setActiveSection] = useState('main');
-  const [mapClicks, setMapClicks] = useState(0);
-  const [showStats, setShowStats] = useState(false);
   const [activeList, setActiveList] = useState(null);
   const [eventosData, setEventosData] = useState([]);
   const [showEventsList, setShowEventsList] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
-
-    const statsRef = doc(db, "stats", "mapClicks");
-    const unsubscribe = onSnapshot(statsRef, (doc) => {
-      if (doc.exists()) {
-        setMapClicks(doc.data().count);
-      }
-    });
 
     const handleEventosCargados = (evento) => {
       setEventosData(evento.datos.map(e => ({
@@ -42,31 +31,9 @@ function WelcomeScreen({ onStartClick }) {
     eventService.cargarEventos();
 
     return () => {
-      unsubscribe();
       bus.off('eventos.cargados', handleEventosCargados);
     };
   }, []);
-
-  const handleMapClick = async () => {
-    try {
-      const statsRef = doc(db, "stats", "mapClicks");
-      const docSnap = await getDoc(statsRef);
-      
-      if (docSnap.exists()) {
-        await setDoc(statsRef, {
-          count: increment(1)
-        }, { merge: true });
-      } else {
-        await setDoc(statsRef, {
-          count: 1
-        });
-      }
-    } catch (error) {
-      console.error("Error al actualizar el contador:", error);
-    }
-    
-    onStartClick();
-  };
 
   const sections = {
     main: {
@@ -107,34 +74,6 @@ function WelcomeScreen({ onStartClick }) {
   return (
     <div className={`welcome-container ${isLoaded ? 'loaded' : ''}`}>
 
-      {/* Botón para mostrar/ocultar estadísticas */}
-      <button 
-        onClick={() => setShowStats(!showStats)}
-        className="stats-button"
-      >
-        📊 {showStats ? 'Ocultar Stats' : 'Mostrar Stats'}
-      </button>
-
-      {/* Ventana de estadísticas */}
-      {showStats && (
-        <div className="stats-panel">
-          <h3 className="stats-title">
-            📊 Estadísticas
-          </h3>
-          
-          <div className="stats-content">
-            <div className="stats-counter">
-              <span style={{ fontWeight: '500' }}>Visitas al mapa:</span>
-              <span className="stats-count">{mapClicks}</span>
-            </div>
-            
-            <div className="stats-note">
-              Actualizado en tiempo real
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Header Section */}
       <div className="header-section">
         <img 
@@ -152,7 +91,7 @@ function WelcomeScreen({ onStartClick }) {
         </p>
 
         <button 
-          onClick={handleMapClick}
+          onClick={onStartClick}
           className="explore-button"
         >
           🗺️ Explorar Mapa

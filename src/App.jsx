@@ -1,53 +1,16 @@
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import { db } from './firebase';
-import { doc, getDoc, setDoc, increment } from 'firebase/firestore';
 import MapComponent from './components/map/MapComponent';
 import AdminPanel from './pages/AdminPanel';
+import Login from "./pages/Login";
 import TermsAndConditions from './pages/TermsAndConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
-
-function VisitTracker() {
-  const location = useLocation();
-
-  useEffect(() => {
-    // Contar visita cuando la ruta es /map
-    if (location.pathname === '/map') {
-      const countMapVisit = async () => {
-        try {
-          const statsRef = doc(db, "stats", "mapVisits");
-          const docSnap = await getDoc(statsRef);
-          
-          if (docSnap.exists()) {
-            await setDoc(statsRef, {
-              count: increment(1)
-            }, { merge: true });
-          } else {
-            await setDoc(statsRef, {
-              count: 1
-            });
-          }
-          console.log('Visita al mapa registrada');
-        } catch (error) {
-          console.error("Error al actualizar el contador de visitas:", error);
-        }
-      };
-
-      countMapVisit();
-    }
-  }, [location.pathname]);
-
-  return null; // Este componente no renderiza nada
-}
 
 function App() {
   return (
     <Router>
-      {/* Componente para trackear visitas */}
-      <VisitTracker />
-      
       <div style={{
         position: 'relative',
         height: '100vh',
@@ -60,6 +23,8 @@ function App() {
           <Route path="/map" element={<MapComponent />} />
           <Route path="/terminos" element={<TermsAndConditions />} />
           <Route path="/privacidad" element={<PrivacyPolicy />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={ <ProtectedRoute> <AdminPanel /> </ProtectedRoute>} />
         </Routes>
       </div>
     </Router>

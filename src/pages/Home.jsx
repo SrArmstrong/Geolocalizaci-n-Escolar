@@ -17,9 +17,9 @@ function Home() {
   };
 
   // Función para ir al panel de administración
-  const goToAdmin = () => {
-    navigate('/admin');
-  };
+  //const goToAdmin = () => {
+  //  navigate('/admin');
+  //};
   
   // Función para ir al panel de administración
   const goToMap = () => {
@@ -31,7 +31,7 @@ function Home() {
       {screen === 'welcome' && (
         <WelcomeScreen
           onStartClick={goToMap}
-          onAdminClick={goToAdmin}
+          //onAdminClick={goToAdmin}
           style={{
             opacity: isTransitioning ? 0 : 1,
             transition: 'opacity 0.5s ease-out',
