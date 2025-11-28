@@ -1,22 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import Card from '../commons/Card';
+import { QRCodeCanvas } from "qrcode.react";
 import './Eventos.css';
 
 const Eventos = () => {
   const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [qrData, setQrData] = useState(null);
   const [formData, setFormData] = useState({
     codigo: '',
     title: '',
     description: '',
     latitude: '',
     longitude: '',
-    lugar: '' // Campo adicional para mostrar en UI
+    lugar: ''
+  });
+  const [registerData, setRegisterData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: ''
   });
   const [isEditing, setIsEditing] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [error, setError] = useState('');
+  const [registerError, setRegisterError] = useState('');
+  const [registerSuccess, setRegisterSuccess] = useState('');
 
   // Obtener token de autenticación
   const getAuthToken = () => {
@@ -38,7 +48,6 @@ const Eventos = () => {
       setLoading(true);
       setError('');
       
-      //const response = await fetch('http://localhost:3000/events/', {
       const response = await fetch('https://mapaback.onrender.com/events/', {
         method: 'GET',
         headers: getHeaders()
@@ -64,9 +73,9 @@ const Eventos = () => {
         latitude: evento.latitude,
         longitude: evento.longitude,
         lugar: evento.lugar || `Lat: ${evento.latitude}, Lng: ${evento.longitude}`,
-        tipoEvento: 'Evento', // Valor por defecto ya que tu backend no tiene este campo
+        tipoEvento: 'Evento',
         fechaInicio: evento.createdAt ? new Date(evento.createdAt) : new Date(),
-        fechaFin: evento.fechaFin ? new Date(evento.fechaFin) : new Date(Date.now() + 2 * 60 * 60 * 1000), // +2 horas por defecto
+        fechaFin: evento.fechaFin ? new Date(evento.fechaFin) : new Date(Date.now() + 2 * 60 * 60 * 1000),
         createdBy: evento.createdBy,
         createdAt: evento.createdAt
       }));
@@ -83,6 +92,100 @@ const Eventos = () => {
   useEffect(() => {
     fetchEventos();
   }, []);
+
+  // 🔄 FUNCIÓN MODIFICADA: REGISTRAR USUARIO Y OBTENER QR
+  const handleRegister = async () => {
+    try {
+      setRegisterError('');
+      setRegisterSuccess('');
+
+      // Validaciones
+      if (!registerData.email || !registerData.password || !registerData.confirmPassword) {
+        setRegisterError('Todos los campos son requeridos');
+        return;
+      }
+
+      if (registerData.password !== registerData.confirmPassword) {
+        setRegisterError('Las contraseñas no coinciden');
+        return;
+      }
+
+      if (registerData.password.length < 6) {
+        setRegisterError('La contraseña debe tener al menos 6 caracteres');
+        return;
+      }
+
+      // Validar formato de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(registerData.email)) {
+        setRegisterError('Por favor ingrese un email válido');
+        return;
+      }
+
+      // Llamar a la API de registro - CORREGIDO para coincidir con tu backend
+      const response = await fetch('https://mapaback.onrender.com/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAuthToken()}`
+        },
+        body: JSON.stringify({
+          email: registerData.email,
+          password: registerData.password
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        // Usar el mensaje de error del backend
+        throw new Error(result.message || result.error || 'Error al registrar usuario');
+      }
+
+      // ÉXITO: Mostrar QR con los datos del backend
+      setQrData({
+        totpSecret: result.totpSecret, // Esta es la URL para el QR
+        email: registerData.email,
+        rawSecret: result.totpSecret // Guardamos el secreto completo por si acaso
+      });
+
+      setRegisterSuccess('Usuario registrado exitosamente');
+      
+      // Limpiar formulario
+      setRegisterData({
+        email: '',
+        password: '',
+        confirmPassword: ''
+      });
+
+      setRegisterError('');
+      
+    } catch (err) {
+      console.error('Error al registrar usuario:', err);
+      setRegisterError(err.message);
+      setQrData(null);
+    }
+  };
+
+  // 🔄 FUNCIÓN MEJORADA: CERRAR MODAL DE QR
+  const handleCloseQr = () => {
+    setQrData(null);
+    setShowRegisterForm(false);
+    setRegisterSuccess('');
+    setRegisterError('');
+  };
+
+  // 🔄 NUEVA FUNCIÓN: CERRAR FORMULARIO DE REGISTRO
+  const handleCloseRegisterForm = () => {
+    setShowRegisterForm(false);
+    setRegisterData({
+      email: '',
+      password: '',
+      confirmPassword: ''
+    });
+    setRegisterError('');
+    setRegisterSuccess('');
+  };
 
   const formatDate = (date) => {
     if (!date) return 'No especificada';
@@ -176,14 +279,12 @@ const Eventos = () => {
       if (isEditing) {
         // Actualizar evento existente
         response = await fetch(`https://mapaback.onrender.com/events/${formData.codigo}`, {
-        //response = await fetch(`http://localhost:3000/events/${formData.codigo}`, {
           method: 'PUT',
           headers: getHeaders(),
           body: JSON.stringify(eventData)
         });
       } else {
         // Crear nuevo evento
-        //response = await fetch('http://localhost:3000/events/', {
         response = await fetch('https://mapaback.onrender.com/events/', {
           method: 'POST',
           headers: getHeaders(),
@@ -211,7 +312,6 @@ const Eventos = () => {
     try {
       setError('');
       
-      //const response = await fetch(`http://localhost:3000/events/${confirmDeleteId}`, {
       const response = await fetch(`https://mapaback.onrender.com/events/${confirmDeleteId}`, {
         method: 'DELETE',
         headers: getHeaders()
@@ -266,6 +366,9 @@ const Eventos = () => {
         </div>
         
         <div className="eventos-actions">
+          <button onClick={() => setShowRegisterForm(true)} className="eventos-secondary-button">
+            👤 Registrar Usuario
+          </button>
           <button onClick={fetchEventos} className="eventos-secondary-button">
             🔄 Actualizar
           </button>
@@ -356,7 +459,131 @@ const Eventos = () => {
         </div>
       )}
 
-      {/* Modal de formulario */}
+      {/* Modal de formulario de registro de usuario */}
+      {showRegisterForm && !qrData && (
+        <div className="eventos-modal-overlay">
+          <div className="eventos-modal-content">
+            <div className="eventos-modal-header">
+              <h2 className="eventos-modal-title">👤 Registrar Nuevo Usuario</h2>
+              <button 
+                onClick={handleCloseRegisterForm} 
+                className="eventos-close-button"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="eventos-form-container">
+              {registerError && (
+                <div className="eventos-error-message">
+                  ⚠️ {registerError}
+                </div>
+              )}
+              
+              <div className="eventos-field-group">
+                <label className="eventos-field-label">Email *</label>
+                <input
+                  type="email"
+                  placeholder="Ej: usuario@universidad.edu"
+                  value={registerData.email}
+                  onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+                  className="eventos-input"
+                />
+              </div>
+              
+              <div className="eventos-field-group">
+                <label className="eventos-field-label">Contraseña *</label>
+                <input
+                  type="password"
+                  placeholder="Mínimo 6 caracteres"
+                  value={registerData.password}
+                  onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
+                  className="eventos-input"
+                />
+              </div>
+              
+              <div className="eventos-field-group">
+                <label className="eventos-field-label">Confirmar Contraseña *</label>
+                <input
+                  type="password"
+                  placeholder="Repita la contraseña"
+                  value={registerData.confirmPassword}
+                  onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
+                  className="eventos-input"
+                />
+              </div>
+            </div>
+
+            <div className="eventos-modal-footer">
+              <button onClick={handleCloseRegisterForm} className="eventos-cancel-button">
+                Cancelar
+              </button>
+              <button onClick={handleRegister} className="eventos-primary-button">
+                👤 Registrar Usuario
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de QR */}
+      {qrData && (
+        <div className="eventos-modal-overlay">
+          <div className="eventos-modal-content">
+            <div className="eventos-modal-header">
+              <h2 className="eventos-modal-title">Configurar Autenticación 2FA</h2>
+              <button 
+                onClick={handleCloseQr} 
+                className="eventos-close-button"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="eventos-form-container" style={{textAlign: 'center'}}>
+              {registerSuccess && (
+                <div className="eventos-success-message">
+                  ✅ {registerSuccess}
+                </div>
+              )}
+              
+              <div className="eventos-field-group">
+                <label className="eventos-field-label">
+                  <strong>Usuario:</strong> {qrData.email}
+                </label>
+                <p className="eventos-qr-instructions">
+                  Escanee el siguiente código QR con la aplicación de autenticación (Google Authenticator, Authy, etc.)
+                </p>
+                
+                {/* Componente QR corregido */}
+                <div className="eventos-qr-container">
+                  <QRCodeCanvas
+                    value={qrData.totpSecret}
+                    size={200}
+                    level="M"
+                    includeMargin={true}
+                    bgColor="#ffffff"
+                    fgColor="#000000"
+                  />
+                </div>
+                
+                <div className="eventos-security-notice">
+                  <strong>Importante:</strong> Este código QR debe ser guardado de forma segura. 
+                  Será necesario para autenticar al usuario en el sistema.
+                </div>
+              </div>
+            </div>
+
+            <div className="eventos-modal-footer">
+              <button onClick={handleCloseQr} className="eventos-primary-button">
+                Completado
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de formulario de evento */}
       {showForm && (
         <div className="eventos-modal-overlay">
           <div className="eventos-modal-content">

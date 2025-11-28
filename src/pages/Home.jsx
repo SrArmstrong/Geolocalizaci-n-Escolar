@@ -16,12 +16,6 @@ function Home() {
     }, 500);
   };
 
-  // Función para ir al panel de administración
-  //const goToAdmin = () => {
-  //  navigate('/admin');
-  //};
-  
-  // Función para ir al panel de administración
   const goToMap = () => {
     navigate('/map');
   };
