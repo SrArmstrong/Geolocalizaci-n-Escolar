@@ -116,20 +116,20 @@ class EventService {
   }
 
   inicializarSocket() {
-    console.log("🟣 Escuchando WebSockets...");
+    //console.log("🟣 Escuchando WebSockets...");
 
     socket.on("event.created", () => {
-      console.log("🔵 Evento creado");
+      //console.log("🔵 Evento creado");
       this.cargarEventos(); // refresca lista completa
     });
 
     socket.on("event.updated", () => {
-      console.log("🟡 Evento actualizado");
+      //console.log("🟡 Evento actualizado");
       this.cargarEventos();
     });
 
     socket.on("event.deleted", () => {
-      console.log("🔴 Evento eliminado");
+      //console.log("🔴 Evento eliminado");
       this.cargarEventos();
     });
   }

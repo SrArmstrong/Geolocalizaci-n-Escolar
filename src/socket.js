@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 const SOCKET_URL = "https://mapaback.onrender.com"; 
 // O: const SOCKET_URL = import.meta.env.VITE_BACKEND_URL;
 
-console.log("🔌 Conectando a WebSocket:", SOCKET_URL);
+//console.log("🔌 Conectando a WebSocket:", SOCKET_URL);
 
 // Conexión con opciones recomendadas para producción
 const socket = io(SOCKET_URL, {
@@ -16,11 +16,11 @@ const socket = io(SOCKET_URL, {
 });
 
 socket.on("connect", () => {
-  console.log("🟢 WebSocket conectado:", socket.id);
+  //console.log("🟢 WebSocket conectado:", socket.id);
 });
 
 socket.on("disconnect", () => {
-  console.log("🔴 WebSocket desconectado");
+  //console.log("🔴 WebSocket desconectado");
 });
 
 socket.on("connect_error", (err) => {
