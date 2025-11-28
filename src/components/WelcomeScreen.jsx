@@ -6,8 +6,7 @@ import eventService from '../services/eventService.js';
 import './WelcomeScreen.css';
 import { Link } from "react-router-dom";
 
-//Notificaciones
-import NotificationManager from '../components/NotificationManager';
+
 
 function WelcomeScreen({ onStartClick }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -237,9 +236,6 @@ function WelcomeScreen({ onStartClick }) {
               )}
             </div>
           )}
-        </div>
-        <div className="notification-section">
-          <NotificationManager />
         </div>
       </div>
       <footer className="footer">
