@@ -120,6 +120,9 @@ function WelcomeScreen({ onStartClick }) {
         >
           🗺️ Explorar Mapa
         </button>
+        
+        {/* Notificaciones - Integrado minimalista */}
+        <NotificationManager />
       </div>
 
       {/* Navigation Tabs */}
@@ -237,9 +240,6 @@ function WelcomeScreen({ onStartClick }) {
               )}
             </div>
           )}
-        </div>
-        <div className="notification-section">
-          <NotificationManager />
         </div>
       </div>
       <footer className="footer">

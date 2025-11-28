@@ -421,3 +421,93 @@
   box-sizing: border-box;
 }
 
+/* Notification Manager Styles */
+
+.notification-simple {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.notification-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.2rem;
+  border: 2px solid #ccc;
+  border-radius: 30px;
+  background: #f9f9f9;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 160px;
+  justify-content: center;
+}
+
+.notification-toggle:hover {
+  background: #eee;
+  transform: translateY(-2px);
+  border-color: #999;
+}
+
+.notification-toggle.active {
+  background: #e8f5e9;
+  border-color: #4caf50;
+  color: #2e7d32;
+}
+
+.notification-toggle.inactive {
+  background: #fff3e0;
+  border-color: #ff9800;
+  color: #e65100;
+}
+
+.notification-toggle:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.toggle-icon {
+  font-size: 1.2rem;
+}
+
+.toggle-text {
+  font-size: 0.95rem;
+}
+
+/* Estado de permisos denegados */
+.notification-simple.denied {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  border-radius: 20px;
+  background: #ffebee;
+  color: #c62828;
+  font-size: 0.9rem;
+  border: 1px solid #ef5350;
+}
+
+.notification-icon {
+  font-size: 1.2rem;
+}
+
+.notification-text {
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .notification-toggle {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    min-width: 140px;
+  }
+  
+  .toggle-text {
+    font-size: 0.85rem;
+  }
+}
