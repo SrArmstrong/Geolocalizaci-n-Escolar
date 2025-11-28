@@ -243,13 +243,13 @@ function WelcomeScreen({ onStartClick }) {
         </div>
       </div>
       <footer className="footer">
-        <Link to="/terminos" className="footer-link">
-          Términos y Condiciones
-        </Link>
+        
         <span style={{ margin: "0 8px" }}>|</span>
         <Link to="/privacidad" className="footer-link">
           Aviso de Privacidad
         </Link>
+        <span style={{ margin: "0 8px" }}>|</span>
+        
       </footer>
 
     </div>
