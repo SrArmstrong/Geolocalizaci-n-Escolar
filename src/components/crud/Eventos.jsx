@@ -15,7 +15,11 @@ const Eventos = () => {
     description: '',
     latitude: '',
     longitude: '',
-    lugar: ''
+    lugar: '',
+    tipoEvento: '',
+    fechaInicio: '',
+    fechaFin: '',
+    createdBy: ''
   });
   const [registerData, setRegisterData] = useState({
     email: '',
@@ -73,8 +77,8 @@ const Eventos = () => {
         latitude: evento.latitude,
         longitude: evento.longitude,
         lugar: evento.lugar || `Lat: ${evento.latitude}, Lng: ${evento.longitude}`,
-        tipoEvento: 'Evento',
-        fechaInicio: evento.createdAt ? new Date(evento.createdAt) : new Date(),
+        tipoEvento: evento.tipoEvento || 'Evento',
+        fechaInicio: evento.fechaInicio ? new Date(evento.fechaInicio) : (evento.createdAt ? new Date(evento.createdAt) : new Date()),
         fechaFin: evento.fechaFin ? new Date(evento.fechaFin) : new Date(Date.now() + 2 * 60 * 60 * 1000),
         createdBy: evento.createdBy,
         createdAt: evento.createdAt
@@ -214,6 +218,18 @@ const Eventos = () => {
     return 'Formato no válido';
   };
 
+  // Función para formatear fecha para input datetime-local
+  const formatDateForInput = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   const getEventStatus = (fechaInicio, fechaFin) => {
     const now = new Date();
     const inicio = fechaInicio instanceof Date ? fechaInicio : new Date(fechaInicio);
@@ -231,7 +247,11 @@ const Eventos = () => {
       description: evento.description || '',
       latitude: evento.latitude || '',
       longitude: evento.longitude || '',
-      lugar: evento.lugar || ''
+      lugar: evento.lugar || '',
+      tipoEvento: evento.tipoEvento || '',
+      fechaInicio: formatDateForInput(evento.fechaInicio),
+      fechaFin: formatDateForInput(evento.fechaFin),
+      createdBy: evento.createdBy || ''
     });
     setIsEditing(true);
     setShowForm(true);
@@ -244,13 +264,17 @@ const Eventos = () => {
       description: '',
       latitude: '',
       longitude: '',
-      lugar: ''
+      lugar: '',
+      tipoEvento: '',
+      fechaInicio: '',
+      fechaFin: '',
+      createdBy: ''
     });
     setIsEditing(false);
     setShowForm(true);
   };
 
-  // 🔄 GUARDAR EVENTO (CREATE/UPDATE)
+  // 🔄 GUARDAR EVENTO (CREATE/UPDATE) - ACTUALIZADO
   const handleSubmit = async () => {
     try {
       setError('');
@@ -264,6 +288,24 @@ const Eventos = () => {
         setError('El título del evento es requerido');
         return;
       }
+      if (!formData.tipoEvento) {
+        setError('El tipo de evento es requerido');
+        return;
+      }
+      if (!formData.fechaInicio) {
+        setError('La fecha de inicio es requerida');
+        return;
+      }
+      if (!formData.fechaFin) {
+        setError('La fecha de fin es requerida');
+        return;
+      }
+
+      // Validar que la fecha de fin sea posterior a la de inicio
+      if (new Date(formData.fechaFin) <= new Date(formData.fechaInicio)) {
+        setError('La fecha de fin debe ser posterior a la fecha de inicio');
+        return;
+      }
 
       // Preparar datos para el backend
       const eventData = {
@@ -271,7 +313,12 @@ const Eventos = () => {
         title: formData.title,
         description: formData.description,
         latitude: parseFloat(formData.latitude) || 0,
-        longitude: parseFloat(formData.longitude) || 0
+        longitude: parseFloat(formData.longitude) || 0,
+        lugar: formData.lugar,
+        tipoEvento: formData.tipoEvento,
+        fechaInicio: formData.fechaInicio,
+        fechaFin: formData.fechaFin,
+        createdBy: formData.createdBy || 'admin' // Valor por defecto si no se especifica
       };
 
       let response;
@@ -427,8 +474,13 @@ const Eventos = () => {
                     </div>
                     
                     <div className="eventos-info-row">
-                      <span className="eventos-label">🗓️ Creado:</span>
-                      <span className="eventos-value">{formatDate(evento.createdAt)}</span>
+                      <span className="eventos-label">🗓️ Inicio:</span>
+                      <span className="eventos-value">{formatDate(evento.fechaInicio)}</span>
+                    </div>
+
+                    <div className="eventos-info-row">
+                      <span className="eventos-label">🗓️ Fin:</span>
+                      <span className="eventos-value">{formatDate(evento.fechaFin)}</span>
                     </div>
                     
                     <div className="eventos-info-row">
@@ -583,7 +635,7 @@ const Eventos = () => {
         </div>
       )}
 
-      {/* Modal de formulario de evento */}
+      {/* Modal de formulario de evento - ACTUALIZADO */}
       {showForm && (
         <div className="eventos-modal-overlay">
           <div className="eventos-modal-content">
@@ -621,6 +673,47 @@ const Eventos = () => {
                   className="eventos-input"
                 />
               </div>
+
+              <div className="eventos-field-group">
+                <label className="eventos-field-label">Tipo de Evento *</label>
+                <select
+                  value={formData.tipoEvento}
+                  onChange={(e) => setFormData({ ...formData, tipoEvento: e.target.value })}
+                  className="eventos-input"
+                >
+                  <option value="">Seleccione un tipo</option>
+                  <option value="Conferencia">Conferencia</option>
+                  <option value="Taller">Taller</option>
+                  <option value="Seminario">Seminario</option>
+                  <option value="Exposición">Exposición</option>
+                  <option value="Reunión">Reunión</option>
+                  <option value="Ceremonia">Ceremonia</option>
+                  <option value="Deportivo">Evento Deportivo</option>
+                  <option value="Cultural">Evento Cultural</option>
+                  <option value="Académico">Evento Académico</option>
+                  <option value="Social">Evento Social</option>
+                </select>
+              </div>
+              
+              <div className="eventos-field-group">
+                <label className="eventos-field-label">Fecha y Hora de Inicio *</label>
+                <input
+                  type="datetime-local"
+                  value={formData.fechaInicio}
+                  onChange={(e) => setFormData({ ...formData, fechaInicio: e.target.value })}
+                  className="eventos-input"
+                />
+              </div>
+
+              <div className="eventos-field-group">
+                <label className="eventos-field-label">Fecha y Hora de Fin *</label>
+                <input
+                  type="datetime-local"
+                  value={formData.fechaFin}
+                  onChange={(e) => setFormData({ ...formData, fechaFin: e.target.value })}
+                  className="eventos-input"
+                />
+              </div>
               
               <div className="eventos-field-group">
                 <label className="eventos-field-label">Latitud</label>
@@ -652,6 +745,16 @@ const Eventos = () => {
                   placeholder="Ej: Auditorio Principal, Sala de Conferencias"
                   value={formData.lugar}
                   onChange={(e) => setFormData({ ...formData, lugar: e.target.value })}
+                  className="eventos-input"
+                />
+              </div>
+
+              <div className="eventos-field-group">
+                <label className="eventos-field-label">Creado por</label>
+                <input
+                  placeholder="Ej: Departamento de Sistemas"
+                  value={formData.createdBy}
+                  onChange={(e) => setFormData({ ...formData, createdBy: e.target.value })}
                   className="eventos-input"
                 />
               </div>
