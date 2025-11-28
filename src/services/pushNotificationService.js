@@ -103,11 +103,41 @@ class PushNotificationService {
     if (!this.subscription) return;
 
     try {
+      // 1. Cancelar suscripción en el navegador
       await this.subscription.unsubscribe();
+      
+      // 2. Notificar al backend que se canceló la suscripción
+      await this.notifyUnsubscribeToServer(this.subscription);
+      
+      // 3. Limpiar estado local
       this.subscription = null;
-      console.log('✅ Suscripción cancelada');
+      
+      console.log('✅ Suscripción cancelada completamente');
+      
     } catch (error) {
       console.error('❌ Error cancelando suscripción:', error);
+    }
+  }
+
+  async notifyUnsubscribeToServer(subscription) {
+    try {
+      const response = await fetch('https://mapaback.onrender.com/unsubscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subscription: subscription
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Error notificando al servidor');
+      }
+      
+      console.log('🔕 Servidor notificado de la desuscripción');
+    } catch (error) {
+      console.warn('⚠️ No se pudo notificar al servidor, pero la suscripción local se canceló');
     }
   }
 

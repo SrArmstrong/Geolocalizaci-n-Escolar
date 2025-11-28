@@ -22,36 +22,30 @@ const NotificationManager = () => {
     setIsSubscribed(subscribed);
   };
 
-  const handleToggleNotifications = async () => {
-    if (isLoading) return;
+  const handleActivateNotifications = async () => {
+    if (isLoading || isSubscribed) return;
     
     setIsLoading(true);
     
     try {
-      if (isSubscribed) {
-        // Desactivar notificaciones
-        await pushNotificationService.unsubscribe();
-        setIsSubscribed(false);
+      // Solo permitir activar notificaciones
+      const result = await pushNotificationService.requestPermissionAndSubscribe();
+      if (result) {
+        setPermission('granted');
+        setIsSubscribed(true);
+        
+        // Mostrar notificación de confirmación
+        setTimeout(() => {
+          pushNotificationService.showLocalNotification('🔔 Notificaciones Activadas', {
+            body: 'Ahora recibirás alertas de nuevos eventos',
+            data: { url: '/' }
+          });
+        }, 500);
       } else {
-        // Activar notificaciones
-        const result = await pushNotificationService.requestPermissionAndSubscribe();
-        if (result) {
-          setPermission('granted');
-          setIsSubscribed(true);
-          
-          // Mostrar notificación de confirmación
-          setTimeout(() => {
-            pushNotificationService.showLocalNotification('🔔 Notificaciones Activadas', {
-              body: 'Ahora recibirás alertas de nuevos eventos',
-              data: { url: '/' }
-            });
-          }, 500);
-        } else {
-          setPermission('denied');
-        }
+        setPermission('denied');
       }
     } catch (error) {
-      console.error('Error al cambiar estado:', error);
+      console.error('Error activando notificaciones:', error);
     } finally {
       setIsLoading(false);
       await checkNotificationSupport();
@@ -59,7 +53,7 @@ const NotificationManager = () => {
   };
 
   if (!isSupported) {
-    return null; // Ocultar completamente si no es soportado
+    return null;
   }
 
   // Si los permisos están denegados, mostrar un mensaje minimalista
@@ -72,19 +66,35 @@ const NotificationManager = () => {
     );
   }
 
+  // Si ya está suscrito, mostrar información en lugar de botón
+  if (isSubscribed) {
+    return (
+      <div className="notification-simple active">
+        <span className="notification-icon">🔔</span>
+        <div className="notification-info">
+          <span className="notification-status">Notificaciones activas</span>
+          <small className="notification-hint">
+            Para desactivar: configuración del navegador → Permisos → Notificaciones
+          </small>
+        </div>
+      </div>
+    );
+  }
+
+  // Botón para activar (solo aparece cuando no está suscrito)
   return (
     <div className="notification-simple">
       <button
-        onClick={handleToggleNotifications}
+        onClick={handleActivateNotifications}
         disabled={isLoading}
-        className={`notification-toggle ${isSubscribed ? 'active' : 'inactive'}`}
-        title={isSubscribed ? 'Desactivar notificaciones' : 'Activar notificaciones'}
+        className="notification-toggle activate"
+        title="Activar notificaciones"
       >
         <span className="toggle-icon">
-          {isSubscribed ? '🔔' : '🔕'}
+          {isLoading ? '⏳' : '🔕'}
         </span>
         <span className="toggle-text">
-          {isLoading ? 'Cargando...' : (isSubscribed ? 'Notificaciones activadas' : 'Activar Notificaciones')}
+          {isLoading ? 'Activando...' : 'Activar Notificaciones'}
         </span>
       </button>
     </div>
