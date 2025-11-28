@@ -236,10 +236,16 @@ class EventService {
 
   // Mostrar notificación cuando hay nuevo evento
   async mostrarNotificacionEvento(eventData, tipo) {
+    // ⛔ NO ENVIAR NADA si el usuario NO está suscrito
+    const isSubscribed = await pushNotificationService.isSubscribed();
+    if (!isSubscribed) {
+      console.log("🔕 Notificaciones desactivadas, no se mostrará nada.");
+      return;
+    }
+
     const titulo = tipo === 'nuevo' ? '🎉 Nuevo Evento UTEQ' : '✏️ Evento Actualizado';
     const cuerpo = `${eventData.title || 'Evento'} - ${eventData.description || 'Disponible'}`;
 
-    // Mostrar notificación del sistema
     if (pushNotificationService.getPermissionState() === 'granted') {
       await pushNotificationService.showLocalNotification(titulo, {
         body: cuerpo,
@@ -252,14 +258,6 @@ class EventService {
         renotify: true,
         requireInteraction: true
       });
-    } else {
-      // Fallback: notificación del navegador
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(titulo, {
-          body: cuerpo,
-          icon: '/logo_uteq192.png'
-        });
-      }
     }
   }
 
