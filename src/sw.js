@@ -1,6 +1,3 @@
-// ================================
-// PRECACHE (Workbox)
-// ================================
 import { precacheAndRoute } from 'workbox-precaching';
 
 const CACHE_NAME = 'pwa-mapa-v1';
@@ -8,9 +5,6 @@ const urlsToCache = ['/', '/index.html', '/manifest.json'];
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-// ================================
-// INSTALL
-// ================================
 self.addEventListener('install', (event) => {
   console.log('🟢 Service Worker instalado');
   event.waitUntil(
@@ -19,21 +13,14 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// ================================
-// ACTIVATE
-// ================================
 self.addEventListener('activate', (event) => {
   console.log('🟢 Service Worker activado');
   event.waitUntil(self.clients.claim());
 });
 
-// ================================
-// PUSH — YA CORREGIDO
-// ================================
 self.addEventListener('push', async (event) => {
   console.log("📨 Push recibido");
 
-  // 👉 Si NO hay subscription, NO mostrar notificación
   const subscription = await self.registration.pushManager.getSubscription();
   if (!subscription) {
     console.log("🔕 Notificaciones desactivadas → ignorando push");
@@ -72,9 +59,6 @@ self.addEventListener('push', async (event) => {
   );
 });
 
-// ================================
-// CLICK EN NOTIFICACIONES
-// ================================
 self.addEventListener('notificationclick', (event) => {
   console.log('👆 Notificación clickeada:', event.notification.data);
 
@@ -97,16 +81,10 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// ================================
-// NOTIFICATION CLOSED
-// ================================
 self.addEventListener('notificationclose', (event) => {
   console.log('❌ Notificación cerrada:', event.notification);
 });
 
-// ================================
-// FETCH → CACHE FIRST
-// ================================
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {

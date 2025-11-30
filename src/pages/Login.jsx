@@ -1,17 +1,21 @@
 // src/pages/Login.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './Login.css';
 
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
-  const [Attempts ,setAttempts] = useState(0);
+  const [attempts, setAttempts] = useState(0);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
     try {
       //const response = await fetch("http://localhost:3000/auth/login", {
@@ -27,51 +31,86 @@ function Login() {
         localStorage.setItem("authToken", data.token);
         navigate("/admin");
       } else {
-        setAttempts((prev) => prev + 1);
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
         setError(data.error || "Credenciales incorrectas");
 
-        setAttempts((prev) => {
-        const newAttempts = prev + 1;
         if (newAttempts >= 3) {
+          setTimeout(() => {
             navigate("/");
+          }, 2000); // Pequeño delay para que el usuario vea el mensaje
         }
-        return newAttempts;
-        });
       }
     } catch (err) {
       console.error("Error en login:", err);
       setError("Error interno del servidor");
+    } finally {
+      // Esto se ejecuta siempre, tanto en éxito como en error
+      setIsLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Login Admin</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Correo"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        /><br />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        /><br />
-        <input
-          type="text"
-          placeholder="Código TOTP"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          required
-        /><br />
-        <button type="submit">Ingresar</button>
-      </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="login-container">
+      <div className={`login-card ${isLoading ? 'login-loading' : ''}`}>
+        <div className="login-header">
+          <h2 className="login-title">Login</h2>
+          <p className="login-subtitle">Ingresa tus credenciales para continuar</p>
+        </div>
+        
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="login-field-group">
+            <label className="login-label">Correo electrónico</label>
+            <input
+              type="email"
+              placeholder="tu@correo.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={isLoading}
+              className="login-input"
+            />
+          </div>
+          
+          <div className="login-field-group">
+            <label className="login-label">Contraseña</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={isLoading}
+              className="login-input"
+            />
+          </div>
+          
+          <div className="login-field-group">
+            <label className="login-label">Código TOTP</label>
+            <input
+              type="text"
+              placeholder="123456"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+              required
+              disabled={isLoading}
+              className="login-input"
+              maxLength={6}
+              pattern="[0-9]{6}"
+            />
+          </div>
+          
+          <button 
+            type="submit" 
+            disabled={isLoading}
+            className="login-button"
+          >
+            {isLoading ? 'Verificando...' : 'Ingresar'}
+          </button>
+        </form>
+
+        {error && <div className="login-error">{error}</div>}
+      </div>
     </div>
   );
 }

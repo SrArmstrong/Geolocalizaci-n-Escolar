@@ -1,4 +1,7 @@
-/* Estilos para modo integrado */
+/* ========================================
+   BASE STYLES - MODO INTEGRADO
+   ======================================== */
+
 .integratedContainer {
   width: 100%;
   height: 100%;
@@ -89,11 +92,13 @@
   align-items: flex-start;
   gap: 1rem;
   flex: 1;
+  min-width: 0;
 }
 
 .eventIcon {
   font-size: 1.5rem;
   margin-top: 0.2rem;
+  flex-shrink: 0;
 }
 
 .eventDetails {
@@ -102,12 +107,16 @@
   align-items: flex-start;
   text-align: left;
   gap: 0.3rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .eventTitle {
   font-weight: 700;
   font-size: 1.2rem;
   margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .eventDescription {
@@ -115,6 +124,8 @@
   opacity: 0.9;
   line-height: 1.4;
   margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .eventCode {
@@ -125,6 +136,7 @@
   background: rgba(255, 255, 255, 0.2);
   padding: 0.4rem 0.8rem;
   border-radius: 10px;
+  flex-shrink: 0;
 }
 
 .noResults {
@@ -137,7 +149,10 @@
   backdrop-filter: blur(10px);
 }
 
-/* Estilos originales para modo flotante */
+/* ========================================
+   BASE STYLES - MODO FLOTANTE
+   ======================================== */
+
 .toggleButton {
   position: fixed;
   right: 20px;
@@ -260,4 +275,435 @@
   gap: 12px;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.eventButton:hover {
+  background-color: #fee2e2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.eventButton:active {
+  transform: translateY(0);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Extra Small Devices (phones, 320px - 480px) */
+@media (max-width: 480px) {
+  /* Modo Integrado */
+  .integratedTitle {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .integratedSearchInput {
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+    max-width: 100%;
+  }
+
+  .integratedList {
+    gap: 0.8rem;
+    max-height: 350px;
+    padding: 0.8rem 0.3rem;
+  }
+
+  .integratedEventButton {
+    padding: 1rem 1.2rem;
+    gap: 1rem;
+    border-radius: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .integratedEventContent {
+    gap: 0.8rem;
+    width: 100%;
+  }
+
+  .eventIcon {
+    font-size: 1.3rem;
+  }
+
+  .eventTitle {
+    font-size: 1rem;
+  }
+
+  .eventDescription {
+    font-size: 0.9rem;
+  }
+
+  .eventCode {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    align-self: flex-start;
+  }
+
+  .noResults {
+    padding: 2rem 1rem;
+    font-size: 1rem;
+  }
+
+  /* Modo Flotante */
+  .toggleButton {
+    right: 10px;
+    height: 44px;
+    min-width: 44px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .toggleButtonVisible {
+    bottom: calc(70vh - 20px);
+    width: 50px;
+    font-size: 18px;
+  }
+
+  .toggleButtonHidden {
+    bottom: 70px;
+  }
+
+  .panel {
+    max-height: 70vh;
+    padding: 1.2em 1em;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+
+  .panelTitle {
+    font-size: 1.1em;
+    margin-bottom: 0.8em;
+  }
+
+  .searchInput {
+    padding: 10px 14px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .eventList {
+    max-height: calc(70vh - 120px);
+  }
+
+  .eventButton {
+    padding: 12px 16px;
+    font-size: 14px;
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .eventItem {
+    margin-bottom: 6px;
+  }
+}
+
+/* Small Devices (phones landscape, tablets portrait, 481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  /* Modo Integrado */
+  .integratedTitle {
+    font-size: 1.6rem;
+  }
+
+  .integratedSearchInput {
+    padding: 0.9rem 1.3rem;
+    font-size: 1rem;
+  }
+
+  .integratedList {
+    max-height: 380px;
+    gap: 0.9rem;
+  }
+
+  .integratedEventButton {
+    padding: 1.3rem 1.6rem;
+    gap: 1.2rem;
+  }
+
+  .eventIcon {
+    font-size: 1.4rem;
+  }
+
+  .eventTitle {
+    font-size: 1.1rem;
+  }
+
+  .eventDescription {
+    font-size: 0.95rem;
+  }
+
+  .noResults {
+    padding: 2.5rem 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  /* Modo Flotante */
+  .toggleButton {
+    right: 15px;
+  }
+
+  .toggleButtonVisible {
+    bottom: calc(65vh - 10px);
+    width: 55px;
+  }
+
+  .panel {
+    max-height: 65vh;
+    padding: 1.4em 1.3em;
+  }
+
+  .eventList {
+    max-height: calc(65vh - 130px);
+  }
+
+  .eventButton {
+    padding: 14px 18px;
+    font-size: 15px;
+  }
+}
+
+/* Medium Devices (tablets landscape, 769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .integratedSearchInput {
+    max-width: 600px;
+  }
+
+  .integratedList {
+    max-height: 420px;
+  }
+
+  .panel {
+    max-height: 55vh;
+    padding: 1.6em 2em;
+  }
+
+  .eventList {
+    max-height: calc(55vh - 140px);
+  }
+}
+
+/* Large Devices (desktops, 1025px - 1440px) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .integratedSearchInput {
+    max-width: 650px;
+  }
+
+  .integratedList {
+    max-height: 450px;
+  }
+
+  .panel {
+    max-height: 50vh;
+    max-width: 800px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+/* Extra Large Devices (large desktops, 1441px+) */
+@media (min-width: 1441px) {
+  .integratedTitle {
+    font-size: 2.5rem;
+  }
+
+  .integratedSearchInput {
+    max-width: 700px;
+    padding: 1.2rem 1.8rem;
+    font-size: 1.2rem;
+  }
+
+  .integratedList {
+    max-height: 500px;
+    gap: 1.2rem;
+  }
+
+  .integratedEventButton {
+    padding: 1.8rem 2.5rem;
+    font-size: 1.2rem;
+  }
+
+  .eventIcon {
+    font-size: 1.8rem;
+  }
+
+  .eventTitle {
+    font-size: 1.4rem;
+  }
+
+  .eventDescription {
+    font-size: 1.1rem;
+  }
+
+  .eventCode {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .panel {
+    max-width: 900px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* Landscape Orientation Adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+  .integratedTitle {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .integratedSearchInput {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .integratedList {
+    max-height: 250px;
+    gap: 0.6rem;
+  }
+
+  .integratedEventButton {
+    padding: 0.8rem 1rem;
+    gap: 0.8rem;
+  }
+
+  .eventIcon {
+    font-size: 1.2rem;
+  }
+
+  .eventTitle {
+    font-size: 0.95rem;
+  }
+
+  .eventDescription {
+    font-size: 0.85rem;
+  }
+
+  .panel {
+    max-height: 80vh;
+  }
+
+  .eventList {
+    max-height: calc(80vh - 110px);
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .integratedEventButton {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .integratedEventButton:active {
+    transform: scale(0.98);
+  }
+
+  .eventButton {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .eventButton:active {
+    transform: scale(0.98);
+  }
+
+  .toggleButton {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Aumentar áreas táctiles en móviles */
+  .toggleButton {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  .integratedEventButton,
+  .eventButton {
+    min-height: 48px;
+  }
+}
+
+/* Scrollbar Styling */
+.integratedList::-webkit-scrollbar,
+.eventList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.integratedList::-webkit-scrollbar-track,
+.eventList::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.integratedList::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.eventList::-webkit-scrollbar-thumb {
+  background: rgba(220, 38, 38, 0.3);
+  border-radius: 10px;
+}
+
+.integratedList::-webkit-scrollbar-thumb:hover,
+.eventList::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Reducir scrollbar en móviles */
+@media (max-width: 768px) {
+  .integratedList::-webkit-scrollbar,
+  .eventList::-webkit-scrollbar {
+    width: 4px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .toggleButton {
+    display: none;
+  }
+
+  .panel {
+    position: relative;
+    max-height: none;
+    box-shadow: none;
+    border: 1px solid #ccc;
+    page-break-inside: avoid;
+  }
+
+  .integratedEventButton,
+  .eventButton {
+    page-break-inside: avoid;
+  }
+}
+
+/* Accesibilidad - Focus visible */
+.integratedSearchInput:focus-visible,
+.searchInput:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+.integratedEventButton:focus-visible,
+.eventButton:focus-visible,
+.toggleButton:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Reducción de movimiento para accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

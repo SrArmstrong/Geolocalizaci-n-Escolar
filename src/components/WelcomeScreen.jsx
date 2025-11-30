@@ -86,7 +86,7 @@ function WelcomeScreen({ onStartClick }) {
       content: "Explora los próximos eventos y actividades en la UTEQ",
       gradient: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)"
     }
-  };
+  };  
 
   const handleEventClick = (coords, locationName) => {
     onStartClick();
