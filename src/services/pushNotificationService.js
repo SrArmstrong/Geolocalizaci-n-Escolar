@@ -13,21 +13,14 @@ class PushNotificationService {
     }
 
     try {
-      // Registrar service worker
       this.swRegistration = await navigator.serviceWorker.register('/sw.js');
-      console.log('🟢 Service Worker registrado:', this.swRegistration);
 
-      // Verificar si ya estamos suscritos
       this.subscription = await this.swRegistration.pushManager.getSubscription();
-      
-      if (this.subscription) {
-        console.log('✅ Ya suscrito a notificaciones push');
-        return true;
-      }
 
       return true;
+
     } catch (error) {
-      console.error('❌ Error inicializando notificaciones:', error);
+      console.error('Error en notificaciones:', error);
       return false;
     }
   }
@@ -51,12 +44,9 @@ class PushNotificationService {
       });
 
       this.subscription = subscription;
-      console.log('✅ Suscrito a notificaciones push:', subscription);
-      
-      // NOTA: No enviamos al servidor, solo suscripción local
-      console.log('ℹ️ Suscripción local completada (sin envío a servidor)');
       
       return true;
+
     } catch (error) {
       console.error('❌ Error suscribiéndose a notificaciones:', error);
       return false;
@@ -81,16 +71,13 @@ class PushNotificationService {
 
   // Clave pública VAPID (debes generar tus propias claves)
   getVapidPublicKey() {
-    // Clave pública VAPID de ejemplo - GENERA TUS PROPIAS CLAVES
-    return 'BPP4-q8NRHBw2jTH6X018ZSOinSmLHv5g2X6B16HoLBt9MCLrDhEPYSn8PkwVLv6vgT3IXsg1U_MCwGPX6fJvss'; // Reemplaza con tu clave pública real
+    return 'BPP4-q8NRHBw2jTH6X018ZSOinSmLHv5g2X6B16HoLBt9MCLrDhEPYSn8PkwVLv6vgT3IXsg1U_MCwGPX6fJvss';
   }
 
-  // Verificar estado de permisos
   getPermissionState() {
     return Notification.permission;
   }
 
-  // Verificar si está suscrito
   async isSubscribed() {
     if (!this.swRegistration) return false;
     
@@ -112,7 +99,7 @@ class PushNotificationService {
       // 3. Limpiar estado local
       this.subscription = null;
       
-      console.log('✅ Suscripción cancelada completamente');
+      console.log('Suscripción cancelada');
       
     } catch (error) {
       console.error('❌ Error cancelando suscripción:', error);

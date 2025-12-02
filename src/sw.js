@@ -6,7 +6,6 @@ const urlsToCache = ['/', '/index.html', '/manifest.json'];
 precacheAndRoute(self.__WB_MANIFEST);
 
 self.addEventListener('install', (event) => {
-  console.log('🟢 Service Worker instalado');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
   );
@@ -14,29 +13,27 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('🟢 Service Worker activado');
   event.waitUntil(self.clients.claim());
 });
 
 self.addEventListener('push', async (event) => {
-  console.log("📨 Push recibido");
 
   const subscription = await self.registration.pushManager.getSubscription();
   if (!subscription) {
-    console.log("🔕 Notificaciones desactivadas → ignorando push");
     return;
   }
 
   if (!event.data) return;
 
   let data;
+
   try {
     data = event.data.json();
   } catch (err) {
-    console.warn("⚠️ No se pudo parsear JSON del push");
+    console.warn("⚠️ No se pudo parsear JSON del push", err);
     data = {
       title: "Nuevo evento",
-      body: "Hay novedades en el mapa",
+      body: "Hay novedades en el Mapa",
     };
   }
 
@@ -60,7 +57,6 @@ self.addEventListener('push', async (event) => {
 });
 
 self.addEventListener('notificationclick', (event) => {
-  console.log('👆 Notificación clickeada:', event.notification.data);
 
   event.notification.close();
 
@@ -82,7 +78,7 @@ self.addEventListener('notificationclick', (event) => {
 });
 
 self.addEventListener('notificationclose', (event) => {
-  console.log('❌ Notificación cerrada:', event.notification);
+  //console.log('❌ Notificación cerrada:', event.notification);
 });
 
 self.addEventListener('fetch', (event) => {

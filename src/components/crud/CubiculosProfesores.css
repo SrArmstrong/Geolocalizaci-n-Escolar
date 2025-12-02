@@ -1,0 +1,524 @@
+.cubiculos-container {
+  padding: 1rem;
+}
+
+.cubiculos-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.cubiculos-loading-spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid #3498db;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.cubiculos-loading-text {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.cubiculos-error-message {
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.cubiculos-error-close {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cubiculos-error-close:hover {
+  background-color: rgba(220, 38, 38, 0.1);
+  border-radius: 50%;
+}
+
+.cubiculos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cubiculos-stats-container {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cubiculos-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cubiculos-stat-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e3799;
+  line-height: 1;
+}
+
+.cubiculos-stat-label {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.cubiculos-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.cubiculos-primary-button {
+  background-color: #1e3799;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.cubiculos-primary-button:hover {
+  background-color: #0c2461;
+}
+
+.cubiculos-secondary-button {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+}
+
+.cubiculos-secondary-button:hover {
+  background-color: #e2e8f0;
+  border-color: #94a3b8;
+}
+
+.cubiculos-danger-button {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.cubiculos-danger-button:hover {
+  background-color: #b91c1c;
+}
+
+.cubiculos-button-icon {
+  font-size: 1.1rem;
+}
+
+.cubiculos-empty-state-container {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  border: 2px dashed #cbd5e1;
+}
+
+.cubiculos-empty-state-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.cubiculos-empty-state-title {
+  font-size: 1.5rem;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.cubiculos-empty-state-description {
+  color: #64748b;
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cubiculos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.cubiculos-card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cubiculos-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cubiculos-cubiculo-icon {
+  font-size: 1.5rem;
+  background-color: #e0f2fe;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cubiculos-card-title-section {
+  flex: 1;
+}
+
+.cubiculos-card-title {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+}
+
+.cubiculos-card-subtitle {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.cubiculos-status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+}
+
+.cubiculos-card-body {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.cubiculos-info-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.cubiculos-label {
+  color: #64748b;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.cubiculos-value {
+  color: #1e293b;
+  flex: 1;
+  font-weight: 500;
+}
+
+.cubiculos-card-footer {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.cubiculos-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.cubiculos-modal-content {
+  background-color: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.cubiculos-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cubiculos-modal-title {
+  font-size: 1.25rem;
+  color: #1e293b;
+  margin: 0;
+}
+
+.cubiculos-close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #64748b;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.cubiculos-close-button:hover {
+  background-color: #f1f5f9;
+}
+
+.cubiculos-form-container {
+  padding: 1.5rem;
+}
+
+.cubiculos-field-group {
+  margin-bottom: 1.25rem;
+}
+
+.cubiculos-field-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.375rem;
+}
+
+.cubiculos-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: border-color 0.15s;
+}
+
+.cubiculos-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.cubiculos-input:hover {
+  border-color: #9ca3af;
+}
+
+.cubiculos-field-hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.375rem;
+}
+
+.cubiculos-text-button {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.cubiculos-text-button:hover {
+  text-decoration: underline;
+}
+
+.cubiculos-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.cubiculos-cancel-button {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.cubiculos-cancel-button:hover {
+  background-color: #e5e7eb;
+}
+
+.cubiculos-confirm-modal {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  max-width: 400px;
+}
+
+.cubiculos-confirm-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.cubiculos-confirm-title {
+  font-size: 1.25rem;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.cubiculos-confirm-message {
+  color: #64748b;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.cubiculos-confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.cubiculos-profesores-list {
+  padding: 0 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cubiculos-list-title {
+  font-size: 1rem;
+  color: #374151;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.cubiculos-list-container {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.cubiculos-profesor-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cubiculos-profesor-item:last-child {
+  border-bottom: none;
+}
+
+.cubiculos-profesor-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cubiculos-profesor-nombre {
+  font-size: 0.875rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.cubiculos-profesor-turno {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.cubiculos-profesor-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cubiculos-small-button {
+  background: none;
+  border: 1px solid #d1d5db;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.cubiculos-small-button:hover {
+  background-color: #f3f4f6;
+}
+
+.cubiculos-small-danger-button {
+  background: none;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.cubiculos-small-danger-button:hover {
+  background-color: #fee2e2;
+}

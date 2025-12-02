@@ -66,7 +66,6 @@ const Eventos = () => {
 
       const data = await response.json();
       
-      // Transformar datos del backend al formato esperado por el frontend
       const eventosTransformados = data.map(evento => ({
         id: evento.codigo,
         codigo: evento.codigo,
@@ -97,13 +96,11 @@ const Eventos = () => {
     fetchEventos();
   }, []);
 
-  // 🔄 FUNCIÓN MODIFICADA: REGISTRAR USUARIO Y OBTENER QR
   const handleRegister = async () => {
     try {
       setRegisterError('');
       setRegisterSuccess('');
 
-      // Validaciones
       if (!registerData.email || !registerData.password || !registerData.confirmPassword) {
         setRegisterError('Todos los campos son requeridos');
         return;
@@ -126,7 +123,6 @@ const Eventos = () => {
         return;
       }
 
-      // Llamar a la API de registro - CORREGIDO para coincidir con tu backend
       const response = await fetch('https://mapaback.onrender.com/auth/register', {
         method: 'POST',
         headers: {
@@ -142,15 +138,13 @@ const Eventos = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        // Usar el mensaje de error del backend
         throw new Error(result.message || result.error || 'Error al registrar usuario');
       }
 
-      // ÉXITO: Mostrar QR con los datos del backend
       setQrData({
-        totpSecret: result.totpSecret, // Esta es la URL para el QR
+        totpSecret: result.totpSecret,
         email: registerData.email,
-        rawSecret: result.totpSecret // Guardamos el secreto completo por si acaso
+        rawSecret: result.totpSecret
       });
 
       setRegisterSuccess('Usuario registrado exitosamente');
@@ -171,7 +165,6 @@ const Eventos = () => {
     }
   };
 
-  // 🔄 FUNCIÓN MEJORADA: CERRAR MODAL DE QR
   const handleCloseQr = () => {
     setQrData(null);
     setShowRegisterForm(false);
@@ -179,7 +172,6 @@ const Eventos = () => {
     setRegisterError('');
   };
 
-  // 🔄 NUEVA FUNCIÓN: CERRAR FORMULARIO DE REGISTRO
   const handleCloseRegisterForm = () => {
     setShowRegisterForm(false);
     setRegisterData({
@@ -218,7 +210,6 @@ const Eventos = () => {
     return 'Formato no válido';
   };
 
-  // Función para formatear fecha para input datetime-local
   const formatDateForInput = (date) => {
     if (!date) return '';
     const d = new Date(date);

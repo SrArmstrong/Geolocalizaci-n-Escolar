@@ -3,7 +3,6 @@ import Home from './pages/Home';
 import MapComponent from './components/map/MapComponent';
 import AdminPanel from './pages/AdminPanel';
 import Login from "./pages/Login";
-import TermsAndConditions from './pages/TermsAndConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
@@ -21,7 +20,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<MapComponent />} />
-          <Route path="/terminos" element={<TermsAndConditions />} />
           <Route path="/privacidad" element={<PrivacyPolicy />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={ <ProtectedRoute> <AdminPanel /> </ProtectedRoute>} />

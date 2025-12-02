@@ -323,3 +323,37 @@
     align-items: flex-start;
   }
 }
+/* Estilos de navegación */
+.admin-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0 2rem 0;
+  padding: 0 2rem;
+}
+
+.admin-nav-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  border: 1px solid white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-nav-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.admin-nav-button.active {
+  background: white;
+  color: #1e3799;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}

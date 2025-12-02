@@ -98,6 +98,9 @@
   text-align: center;
   margin-bottom: 3rem;
   animation: fadeInDown 1s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .logo-image {
@@ -131,9 +134,9 @@
 
 /* Explore Button */
 .explore-button {
-  margin-top: 1.5rem;
+  margin: 1.5rem auto 0;
   padding: 1rem 2.5rem;
-  font-size: 1.8rem;
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
   font-weight: 700;
   background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
   color: white;
@@ -142,9 +145,13 @@
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 10px 30px rgba(30, 58, 138, 0.3);
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.6rem;
+  width: fit-content;
+  min-width: 200px;
+  max-width: 90%;
 }
 
 .explore-button:hover {
@@ -629,10 +636,15 @@
   }
 
   .explore-button {
-    padding: 0.8rem 1.5rem;
-    font-size: 1.2rem;
-    width: 90%;
-    max-width: 300px;
+    padding: 0.8rem 1.8rem;
+    font-size: 1.3rem;
+    width: auto;
+    min-width: 180px;
+    max-width: 85%;
+    margin: 1.5rem auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .nav-tabs {
@@ -763,6 +775,8 @@
   .explore-button {
     padding: 0.9rem 2rem;
     font-size: 1.5rem;
+    width: auto;
+    margin: 1.5rem auto 0;
   }
 
   .nav-tabs {
