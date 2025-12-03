@@ -1,3 +1,5 @@
+// location.js
+
 import AMBIENTAL from './assets/AMBIENTAL.jpeg';
 import AUDITORIO from './assets/AUDITORIO.jpeg';
 import BIBLIOTECA from './assets/BIBLIOTECA.jpeg';
@@ -15,8 +17,6 @@ import LABORATORIOJ from './assets/LABORATORIOJ.jpeg';
 import NANO from './assets/NANO.jpeg';
 import RECTORIA from './assets/RECTORIA.jpeg';
 
-
-// location.js
 const locations = [
     { 
       latitude: 20.6532215, 

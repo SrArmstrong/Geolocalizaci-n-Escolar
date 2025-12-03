@@ -512,9 +512,6 @@ const CubiculosProfesores = () => {
                 >
                   <option value="Planta Baja">Planta Baja</option>
                   <option value="Planta Alta">Planta Alta</option>
-                  <option value="Sótano">Sótano</option>
-                  <option value="Primer Piso">Primer Piso</option>
-                  <option value="Segundo Piso">Segundo Piso</option>
                 </select>
               </div>
               
