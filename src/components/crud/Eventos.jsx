@@ -273,32 +273,38 @@ const Eventos = () => {
 
       if (!formData.codigo && !isEditing) {
         setError('El código del evento es requerido');
+        setShowForm(false);
         return;
       }
       if (!formData.title) {
         setError('El título del evento es requerido');
+        setShowForm(false);
         return;
       }
       if (!formData.tipoEvento) {
         setError('El tipo de evento es requerido');
+        setShowForm(false);
         return;
       }
       if (!formData.fechaInicio) {
         setError('La fecha de inicio es requerida');
+        setShowForm(false);
         return;
       }
       if (!formData.fechaFin) {
         setError('La fecha de fin es requerida');
+        setShowForm(false);
         return;
       }
 
     
       if (new Date(formData.fechaFin) <= new Date(formData.fechaInicio)) {
         setError('La fecha de fin debe ser posterior a la fecha de inicio');
+        setShowForm(false);
         return;
       }
 
- 
+
       const eventData = {
         codigo: formData.codigo,
         title: formData.title,
@@ -342,6 +348,7 @@ const Eventos = () => {
     } catch (err) {
       console.error('Error al guardar evento:', err);
       setError(err.message);
+      setShowForm(false);
     }
   };
 
