@@ -1,4 +1,4 @@
-// src/pages/Login.jsx
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './Login.css';
@@ -38,14 +38,14 @@ function Login() {
         if (newAttempts >= 3) {
           setTimeout(() => {
             navigate("/");
-          }, 2000); // Pequeño delay para que el usuario vea el mensaje
+          }, 2000); 
         }
       }
     } catch (err) {
       console.error("Error en login:", err);
       setError("Error interno del servidor");
     } finally {
-      // Esto se ejecuta siempre, tanto en éxito como en error
+    
       setIsLoading(false);
     }
   };

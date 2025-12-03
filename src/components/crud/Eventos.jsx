@@ -32,12 +32,12 @@ const Eventos = () => {
   const [registerError, setRegisterError] = useState('');
   const [registerSuccess, setRegisterSuccess] = useState('');
 
-  // Obtener token de autenticación
+
   const getAuthToken = () => {
     return localStorage.getItem('authToken');
   };
 
-  // Configurar headers para las requests
+  
   const getHeaders = () => {
     const token = getAuthToken();
     return {
@@ -46,7 +46,7 @@ const Eventos = () => {
     };
   };
 
-  // 🔄 OBTENER EVENTOS DESDE EL BACKEND
+
   const fetchEventos = async () => {
     try {
       setLoading(true);
@@ -116,7 +116,7 @@ const Eventos = () => {
         return;
       }
 
-      // Validar formato de email
+    
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(registerData.email)) {
         setRegisterError('Por favor ingrese un email válido');
@@ -149,7 +149,7 @@ const Eventos = () => {
 
       setRegisterSuccess('Usuario registrado exitosamente');
       
-      // Limpiar formulario
+   
       setRegisterData({
         email: '',
         password: '',
@@ -265,12 +265,12 @@ const Eventos = () => {
     setShowForm(true);
   };
 
-  // 🔄 GUARDAR EVENTO (CREATE/UPDATE) - ACTUALIZADO
+
   const handleSubmit = async () => {
     try {
       setError('');
       
-      // Validaciones básicas
+
       if (!formData.codigo && !isEditing) {
         setError('El código del evento es requerido');
         return;
@@ -292,13 +292,13 @@ const Eventos = () => {
         return;
       }
 
-      // Validar que la fecha de fin sea posterior a la de inicio
+    
       if (new Date(formData.fechaFin) <= new Date(formData.fechaInicio)) {
         setError('La fecha de fin debe ser posterior a la fecha de inicio');
         return;
       }
 
-      // Preparar datos para el backend
+ 
       const eventData = {
         codigo: formData.codigo,
         title: formData.title,
@@ -309,20 +309,20 @@ const Eventos = () => {
         tipoEvento: formData.tipoEvento,
         fechaInicio: formData.fechaInicio,
         fechaFin: formData.fechaFin,
-        createdBy: formData.createdBy || 'admin' // Valor por defecto si no se especifica
+        createdBy: formData.createdBy || 'admin'
       };
 
       let response;
       
       if (isEditing) {
-        // Actualizar evento existente
+        
         response = await fetch(`https://mapaback.onrender.com/events/${formData.codigo}`, {
           method: 'PUT',
           headers: getHeaders(),
           body: JSON.stringify(eventData)
         });
       } else {
-        // Crear nuevo evento
+        
         response = await fetch('https://mapaback.onrender.com/events/', {
           method: 'POST',
           headers: getHeaders(),
@@ -335,7 +335,7 @@ const Eventos = () => {
         throw new Error(errorData.error || 'Error al guardar evento');
       }
 
-      // Recargar la lista de eventos
+      
       await fetchEventos();
       setShowForm(false);
       setError('');
@@ -345,7 +345,7 @@ const Eventos = () => {
     }
   };
 
-  // 🔄 ELIMINAR EVENTO
+  
   const handleDelete = async () => {
     try {
       setError('');
@@ -360,7 +360,7 @@ const Eventos = () => {
         throw new Error(errorData.error || 'Error al eliminar evento');
       }
 
-      // Actualizar estado local
+      
       setEventos(prev => prev.filter(evento => evento.codigo !== confirmDeleteId));
       setConfirmDeleteId(null);
     } catch (err) {

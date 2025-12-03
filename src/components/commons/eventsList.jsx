@@ -1,4 +1,4 @@
-// EventsList.jsx
+
 import React, { useState, useEffect } from 'react';
 import eventService from '../../services/eventService.js';
 import bus from '../../bus.js';
@@ -44,7 +44,7 @@ const EventsList = ({ activeList, setActiveList, integrated = false }) => {
     }
   };
 
-  // Modo integrado para WelcomeScreen
+ 
   if (integrated) {
     return (
       <div className={styles.integratedContainer}>
@@ -86,7 +86,7 @@ const EventsList = ({ activeList, setActiveList, integrated = false }) => {
     );
   }
 
-  // Modo flotante original
+
   return (
     <>
       <button

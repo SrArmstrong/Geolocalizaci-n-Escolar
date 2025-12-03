@@ -1,4 +1,4 @@
-/* Estilos generales del componente Login - Actualizados para coincidir con WelcomeScreen */
+
 .login-container {
   min-height: 100vh;
   display: flex;
@@ -57,7 +57,7 @@
   line-height: 1.6;
 }
 
-/* Formulario */
+
 .login-form {
   display: flex;
   flex-direction: column;
@@ -109,7 +109,7 @@
   color: #94a3b8;
 }
 
-/* Botón de login - Actualizado para coincidir con explore-button */
+
 .login-button {
   background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
   color: white;
@@ -165,7 +165,7 @@
   display: none;
 }
 
-/* Mensaje de error - Actualizado */
+
 .login-error {
   background-color: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.4);
@@ -186,7 +186,7 @@
   75% { transform: translateX(5px); }
 }
 
-/* Loading state */
+
 .login-loading {
   opacity: 0.7;
   pointer-events: none;
@@ -207,7 +207,7 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Iconos decorativos */
+
 .login-input-wrapper {
   position: relative;
 }
@@ -225,7 +225,7 @@
   padding-left: 3rem;
 }
 
-/* Enlaces adicionales */
+
 .login-links {
   text-align: center;
   margin-top: 1.5rem;
@@ -246,7 +246,7 @@
   text-decoration: underline;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .login-container {
     padding: 1rem;

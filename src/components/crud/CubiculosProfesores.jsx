@@ -27,12 +27,10 @@ const CubiculosProfesores = () => {
   const [error, setError] = useState('');
   const [profesorError, setProfesorError] = useState('');
 
-  // Obtener token de autenticación
   const getAuthToken = () => {
     return localStorage.getItem('authToken');
   };
 
-  // Configurar headers para las requests
   const getHeaders = () => {
     const token = getAuthToken();
     return {
@@ -41,7 +39,6 @@ const CubiculosProfesores = () => {
     };
   };
 
-  // 🔄 OBTENER CUBÍCULOS DESDE EL BACKEND
   const fetchCubiculos = async () => {
     try {
       setLoading(true);
@@ -69,7 +66,6 @@ const CubiculosProfesores = () => {
     }
   };
 
-  // 🔄 OBTENER PROFESORES DESDE EL BACKEND
   const fetchProfesores = async () => {
     try {
       const response = await fetch('https://mapaback.onrender.com/profesores/', {
@@ -141,12 +137,10 @@ const CubiculosProfesores = () => {
     setProfesorError('');
   };
 
-  // 🔄 GUARDAR CUBÍCULO (CREATE/UPDATE)
   const handleSubmitCubiculo = async () => {
     try {
       setError('');
       
-      // Validaciones básicas
       if (!formData.edificio) {
         setError('El edificio es requerido');
         return;
@@ -156,7 +150,6 @@ const CubiculosProfesores = () => {
         return;
       }
 
-      // Preparar datos para el backend
       const cubiculoData = {
         codigo: formData.codigo || `${formData.edificio}-${formData.numeroCubiculo}-${formData.planta}`,
         edificio: formData.edificio,
@@ -168,14 +161,12 @@ const CubiculosProfesores = () => {
       let response;
       
       if (isEditing) {
-        // Actualizar cubículo existente
         response = await fetch(`https://mapaback.onrender.com/cubiculos/${formData.codigo}`, {
           method: 'PUT',
           headers: getHeaders(),
           body: JSON.stringify(cubiculoData)
         });
       } else {
-        // Crear nuevo cubículo
         response = await fetch('https://mapaback.onrender.com/cubiculos/', {
           method: 'POST',
           headers: getHeaders(),
@@ -188,7 +179,6 @@ const CubiculosProfesores = () => {
         throw new Error(errorData.error || 'Error al guardar cubículo');
       }
 
-      // Recargar la lista de cubículos
       await fetchCubiculos();
       setShowForm(false);
       setError('');
@@ -198,12 +188,10 @@ const CubiculosProfesores = () => {
     }
   };
 
-  // 🔄 GUARDAR PROFESOR (CREATE/UPDATE)
   const handleSubmitProfesor = async () => {
     try {
       setProfesorError('');
       
-      // Validaciones básicas
       if (!profesorFormData.nombre) {
         setProfesorError('El nombre del profesor es requerido');
         return;
@@ -213,7 +201,6 @@ const CubiculosProfesores = () => {
         return;
       }
 
-      // Preparar datos para el backend
       const profesorData = {
         nombre: profesorFormData.nombre,
         turno: profesorFormData.turno,
@@ -223,14 +210,12 @@ const CubiculosProfesores = () => {
       let response;
       
       if (isEditingProfesor) {
-        // Actualizar profesor existente
         response = await fetch(`https://mapaback.onrender.com/profesores/${profesorFormData.codigo}`, {
           method: 'PUT',
           headers: getHeaders(),
           body: JSON.stringify(profesorData)
         });
       } else {
-        // Crear nuevo profesor
         response = await fetch('https://mapaback.onrender.com/profesores/', {
           method: 'POST',
           headers: getHeaders(),
@@ -243,7 +228,6 @@ const CubiculosProfesores = () => {
         throw new Error(errorData.error || 'Error al guardar profesor');
       }
 
-      // Recargar la lista de profesores y cubículos
       await fetchProfesores();
       await fetchCubiculos();
       setShowProfesorForm(false);
@@ -254,7 +238,6 @@ const CubiculosProfesores = () => {
     }
   };
 
-  // 🔄 ELIMINAR CUBÍCULO
   const handleDeleteCubiculo = async () => {
     try {
       setError('');
@@ -269,7 +252,6 @@ const CubiculosProfesores = () => {
         throw new Error(errorData.error || 'Error al eliminar cubículo');
       }
 
-      // Actualizar estado local
       setCubiculos(prev => prev.filter(cubiculo => cubiculo.codigo !== confirmDeleteId));
       setConfirmDeleteId(null);
     } catch (err) {
@@ -278,7 +260,6 @@ const CubiculosProfesores = () => {
     }
   };
 
-  // 🔄 ELIMINAR PROFESOR
   const handleDeleteProfesor = async () => {
     try {
       setProfesorError('');
@@ -293,10 +274,8 @@ const CubiculosProfesores = () => {
         throw new Error(errorData.error || 'Error al eliminar profesor');
       }
 
-      // Actualizar estado local
       setProfesores(prev => prev.filter(profesor => profesor.codigo !== confirmDeleteProfesorId));
       
-      // Actualizar cubículos que tenían asignado este profesor
       setCubiculos(prev => prev.map(cubiculo => {
         if (cubiculo.profesorId === confirmDeleteProfesorId) {
           return { ...cubiculo, profesorId: null, profesorNombre: null };
@@ -336,7 +315,6 @@ const CubiculosProfesores = () => {
 
   return (
     <div className="cubiculos-container">
-      {/* Mostrar errores */}
       {error && (
         <div className="cubiculos-error-message">
           ⚠️ {error}
@@ -344,7 +322,6 @@ const CubiculosProfesores = () => {
         </div>
       )}
       
-      {/* Header de acciones */}
       <div className="cubiculos-header">
         <div className="cubiculos-stats-container">
           <div className="cubiculos-stat-item">
@@ -377,7 +354,6 @@ const CubiculosProfesores = () => {
         </div>
       </div>
 
-      {/* Grid de cubículos */}
       {cubiculos.length === 0 ? (
         <div className="cubiculos-empty-state-container">
           <div className="cubiculos-empty-state-icon">🏫</div>
@@ -466,7 +442,6 @@ const CubiculosProfesores = () => {
         </div>
       )}
 
-      {/* Modal de formulario de cubículo */}
       {showForm && (
         <div className="cubiculos-modal-overlay">
           <div className="cubiculos-modal-content">
@@ -565,7 +540,6 @@ const CubiculosProfesores = () => {
         </div>
       )}
 
-      {/* Modal de gestión de profesores */}
       {showProfesorForm && (
         <div className="cubiculos-modal-overlay">
           <div className="cubiculos-modal-content">
@@ -624,7 +598,6 @@ const CubiculosProfesores = () => {
               )}
             </div>
 
-            {/* Lista de profesores existentes */}
             {profesores.length > 0 && (
               <div className="cubiculos-profesores-list">
                 <h4 className="cubiculos-list-title">Profesores Registrados</h4>
@@ -672,7 +645,6 @@ const CubiculosProfesores = () => {
         </div>
       )}
 
-      {/* Modal de confirmación de eliminación de cubículo */}
       {confirmDeleteId && (
         <div className="cubiculos-modal-overlay">
           <div className="cubiculos-confirm-modal">
@@ -693,7 +665,6 @@ const CubiculosProfesores = () => {
         </div>
       )}
 
-      {/* Modal de confirmación de eliminación de profesor */}
       {confirmDeleteProfesorId && (
         <div className="cubiculos-modal-overlay">
           <div className="cubiculos-confirm-modal">

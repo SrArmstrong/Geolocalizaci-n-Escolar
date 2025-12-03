@@ -1,9 +1,7 @@
-/* CubiculosProfesores.css*/
 .cubiculos-container {
   padding: 1.5rem;
 }
 
-/* Estilos de carga */
 .cubiculos-loading-container {
   display: flex;
   flex-direction: column;
@@ -28,13 +26,11 @@
   font-weight: 500;
 }
 
-/* Animación de spinner */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* Header de acciones */
 .cubiculos-header {
   display: flex;
   justify-content: space-between;
@@ -71,7 +67,6 @@
   font-weight: 500;
 }
 
-/* Estado vacío */
 .cubiculos-empty-state-container {
   display: flex;
   flex-direction: column;
@@ -106,14 +101,12 @@
   line-height: 1.5;
 }
 
-/* Grid de cubículos */
 .cubiculos-grid {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
 }
 
-/* Estilos de tarjetas */
 .cubiculos-card-content {
   display: flex;
   flex-direction: column;
@@ -211,7 +204,6 @@
   border-top: 1px solid #e2e8f0;
 }
 
-/* Botones */
 .cubiculos-primary-button {
   background-color: #1e40af;
   color: white;
@@ -307,7 +299,6 @@
   font-weight: bold;
 }
 
-/* Modales */
 .cubiculos-modal-overlay {
   position: fixed;
   top: 0;
@@ -421,7 +412,6 @@
   justify-content: flex-end;
 }
 
-/* Modal de confirmación */
 .cubiculos-confirm-modal {
   background-color: #ffffff;
   border-radius: 12px;
@@ -459,7 +449,6 @@
   justify-content: center;
 }
 
-/* Lista de profesores */
 .cubiculos-profesores-list {
   padding: 0 1.5rem;
   margin-bottom: 1.5rem;
@@ -561,7 +550,6 @@
   color: #2563eb;
 }
 
-/* Mensajes de error */
 .cubiculos-error-message {
   background-color: #fee2e2;
   border: 1px solid #fca5a5;
@@ -595,7 +583,6 @@
   border-radius: 50%;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .cubiculos-header {
     flex-direction: column;

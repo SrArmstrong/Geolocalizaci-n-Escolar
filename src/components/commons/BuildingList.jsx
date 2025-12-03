@@ -12,9 +12,9 @@ const BuildingList = ({ activeList, setActiveList }) => {
   const normalizeText = (text) => {
     return text
       .toLowerCase()
-      .normalize("NFD") // Separa caracteres y acentos
-      .replace(/[\u0300-\u036f]/g, "") // Elimina diacríticos (acentos)
-      .replace(/\s+/g, ""); // Elimina todos los espacios
+      .normalize("NFD") 
+      .replace(/[\u0300-\u036f]/g, "") 
+      .replace(/\s+/g, ""); 
   };
 
   const filtered = locations.filter(loc => {
@@ -48,7 +48,7 @@ const BuildingList = ({ activeList, setActiveList }) => {
           style={{
             position: 'fixed',
             right: '20px',
-            bottom: visible ? '65vh' : '20px', // 👈 Cuando visible, se sube
+            bottom: visible ? '65vh' : '20px',
             zIndex: 9999,
             backgroundColor: '#1e3a8a',
             color: 'white',
@@ -186,7 +186,7 @@ const BuildingList = ({ activeList, setActiveList }) => {
                       textAlign: 'left',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'space-between', // 👈 Esto alinea título y código
+                      justifyContent: 'space-between', 
                       gap: '12px',
                       transition: 'all 0.2s ease',
                       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)',

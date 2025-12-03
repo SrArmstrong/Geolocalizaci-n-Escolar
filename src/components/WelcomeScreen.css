@@ -1,4 +1,4 @@
-/* WelcomeScreen.css */
+
 .welcome-container {
   min-height: 100vh;
   background: 
@@ -19,7 +19,7 @@
   transform: translateY(30px);
 }
 
-/* Stats Button */
+
 .stats-button {
   position: fixed;
   top: 20px;
@@ -39,7 +39,7 @@
   gap: 0.5rem;
 }
 
-/* Stats Panel */
+
 .stats-panel {
   position: fixed;
   top: 70px;
@@ -93,7 +93,7 @@
   font-style: italic;
 }
 
-/* Header Section */
+
 .header-section {
   text-align: center;
   margin-bottom: 3rem;
@@ -132,7 +132,7 @@
   line-height: 1.6;
 }
 
-/* Explore Button */
+
 .explore-button {
   margin: 1.5rem auto 0;
   padding: 1rem 2.5rem;
@@ -159,7 +159,7 @@
   box-shadow: 0 15px 40px rgba(30, 58, 138, 0.4);
 }
 
-/* Navigation Tabs */
+
 .nav-tabs {
   display: flex;
   gap: 1rem;
@@ -196,7 +196,7 @@
   box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
 }
 
-/* Content Section */
+
 .content-section {
   max-width: 1200px;
   margin: 0 auto;
@@ -237,7 +237,7 @@
   font-size: 3rem;
 }
 
-/* Careers Grid */
+
 .careers-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -262,7 +262,7 @@
   background-color: rgba(255,255,255,0.25);
 }
 
-/* Events Section */
+
 .view-buttons {
   display: flex;
   gap: 1rem;
@@ -369,7 +369,7 @@
   position: relative;
 }
 
-/* Animations */
+
 @keyframes float {
   0%, 100% { 
     transform: translateY(0) rotate(0deg); 
@@ -428,7 +428,7 @@
   box-sizing: border-box;
 }
 
-/* Notification Manager Styles */
+
 
 .notification-simple {
   display: flex;
@@ -485,7 +485,7 @@
   font-size: 0.95rem;
 }
 
-/* Estado de permisos denegados */
+
 .notification-simple.denied {
   display: flex;
   align-items: center;
@@ -506,7 +506,7 @@
   font-size: 0.9rem;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .notification-toggle {
     padding: 0.5rem 1rem;
@@ -519,7 +519,7 @@
   }
 }
 
-/* Estilos para el nuevo diseño de notificaciones */
+
 .notification-simple {
   display: flex;
   align-items: center;
@@ -606,15 +606,13 @@
   font-weight: 500;
 }
 
-/* Asegurar que el contenedor se integre bien en WelcomeScreen */
+
 .header-section .notification-simple {
   margin: 15px auto;
 }
-/* ========================================
-   RESPONSIVE DESIGN
-   ======================================== */
 
-/* Extra Small Devices (phones, 320px - 480px) */
+
+
 @media (max-width: 480px) {
   .welcome-container {
     padding: 1rem 0.5rem;
@@ -752,7 +750,7 @@
   }
 }
 
-/* Small Devices (phones landscape, tablets portrait, 481px - 768px) */
+
 @media (min-width: 481px) and (max-width: 768px) {
   .welcome-container {
     padding: 1.5rem 1rem;
@@ -821,7 +819,7 @@
   }
 }
 
-/* Medium Devices (tablets landscape, small laptops, 769px - 1024px) */
+
 @media (min-width: 769px) and (max-width: 1024px) {
   .welcome-container {
     padding: 2rem 1.5rem;
@@ -840,7 +838,7 @@
   }
 }
 
-/* Large Devices (desktops, 1025px - 1440px) */
+
 @media (min-width: 1025px) and (max-width: 1440px) {
   .content-section {
     max-width: 1100px;
@@ -855,7 +853,7 @@
   }
 }
 
-/* Extra Large Devices (large desktops, 1441px+) */
+
 @media (min-width: 1441px) {
   .welcome-container {
     padding: 3rem 2rem;
@@ -895,7 +893,7 @@
   }
 }
 
-/* Landscape Orientation Adjustments */
+
 @media (max-height: 600px) and (orientation: landscape) {
   .logo-image {
     width: 150px;
@@ -930,7 +928,7 @@
   }
 }
 
-/* Touch Device Optimizations */
+
 @media (hover: none) and (pointer: coarse) {
   .nav-button,
   .explore-button,
@@ -953,7 +951,7 @@
   }
 }
 
-/* Print Styles */
+
 @media print {
   .welcome-container {
     background: white;

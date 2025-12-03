@@ -1,6 +1,4 @@
-/* AdminDashboard.css */
 
-/* Estilos generales y contenedores */
 .admin-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -31,7 +29,7 @@
   margin: 0 auto;
 }
 
-/* Botones y elementos interactivos */
+
 .admin-back-button {
   background: rgba(255, 255, 255, 0.1);
   color: white;
@@ -72,7 +70,7 @@
   font-size: 1.5rem;
 }
 
-/* Títulos y texto */
+
 .admin-main-title {
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
@@ -89,7 +87,7 @@
   line-height: 1.5;
 }
 
-/* Navegación */
+
 .admin-navigation-container {
   padding: 2rem;
   max-width: 1200px;
@@ -133,7 +131,7 @@
   font-weight: 600;
 }
 
-/* Grid de navegación */
+
 .admin-navigation-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -211,7 +209,7 @@
   font-weight: 600;
 }
 
-/* Contenido principal */
+
 .admin-content-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -260,7 +258,7 @@
   line-height: 1.5;
 }
 
-/* Estados de carga */
+
 .admin-loading-indicator {
   display: flex;
   align-items: center;
@@ -294,13 +292,13 @@
   overflow: hidden;
 }
 
-/* Animaciones */
+
 @keyframes admin-spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .admin-header {
     padding: 1.5rem 1rem 2rem;
@@ -323,7 +321,7 @@
     align-items: flex-start;
   }
 }
-/* Estilos de navegación */
+
 .admin-navigation {
   display: flex;
   justify-content: center;

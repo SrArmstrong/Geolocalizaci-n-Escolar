@@ -1,11 +1,11 @@
-// socket.js
+
 import { io } from "socket.io-client";
 
 // URL del backend con WebSockets
 const SOCKET_URL = "https://mapaback.onrender.com"; 
 // O: const SOCKET_URL = import.meta.env.VITE_BACKEND_URL;
 
-//console.log("🔌 Conectando a WebSocket:", SOCKET_URL);
+
 
 // Conexión con opciones recomendadas para producción
 const socket = io(SOCKET_URL, {
