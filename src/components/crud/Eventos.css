@@ -1,9 +1,9 @@
-/* Eventos.css */
+
 .eventos-container {
   padding: 1.5rem;
 }
 
-/* Estilos de carga */
+
 .eventos-loading-container {
   display: flex;
   flex-direction: column;
@@ -28,13 +28,13 @@
   font-weight: 500;
 }
 
-/* Animación de spinner */
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* Header de acciones */
+
 .eventos-header {
   display: flex;
   justify-content: space-between;
@@ -71,7 +71,7 @@
   text-align: center;
 }
 
-/* Estado vacío */
+
 .eventos-empty-state-container {
   display: flex;
   flex-direction: column;
@@ -103,14 +103,14 @@
   line-height: 1.5;
 }
 
-/* Grid de eventos */
+
 .eventos-grid {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
 }
 
-/* Estilos de tarjetas */
+
 .eventos-card-content {
   display: flex;
   flex-direction: column;
@@ -213,7 +213,7 @@
   border-top: 1px solid #e2e8f0;
 }
 
-/* Botones */
+
 .eventos-primary-button {
   background-color: #1e40af;
   color: white;
@@ -309,7 +309,7 @@
   font-weight: bold;
 }
 
-/* Modales */
+
 .eventos-modal-overlay {
   position: fixed;
   top: 0;
@@ -413,7 +413,7 @@
   justify-content: flex-end;
 }
 
-/* Modal de confirmación */
+
 .eventos-confirm-modal {
   background-color: #ffffff;
   border-radius: 12px;
@@ -451,7 +451,7 @@
   justify-content: center;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .eventos-header {
     flex-direction: column;
@@ -485,7 +485,7 @@
   }
 }
 
-/* Estilos para el formulario de registro de usuario */
+
 .eventos-success-message {
   background-color: #d1fae5;
   border: 1px solid #10b981;

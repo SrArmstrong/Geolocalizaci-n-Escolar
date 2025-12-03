@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './Login.css';
+import { Link } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ function Login() {
     setError("");
 
     try {
-      //const response = await fetch("http://localhost:3000/auth/login", {
+      //const response = awati fetch("https://localhost:3000/auth/login", {)
       const response = await fetch("https://mapaback.onrender.com/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -38,14 +38,13 @@ function Login() {
         if (newAttempts >= 3) {
           setTimeout(() => {
             navigate("/");
-          }, 2000); 
+          }, 2000);
         }
       }
     } catch (err) {
       console.error("Error en login:", err);
       setError("Error interno del servidor");
     } finally {
-    
       setIsLoading(false);
     }
   };
@@ -105,12 +104,34 @@ function Login() {
             disabled={isLoading}
             className="login-button"
           >
-            {isLoading ? 'Verificando...' : 'Ingresar'}
+            {isLoading ? (
+              <>
+                <span>Verificando...</span>
+                <div style={{
+                  width: '20px', 
+                  height: '20px', 
+                  border: '2px solid white', 
+                  borderTop: '2px solid transparent', 
+                  borderRadius: '50%', 
+                  animation: 'spin 1s linear infinite'
+                }}></div>
+              </>
+            ) : 'Ingresar'}
           </button>
         </form>
 
         {error && <div className="login-error">{error}</div>}
       </div>
+      
+      <footer className="footer">
+        <div className="footer-content">
+          <span className="separator">|</span>
+          <Link to="/" className="footer-link">
+            Volver al inicio
+          </Link>
+          <span className="separator">|</span>
+        </div>
+      </footer>
     </div>
   );
 }

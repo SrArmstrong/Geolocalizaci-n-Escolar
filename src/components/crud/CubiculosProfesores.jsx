@@ -143,10 +143,12 @@ const CubiculosProfesores = () => {
       
       if (!formData.edificio) {
         setError('El edificio es requerido');
+        setShowForm(false);
         return;
       }
       if (!formData.numeroCubiculo) {
         setError('El número de cubículo es requerido');
+        setShowForm(false);
         return;
       }
 
@@ -185,58 +187,62 @@ const CubiculosProfesores = () => {
     } catch (err) {
       console.error('Error al guardar cubículo:', err);
       setError(err.message);
+      setShowForm(false);
     }
   };
 
-  const handleSubmitProfesor = async () => {
-    try {
-      setProfesorError('');
-      
-      if (!profesorFormData.nombre) {
-        setProfesorError('El nombre del profesor es requerido');
-        return;
-      }
-      if (!profesorFormData.turno) {
-        setProfesorError('El turno es requerido');
-        return;
-      }
-
-      const profesorData = {
-        nombre: profesorFormData.nombre,
-        turno: profesorFormData.turno,
-        codigo: profesorFormData.codigo || profesorFormData.nombre.replace(/\s+/g, '-').toUpperCase()
-      };
-
-      let response;
-      
-      if (isEditingProfesor) {
-        response = await fetch(`https://mapaback.onrender.com/profesores/${profesorFormData.codigo}`, {
-          method: 'PUT',
-          headers: getHeaders(),
-          body: JSON.stringify(profesorData)
-        });
-      } else {
-        response = await fetch('https://mapaback.onrender.com/profesores/', {
-          method: 'POST',
-          headers: getHeaders(),
-          body: JSON.stringify(profesorData)
-        });
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al guardar profesor');
-      }
-
-      await fetchProfesores();
-      await fetchCubiculos();
+const handleSubmitProfesor = async () => {
+  try {
+    setProfesorError('');
+    
+    if (!profesorFormData.nombre) {
+      setProfesorError('El nombre del profesor es requerido');
       setShowProfesorForm(false);
-      setProfesorError('');
-    } catch (err) {
-      console.error('Error al guardar profesor:', err);
-      setProfesorError(err.message);
+      return;
     }
-  };
+    if (!profesorFormData.turno) {
+      setProfesorError('El turno es requerido');
+      setShowProfesorForm(false);
+      return;
+    }
+
+    const profesorData = {
+      nombre: profesorFormData.nombre,
+      turno: profesorFormData.turno,
+      codigo: profesorFormData.codigo || profesorFormData.nombre.replace(/\s+/g, '-').toUpperCase()
+    };
+
+    let response;
+    
+    if (isEditingProfesor) {
+      response = await fetch(`https://mapaback.onrender.com/profesores/${profesorFormData.codigo}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(profesorData)
+      });
+    } else {
+      response = await fetch('https://mapaback.onrender.com/profesores/', {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(profesorData)
+      });
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Error al guardar profesor');
+    }
+
+    await fetchProfesores();
+    await fetchCubiculos();
+    setShowProfesorForm(false);
+    setProfesorError('');
+  } catch (err) {
+    console.error('Error al guardar profesor:', err);
+    setProfesorError(err.message);
+    setShowProfesorForm(false);
+  }
+};
 
   const handleDeleteCubiculo = async () => {
     try {
